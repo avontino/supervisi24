@@ -184,27 +184,27 @@
   </aside>
 
   <main class="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-hidden">
-    <header class="h-16 bg-white border-b border-slate-200 px-3 sm:px-5 md:px-6 flex items-center justify-between flex-shrink-0 z-20 no-print">
-      <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
+    <header class="h-14 sm:h-16 bg-white border-b border-slate-200 px-2 sm:px-5 md:px-6 flex items-center justify-between flex-shrink-0 z-20 no-print">
+      <div class="flex items-center space-x-1.5 sm:space-x-3 min-w-0">
         <!-- Hamburger Button Mobile -->
-        <button id="btn-toggle-sidebar" type="button" onclick="toggleMobileSidebar(true)" class="md:hidden p-2 -ml-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg focus:outline-none" title="Menu Navigasi">
-          <i class="fa-solid fa-bars text-base"></i>
+        <button id="btn-toggle-sidebar" type="button" onclick="toggleMobileSidebar(true)" class="md:hidden p-1.5 -ml-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg focus:outline-none" title="Menu Navigasi">
+          <i class="fa-solid fa-bars text-lg"></i>
         </button>
-        <h2 id="top-title" class="text-sm sm:text-base font-bold text-slate-800 truncate max-w-[125px] sm:max-w-xs md:max-w-none">Dashboard Supervisi</h2>
-        <span class="hidden sm:inline text-slate-300">|</span>
-        <span id="role-pill" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+        <h2 id="top-title" class="text-xs sm:text-base font-bold text-slate-800 truncate max-w-[120px] sm:max-w-xs md:max-w-none">Dashboard Supervisi</h2>
+        <span class="hidden md:inline text-slate-300">|</span>
+        <span id="role-pill" class="hidden md:inline-block px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
           Mode Supervisor
         </span>
         <!-- Server Connection Badge -->
-        <div id="server-status-badge" class="hidden sm:flex items-center space-x-1.5 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+        <div id="server-status-badge" class="hidden lg:flex items-center space-x-1.5 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span id="server-status-text">MySQL Online</span>
         </div>
       </div>
 
-      <div class="flex items-center space-x-1.5 sm:space-x-2.5">
-        <!-- Universal Print Trigger -->
-        <button onclick="window.print()" title="Cetak Halaman Aktif" class="px-2 sm:px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold flex items-center space-x-1 sm:space-x-1.5 border border-indigo-200 transition">
+      <div class="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+        <!-- Universal Print Trigger (Hidden on Mobile Header) -->
+        <button onclick="window.print()" title="Cetak Halaman Aktif" class="hidden sm:flex px-2 sm:px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold items-center space-x-1 sm:space-x-1.5 border border-indigo-200 transition">
           <i class="fa-solid fa-print"></i>
           <span class="hidden md:inline">Cetak</span>
         </button>
@@ -216,15 +216,15 @@
         </div>
 
         <!-- Tombol Ganti Password -->
-        <button onclick="openChangePasswordModal()" title="Ganti Kata Sandi" class="px-2 sm:px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1 sm:space-x-1.5 border border-slate-200 transition">
+        <button onclick="openChangePasswordModal()" title="Ganti Kata Sandi" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1 border border-slate-200 transition">
           <i class="fa-solid fa-key text-slate-500"></i>
-          <span class="hidden sm:inline">Sandi</span>
+          <span class="hidden md:inline">Sandi</span>
         </button>
 
         <!-- Tombol Logout -->
-        <button onclick="handleLogout()" title="Keluar dari Aplikasi" class="px-2 sm:px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold flex items-center space-x-1 sm:space-x-1.5 border border-rose-200 transition">
+        <button onclick="handleLogout()" title="Keluar dari Aplikasi" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold flex items-center space-x-1 border border-rose-200 transition">
           <i class="fa-solid fa-right-from-bracket"></i>
-          <span class="hidden sm:inline">Keluar</span>
+          <span class="hidden md:inline">Keluar</span>
         </button>
       </div>
     </header>
@@ -2115,9 +2115,13 @@
       container.classList.remove('hidden');
       container.innerHTML = roles.map(r => {
         const isAct = (r === currentRole);
-        const label = r === 'superadmin' ? 'Superadmin' : (r === 'supervisor' ? 'Supervisor' : 'Guru Mandiri');
-        const activeClass = isAct ? 'bg-white text-indigo-700 font-semibold shadow-sm' : 'text-slate-600 hover:text-slate-900';
-        return `<button type="button" onclick="switchRole('${r}')" class="px-3 py-1.5 rounded-md ${activeClass} transition">${label}</button>`;
+        const labelFull = r === 'superadmin' ? 'Superadmin' : (r === 'supervisor' ? 'Supervisor' : 'Guru Mandiri');
+        const labelShort = r === 'superadmin' ? 'Admin' : (r === 'supervisor' ? 'Spv' : 'Guru');
+        const activeClass = isAct ? 'bg-white text-indigo-700 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900';
+        return `<button type="button" onclick="switchRole('${r}')" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-[11px] sm:text-xs ${activeClass} transition">
+          <span class="inline sm:hidden">${labelShort}</span>
+          <span class="hidden sm:inline">${labelFull}</span>
+        </button>`;
       }).join('');
     }
 
@@ -4359,7 +4363,7 @@
       if (role === 'guru') {
         if (rolePill) {
           rolePill.innerText = 'Mode Guru (Self-Asesmen)';
-          rolePill.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200';
+          rolePill.className = 'hidden md:inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200';
         }
         if (navGuru) {
           navGuru.classList.add('hidden');
@@ -4396,7 +4400,7 @@
       } else if (role === 'superadmin') {
         if (rolePill) {
           rolePill.innerText = 'Mode Superadmin (Full Access)';
-          rolePill.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-300 shadow-sm';
+          rolePill.className = 'hidden md:inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-300 shadow-sm';
         }
         if (navGuru) {
           navGuru.classList.remove('hidden');
@@ -4419,10 +4423,10 @@
           const isPengawas = currentLoggedInUser && currentLoggedInUser.nip === '196808061998021005';
           if (isPengawas) {
             rolePill.innerText = 'Mode Pengawas Sekolah (Mochamad Solikin)';
-            rolePill.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-50 text-purple-700 border border-purple-300 shadow-sm';
+            rolePill.className = 'hidden md:inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-50 text-purple-700 border border-purple-300 shadow-sm';
           } else {
             rolePill.innerText = 'Mode Supervisor';
-            rolePill.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200';
+            rolePill.className = 'hidden md:inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200';
           }
         }
         if (navGuru) {
