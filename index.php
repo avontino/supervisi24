@@ -15,6 +15,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- SheetJS (Excel xlsx) -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- html2pdf.js (Direct Client-Side PDF Generator) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     body { font-family: 'Inter', sans-serif; }
@@ -413,6 +415,10 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            <button onclick="exportDatabaseGuruToExcel()" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold flex items-center space-x-1 shadow-sm transition" title="Unduh seluruh database guru ke file Excel (.xlsx)">
+              <i class="fa-solid fa-file-excel"></i>
+              <span>Ekspor Guru (.xlsx)</span>
+            </button>
             <button onclick="window.print()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1 border border-slate-200 transition">
               <i class="fa-solid fa-print text-indigo-600"></i>
               <span>Cetak Database</span>
@@ -726,6 +732,10 @@
 
           <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <button type="button" onclick="downloadPraObservasiPDF()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center justify-center space-x-1.5 shadow-sm transition" title="Unduh langsung file PDF lembar telaah">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span>Unduh PDF</span>
+              </button>
               <button type="button" onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition">
                 <i class="fa-solid fa-print"></i>
                 <span>Cetak Hasil Telaah</span>
@@ -912,6 +922,10 @@
 
           <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <button type="button" onclick="downloadObservasiPDF()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center justify-center space-x-1.5 shadow-sm transition" title="Unduh langsung file PDF lembar observasi">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span>Unduh PDF</span>
+              </button>
               <button type="button" onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition">
                 <i class="fa-solid fa-print"></i>
                 <span>Cetak Hasil Observasi</span>
@@ -1032,6 +1046,10 @@
 
           <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <button type="button" onclick="downloadCoachingPDF()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center justify-center space-x-1.5 shadow-sm transition" title="Unduh langsung file PDF hasil coaching TIRTA">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span>Unduh PDF</span>
+              </button>
               <button type="button" onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition">
                 <i class="fa-solid fa-print"></i>
                 <span>Cetak Hasil Coaching</span>
@@ -1061,17 +1079,25 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-2">
-            <button onclick="exportToExcel()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center space-x-1.5 transition">
+            <button onclick="downloadLaporanPDF()" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Unduh langsung file PDF Laporan Guru Terpilih">
+              <i class="fa-solid fa-file-pdf"></i>
+              <span>Unduh PDF Individu</span>
+            </button>
+            <button onclick="downloadRekapKolektifPDF()" id="btn-unduh-pdf-rekap" class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Unduh langsung file PDF Rekapitulasi Kolektif Seluruh Guru">
+              <i class="fa-solid fa-file-arrow-down"></i>
+              <span>Unduh PDF Rekap</span>
+            </button>
+            <button onclick="exportToExcel()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Ekspor data rekapitulasi ke file Excel (.xlsx)">
               <i class="fa-solid fa-file-excel"></i>
               <span>Ekspor Rekap Excel (.xlsx)</span>
             </button>
-            <button onclick="printLaporanKeseluruhan()" id="btn-cetak-rekap-keseluruhan" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Cetak Rekapitulasi Kolektif">
+            <button onclick="printLaporanKeseluruhan()" id="btn-cetak-rekap-keseluruhan" class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Buka dialog cetak printer Rekapitulasi">
               <i class="fa-solid fa-print"></i>
-              <span>Cetak Rekap Tabel</span>
+              <span>Cetak Rekap</span>
             </button>
-            <button onclick="window.print()" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Cetak Lembar Laporan Guru Terpilih">
+            <button onclick="window.print()" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Buka dialog cetak printer Lembar Individu">
               <i class="fa-solid fa-file-lines"></i>
-              <span>Cetak Lembar Individu</span>
+              <span>Cetak Individu</span>
             </button>
           </div>
         </div>
@@ -6366,6 +6392,188 @@
       XLSX.utils.book_append_sheet(wb, ws, sheetName);
       XLSX.writeFile(wb, fileName);
       showToast('Data berhasil diekspor ke Excel!');
+    }
+
+    function exportDatabaseGuruToExcel() {
+      if (!guruDatabase || !guruDatabase.length) {
+        showToast('Tidak ada data guru untuk diekspor!', 'error');
+        return;
+      }
+      const exportRows = guruDatabase.map((g, idx) => {
+        const m = getGuruEvaluationMetrics(g);
+        const spv = appSettings.supervisors.find(s => s.id === g.supervisorId);
+        return {
+          "No": idx + 1,
+          "Nama Lengkap": g.nama,
+          "NIP": g.nip,
+          "Mata Pelajaran": g.mapel,
+          "Kelas": g.kelas,
+          "Supervisor Penilai": spv ? spv.nama : '-',
+          "Status Supervisi": g.status || 'Belum',
+          "Target Perilaku PMM": g.targetPerilaku || '-',
+          "Nilai Dokumen Telaah (%)": m.rppPct,
+          "Nilai Observasi Kelas (%)": m.obsPct,
+          "Skor Akhir (%)": m.finalScore,
+          "Predikat Kinerja": m.predikat
+        };
+      });
+
+      const ws = XLSX.utils.json_to_sheet(exportRows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Database_44_Guru");
+      const filename = `Database_Guru_SMPN24_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      XLSX.writeFile(wb, filename);
+      showToast('Database Guru berhasil diekspor ke Excel (.xlsx)!');
+    }
+
+    function downloadLaporanPDF() {
+      if (typeof html2pdf === 'undefined') {
+        showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
+        return;
+      }
+      const el = document.getElementById('printable-report');
+      if (!el) return;
+      const g = guruDatabase.find(x => x.id === selectedGuruId) || guruDatabase[0];
+      const rawName = g ? g.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Guru';
+      const nip = g ? g.nip : '';
+      const filename = `Laporan_Supervisi_${rawName}_${nip}.pdf`;
+
+      showToast('Sedang membuat file PDF Laporan Individu... Mohon tunggu.');
+
+      const opt = {
+        margin: [8, 10, 10, 10],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      const wasHidden = el.classList.contains('hidden');
+      if (wasHidden) el.classList.remove('hidden');
+
+      html2pdf().set(opt).from(el).save().then(() => {
+        if (wasHidden) el.classList.add('hidden');
+        showToast('File PDF Laporan Individu berhasil diunduh!');
+      }).catch(err => {
+        if (wasHidden) el.classList.add('hidden');
+        console.error(err);
+        showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
+      });
+    }
+
+    function downloadRekapKolektifPDF() {
+      if (typeof html2pdf === 'undefined') {
+        showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
+        return;
+      }
+      populateAllReportsTable();
+      const el = document.getElementById('printable-all-reports');
+      if (!el) return;
+      const dateStr = new Date().toISOString().slice(0, 10);
+      const filename = `Rekapitulasi_Supervisi_SMPN24_${dateStr}.pdf`;
+
+      showToast('Sedang membuat file PDF Rekapitulasi... Mohon tunggu.');
+
+      const opt = {
+        margin: [8, 10, 10, 10],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+      };
+
+      const wasHidden = el.classList.contains('hidden');
+      el.classList.remove('hidden');
+
+      html2pdf().set(opt).from(el).save().then(() => {
+        if (wasHidden) el.classList.add('hidden');
+        showToast('File PDF Rekapitulasi berhasil diunduh!');
+      }).catch(err => {
+        if (wasHidden) el.classList.add('hidden');
+        console.error(err);
+        showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
+      });
+    }
+
+    function downloadPraObservasiPDF() {
+      if (typeof html2pdf === 'undefined') {
+        showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
+        return;
+      }
+      const g = guruDatabase.find(x => x.id === selectedGuruId) || guruDatabase[0];
+      const rawName = g ? g.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Guru';
+      const el = document.querySelector('#view-pra > div.bg-white');
+      if (!el) return;
+      const filename = `Pra_Observasi_${rawName}_${g ? g.nip : ''}.pdf`;
+
+      showToast('Sedang membuat file PDF Pra-Observasi...');
+      const opt = {
+        margin: [8, 10, 10, 10],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(el).save().then(() => {
+        showToast('File PDF Pra-Observasi berhasil diunduh!');
+      }).catch(err => {
+        console.error(err);
+        showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
+      });
+    }
+
+    function downloadObservasiPDF() {
+      if (typeof html2pdf === 'undefined') {
+        showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
+        return;
+      }
+      const g = guruDatabase.find(x => x.id === selectedGuruId) || guruDatabase[0];
+      const rawName = g ? g.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Guru';
+      const el = document.querySelector('#view-observasi > div.bg-white');
+      if (!el) return;
+      const filename = `Observasi_Kelas_${rawName}_${g ? g.nip : ''}.pdf`;
+
+      showToast('Sedang membuat file PDF Observasi Kelas...');
+      const opt = {
+        margin: [8, 10, 10, 10],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(el).save().then(() => {
+        showToast('File PDF Observasi Kelas berhasil diunduh!');
+      }).catch(err => {
+        console.error(err);
+        showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
+      });
+    }
+
+    function downloadCoachingPDF() {
+      if (typeof html2pdf === 'undefined') {
+        showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
+        return;
+      }
+      const g = guruDatabase.find(x => x.id === selectedGuruId) || guruDatabase[0];
+      const rawName = g ? g.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Guru';
+      const el = document.querySelector('#view-coaching > div.bg-white');
+      if (!el) return;
+      const filename = `Coaching_TIRTA_${rawName}_${g ? g.nip : ''}.pdf`;
+
+      showToast('Sedang membuat file PDF Coaching TIRTA...');
+      const opt = {
+        margin: [8, 10, 10, 10],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(el).save().then(() => {
+        showToast('File PDF Coaching TIRTA berhasil diunduh!');
+      }).catch(err => {
+        console.error(err);
+        showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
+      });
     }
 
     function openAddGuruModal() {
