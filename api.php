@@ -322,6 +322,11 @@ try {
                 $pdo->prepare("UPDATE guru SET supervisor_id = ? WHERE id = ?")->execute([(int)$input['supervisorId'], $guruId]);
             }
 
+            // Jika ada perubahan targetPerilaku
+            if (!empty($input['targetPerilaku'])) {
+                $pdo->prepare("UPDATE guru SET target_perilaku = ? WHERE id = ?")->execute([trim($input['targetPerilaku']), $guruId]);
+            }
+
             echo json_encode(['success' => true, 'message' => 'Hasil Telaah Modul Ajar berhasil disimpan ke database server!']);
             break;
 

@@ -40,8 +40,19 @@
         margin: 0 !important;
         padding: 0 !important;
       }
-      aside, header, #bulk-action-bar, .no-print, button, input, select, #toast, .nav-btn, .hidden {
+      aside, header, #bulk-action-bar, .no-print, button, #toast, .nav-btn, .hidden {
         display: none !important;
+      }
+      input, select, textarea {
+        border: 1px solid #94a3b8 !important;
+        background: transparent !important;
+        color: #0f172a !important;
+        box-shadow: none !important;
+        font-size: 11px !important;
+        padding: 3px 6px !important;
+        border-radius: 4px !important;
+        -webkit-appearance: none !important;
+        appearance: none !important;
       }
       main, main > div, .overflow-y-auto, .overflow-x-auto, .overflow-hidden {
         overflow: visible !important;
@@ -477,12 +488,24 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
               <div class="lg:col-span-2">
-                <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Materi / Topik Pembelajaran</label>
-                <input type="text" id="pra-input-materi" placeholder="Masukkan materi / topik pembelajaran..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
+                <label class="block text-[11px] font-bold text-indigo-700 uppercase mb-1 flex items-center space-x-1">
+                  <i class="fa-solid fa-bullseye text-indigo-600"></i>
+                  <span>Fokus Target Perilaku (PMM)</span>
+                </label>
+                <select id="pra-input-target-perilaku" onchange="onPraTargetPerilakuChange(this.value)" class="w-full bg-white text-slate-800 font-bold p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 shadow-xs">
+                  <option value="Instruksi Pembelajaran">1. Instruksi Pembelajaran</option>
+                  <option value="Umpan Balik Yang Konstruktif">2. Umpan Balik Yang Konstruktif</option>
+                  <option value="Instruksi Yang Adaptif">3. Instruksi Yang Adaptif</option>
+                  <option value="Perhatian dan Kepedulian">4. Perhatian dan Kepedulian</option>
+                  <option value="Ekspektasi Pada Peserta Didik">5. Ekspektasi Pada Peserta Didik</option>
+                  <option value="Aktivitas Interaktif">6. Aktivitas Interaktif</option>
+                  <option value="Keteraturan Suasana Kelas">7. Keteraturan Suasana Kelas</option>
+                  <option value="Penerapan Disiplin Positif">8. Penerapan Disiplin Positif</option>
+                </select>
               </div>
               <div>
                 <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Tanggal Telaah</label>
-                <input type="date" id="pra-input-tanggal" class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
+                <input type="date" id="pra-input-tanggal" class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 font-medium">
               </div>
               <div>
                 <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Penelaah (Supervisor)</label>
@@ -490,9 +513,43 @@
               </div>
             </div>
 
-            <div class="text-xs">
-              <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Tujuan Pembelajaran</label>
-              <textarea id="pra-input-tujuan" rows="2" placeholder="Tuliskan tujuan pembelajaran yang ditargetkan..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+            <!-- Form Isian Guru Mapel (Materi & Tujuan) -->
+            <div id="pra-fields-mapel" class="space-y-3">
+              <div class="text-xs">
+                <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Materi / Topik Pembelajaran</label>
+                <input type="text" id="pra-input-materi" placeholder="Masukkan materi / topik pembelajaran..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
+              </div>
+              <div class="text-xs">
+                <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Tujuan Pembelajaran</label>
+                <textarea id="pra-input-tujuan" rows="2" placeholder="Tuliskan tujuan pembelajaran yang ditargetkan..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+              </div>
+            </div>
+
+            <!-- Form Isian Khusus Guru BK (Bidang Layanan, Fokus Layanan, Tujuan Layanan) -->
+            <div id="pra-fields-bk" class="hidden space-y-3 bg-indigo-50/50 p-3.5 rounded-xl border border-indigo-200">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                <div>
+                  <label class="block text-[11px] font-bold text-indigo-900 uppercase mb-1 flex items-center space-x-1">
+                    <i class="fa-solid fa-shapes text-indigo-600"></i>
+                    <span>Bidang Layanan (BK)</span>
+                  </label>
+                  <input type="text" id="pra-bk-bidang" placeholder="Contoh: Pribadi / Sosial / Belajar / Karir" class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-indigo-900 uppercase mb-1 flex items-center space-x-1">
+                    <i class="fa-solid fa-crosshairs text-indigo-600"></i>
+                    <span>Fokus Layanan (BK)</span>
+                  </label>
+                  <input type="text" id="pra-bk-fokus" placeholder="Contoh: Manajemen Waktu Belajar & Regulasi Emosi..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium">
+                </div>
+              </div>
+              <div class="text-xs">
+                <label class="block text-[11px] font-bold text-indigo-900 uppercase mb-1 flex items-center space-x-1">
+                  <i class="fa-solid fa-flag-checkered text-indigo-600"></i>
+                  <span>Tujuan Layanan (BK)</span>
+                </label>
+                <textarea id="pra-bk-tujuan" rows="2" placeholder="Tuliskan tujuan layanan bimbingan konseling yang ingin dicapai..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium"></textarea>
+              </div>
             </div>
           </div>
 
@@ -615,12 +672,45 @@
             </div>
           </div>
 
+          <!-- Blok Tanda Tangan 3 Pihak Pra-Observasi (Lembar Telaah) -->
+          <div class="mt-8 pt-4 border-t border-slate-200 avoid-break">
+            <div class="text-right text-xs text-slate-600 mb-4 mr-2">
+              Malang, <span class="font-semibold" id="pra-ttd-date">-</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-xs">
+              <div>
+                <p class="text-slate-500 font-medium">Guru yang Disupervisi,</p>
+                <div class="h-16"></div>
+                <p id="pra-ttd-guru" class="font-bold text-slate-900 underline">Nama Guru</p>
+                <p id="pra-ttd-nip-guru" class="text-slate-500 text-[11px]">NIP. -</p>
+              </div>
+              <div>
+                <p class="text-slate-500 font-medium">Supervisor Penilai,</p>
+                <div class="h-16"></div>
+                <p id="pra-ttd-spv" class="font-bold text-slate-900 underline">Nama Supervisor</p>
+                <p id="pra-ttd-nip-spv" class="text-slate-500 text-[11px]">NIP. -</p>
+              </div>
+              <div>
+                <p class="text-slate-500 font-medium">Mengetahui,<br>Kepala Sekolah</p>
+                <div class="h-12"></div>
+                <p id="pra-ttd-ks" class="font-bold text-slate-900 underline">Nama Kepala Sekolah</p>
+                <p id="pra-ttd-nip-ks" class="text-slate-500 text-[11px]">NIP. -</p>
+              </div>
+            </div>
+          </div>
+
           <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
-            <button onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition">
-              <i class="fa-solid fa-print"></i>
-              <span>Cetak Hasil Telaah</span>
-            </button>
-            <button onclick="savePraObservasi()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <button type="button" onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition">
+                <i class="fa-solid fa-print"></i>
+                <span>Cetak Hasil Telaah</span>
+              </button>
+              <button type="button" onclick="resetPraObservasi()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white hover:bg-rose-50 text-rose-600 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-rose-200 transition" title="Kosongkan seluruh isian form dan skor telaah dokumen ini">
+                <i class="fa-solid fa-rotate-left text-rose-500"></i>
+                <span>Kosongkan Isian</span>
+              </button>
+            </div>
+            <button type="button" onclick="savePraObservasi()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
               <i class="fa-solid fa-floppy-disk"></i>
               <span>Simpan Hasil Telaah Dokumen</span>
             </button>
@@ -768,12 +858,45 @@
             <textarea id="obs-catatan-fakta" rows="4" placeholder="Contoh: Pada menit ke-15 guru mengajukan pertanyaan pemantik. Murid berpartisipasi aktif dalam dialog..." class="w-full text-xs p-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
           </div>
 
+          <!-- Blok Tanda Tangan 3 Pihak Observasi Kelas -->
+          <div class="mt-8 pt-4 border-t border-slate-200 avoid-break">
+            <div class="text-right text-xs text-slate-600 mb-4 mr-2">
+              Malang, <span class="font-semibold" id="obs-ttd-date">-</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-xs">
+              <div>
+                <p class="text-slate-500 font-medium">Guru yang Disupervisi,</p>
+                <div class="h-16"></div>
+                <p id="obs-ttd-guru" class="font-bold text-slate-900 underline">Nama Guru</p>
+                <p id="obs-ttd-nip-guru" class="text-slate-500 text-[11px]">NIP. -</p>
+              </div>
+              <div>
+                <p class="text-slate-500 font-medium">Supervisor Penilai,</p>
+                <div class="h-16"></div>
+                <p id="obs-ttd-spv" class="font-bold text-slate-900 underline">Nama Supervisor</p>
+                <p id="obs-ttd-nip-spv" class="text-slate-500 text-[11px]">NIP. -</p>
+              </div>
+              <div>
+                <p class="text-slate-500 font-medium">Mengetahui,<br>Kepala Sekolah</p>
+                <div class="h-12"></div>
+                <p id="obs-ttd-ks" class="font-bold text-slate-900 underline">Nama Kepala Sekolah</p>
+                <p id="obs-ttd-nip-ks" class="text-slate-500 text-[11px]">NIP. -</p>
+              </div>
+            </div>
+          </div>
+
           <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
-            <button onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition">
-              <i class="fa-solid fa-print"></i>
-              <span>Cetak Hasil Observasi</span>
-            </button>
-            <button onclick="saveObservasi()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <button type="button" onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition">
+                <i class="fa-solid fa-print"></i>
+                <span>Cetak Hasil Observasi</span>
+              </button>
+              <button type="button" onclick="resetObservasi()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white hover:bg-rose-50 text-rose-600 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-rose-200 transition" title="Kosongkan seluruh skor dan catatan observasi ini">
+                <i class="fa-solid fa-rotate-left text-rose-500"></i>
+                <span>Kosongkan Isian</span>
+              </button>
+            </div>
+            <button type="button" onclick="saveObservasi()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
               <i class="fa-solid fa-floppy-disk"></i>
               <span>Simpan Instrumen Observasi</span>
             </button>
@@ -855,12 +978,45 @@
             </div>
           </div>
 
+          <!-- Blok Tanda Tangan 3 Pihak Coaching TIRTA -->
+          <div class="mt-8 pt-4 border-t border-slate-200 avoid-break">
+            <div class="text-right text-xs text-slate-600 mb-4 mr-2">
+              Malang, <span class="font-semibold" id="coach-ttd-date">-</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-xs">
+              <div>
+                <p class="text-slate-500 font-medium">Guru / Coachee,</p>
+                <div class="h-16"></div>
+                <p id="coach-ttd-guru" class="font-bold text-slate-900 underline">Nama Guru</p>
+                <p id="coach-ttd-nip-guru" class="text-slate-500 text-[11px]">NIP. -</p>
+              </div>
+              <div>
+                <p class="text-slate-500 font-medium">Supervisor / Coach,</p>
+                <div class="h-16"></div>
+                <p id="coach-ttd-spv" class="font-bold text-slate-900 underline">Nama Supervisor</p>
+                <p id="coach-ttd-nip-spv" class="text-slate-500 text-[11px]">NIP. -</p>
+              </div>
+              <div>
+                <p class="text-slate-500 font-medium">Mengetahui,<br>Kepala Sekolah</p>
+                <div class="h-12"></div>
+                <p id="coach-ttd-ks" class="font-bold text-slate-900 underline">Nama Kepala Sekolah</p>
+                <p id="coach-ttd-nip-ks" class="text-slate-500 text-[11px]">NIP. -</p>
+              </div>
+            </div>
+          </div>
+
           <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
-            <button onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition">
-              <i class="fa-solid fa-print"></i>
-              <span>Cetak Hasil Coaching</span>
-            </button>
-            <button onclick="saveCoaching()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <button type="button" onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition">
+                <i class="fa-solid fa-print"></i>
+                <span>Cetak Hasil Coaching</span>
+              </button>
+              <button type="button" onclick="resetCoaching()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white hover:bg-rose-50 text-rose-600 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-rose-200 transition" title="Kosongkan seluruh catatan coaching TIRTA ini">
+                <i class="fa-solid fa-rotate-left text-rose-500"></i>
+                <span>Kosongkan Isian</span>
+              </button>
+            </div>
+            <button type="button" onclick="saveCoaching()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
               <i class="fa-solid fa-floppy-disk"></i>
               <span>Simpan Catatan Coaching TIRTA</span>
             </button>
@@ -1442,7 +1598,7 @@
         </div>
         <div>
           <label class="block font-semibold text-slate-700 mb-1">Mata Pelajaran</label>
-          <input type="text" id="add-guru-mapel" placeholder="Contoh: BK atau Matematika" class="w-full p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
+          <input type="text" id="add-guru-mapel" list="mapel-options" placeholder="Contoh: Bahasa Jawa, Matematika, BK..." class="w-full p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
         </div>
         <div>
           <label class="block font-semibold text-slate-700 mb-1">Tingkatan / Kelas</label>
@@ -1475,7 +1631,7 @@
         </div>
         <div>
           <label class="block font-semibold text-slate-700 mb-1">Mata Pelajaran</label>
-          <input type="text" id="edit-guru-mapel" class="w-full p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
+          <input type="text" id="edit-guru-mapel" list="mapel-options" class="w-full p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
         </div>
         <div>
           <label class="block font-semibold text-slate-700 mb-1">Tingkatan / Kelas</label>
@@ -1486,14 +1642,16 @@
           <select id="edit-guru-supervisor" class="w-full p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 bg-white"></select>
         </div>
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">Fokus Target Perilaku</label>
+          <label class="block font-semibold text-slate-700 mb-1">Fokus Target Perilaku (PMM)</label>
           <select id="edit-guru-target" class="w-full p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 bg-white">
-            <option value="Instruksi Pembelajaran">Instruksi Pembelajaran</option>
-            <option value="Perhatian dan Kepedulian">Perhatian dan Kepedulian</option>
-            <option value="Keteraturan Suasana Kelas">Keteraturan Suasana Kelas</option>
-            <option value="Aktivitas Interaktif">Aktivitas Interaktif</option>
-            <option value="Ekspektasi pada Peserta Didik">Ekspektasi pada Peserta Didik</option>
-            <option value="Umpan Balik Konstruktif">Umpan Balik Konstruktif</option>
+            <option value="Instruksi Pembelajaran">1. Instruksi Pembelajaran</option>
+            <option value="Umpan Balik Yang Konstruktif">2. Umpan Balik Yang Konstruktif</option>
+            <option value="Instruksi Yang Adaptif">3. Instruksi Yang Adaptif</option>
+            <option value="Perhatian dan Kepedulian">4. Perhatian dan Kepedulian</option>
+            <option value="Ekspektasi Pada Peserta Didik">5. Ekspektasi Pada Peserta Didik</option>
+            <option value="Aktivitas Interaktif">6. Aktivitas Interaktif</option>
+            <option value="Keteraturan Suasana Kelas">7. Keteraturan Suasana Kelas</option>
+            <option value="Penerapan Disiplin Positif">8. Penerapan Disiplin Positif</option>
           </select>
         </div>
       </div>
@@ -1528,7 +1686,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
             <label class="block font-semibold text-slate-700 mb-1">Mata Pelajaran</label>
-            <input type="text" id="uf-mapel" placeholder="Contoh: Matematika" class="w-full p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
+            <input type="text" id="uf-mapel" list="mapel-options" placeholder="Contoh: Matematika" class="w-full p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
           </div>
           <div>
             <label class="block font-semibold text-slate-700 mb-1">Tingkatan / Kelas</label>
@@ -1542,14 +1700,16 @@
             <select id="uf-supervisor" class="w-full p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 bg-white"></select>
           </div>
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Fokus Target Perilaku</label>
+            <label class="block font-semibold text-slate-700 mb-1">Fokus Target Perilaku (PMM)</label>
             <select id="uf-target" class="w-full p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 bg-white">
-              <option value="Instruksi Pembelajaran">Instruksi Pembelajaran</option>
-              <option value="Perhatian dan Kepedulian">Perhatian dan Kepedulian</option>
-              <option value="Keteraturan Suasana Kelas">Keteraturan Suasana Kelas</option>
-              <option value="Aktivitas Interaktif">Aktivitas Interaktif</option>
-              <option value="Ekspektasi pada Peserta Didik">Ekspektasi pada Peserta Didik</option>
-              <option value="Umpan Balik Konstruktif">Umpan Balik Konstruktif</option>
+              <option value="Instruksi Pembelajaran">1. Instruksi Pembelajaran</option>
+              <option value="Umpan Balik Yang Konstruktif">2. Umpan Balik Yang Konstruktif</option>
+              <option value="Instruksi Yang Adaptif">3. Instruksi Yang Adaptif</option>
+              <option value="Perhatian dan Kepedulian">4. Perhatian dan Kepedulian</option>
+              <option value="Ekspektasi Pada Peserta Didik">5. Ekspektasi Pada Peserta Didik</option>
+              <option value="Aktivitas Interaktif">6. Aktivitas Interaktif</option>
+              <option value="Keteraturan Suasana Kelas">7. Keteraturan Suasana Kelas</option>
+              <option value="Penerapan Disiplin Positif">8. Penerapan Disiplin Positif</option>
             </select>
           </div>
         </div>
@@ -1583,6 +1743,23 @@
       </div>
     </div>
   </div>
+
+  <!-- DATALIST PILIHAN MATA PELAJARAN (TERMASUK BAHASA JAWA & PAKBP NASRANI) -->
+  <datalist id="mapel-options">
+    <option value="Bahasa Indonesia"></option>
+    <option value="Matematika"></option>
+    <option value="IPA"></option>
+    <option value="IPS"></option>
+    <option value="Bahasa Inggris"></option>
+    <option value="Pendidikan Agama Islam"></option>
+    <option value="PAKBP (Nasrani)"></option>
+    <option value="PJOK"></option>
+    <option value="Informatika"></option>
+    <option value="Seni Budaya"></option>
+    <option value="Bahasa Jawa"></option>
+    <option value="PPKn"></option>
+    <option value="BK"></option>
+  </datalist>
 
   <!-- MODAL: RESET PASSWORD USER (SUPER ADMIN) -->
   <div id="modal-user-reset-pwd" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
@@ -2151,7 +2328,7 @@
     ];
 
     let guruDatabase = [];
-    const MAPEL_LIST = ['Bahasa Indonesia', 'Matematika', 'IPA', 'IPS', 'Bahasa Inggris', 'Pendidikan Agama Islam', 'PJOK', 'Informatika', 'Seni Budaya', 'PPKn', 'BK'];
+    const MAPEL_LIST = ['Bahasa Indonesia', 'Matematika', 'IPA', 'IPS', 'Bahasa Inggris', 'Pendidikan Agama Islam', 'PAKBP (Nasrani)', 'PJOK', 'Informatika', 'Seni Budaya', 'Bahasa Jawa', 'PPKn', 'BK'];
     const KELAS_LIST = ['Kelas 7A', 'Kelas 7B', 'Kelas 7C', 'Kelas 8A', 'Kelas 8B', 'Kelas 8C', 'Kelas 9A', 'Kelas 9B', 'Kelas 9C'];
 
         function generateInitialGuru() {
@@ -4602,15 +4779,34 @@
       const inMateri = document.getElementById('pra-input-materi');
       const inTujuan = document.getElementById('pra-input-tujuan');
       const inTanggal = document.getElementById('pra-input-tanggal');
+      const inTarget = document.getElementById('pra-input-target-perilaku');
 
       if (idSekolah) idSekolah.value = appSettings.sekolah;
       if (idNamaMapel) idNamaMapel.value = `${guru.nama} / ${guru.mapel}`;
       if (idFaseKelas) idFaseKelas.value = `Fase D (${guru.kelas})`;
-      // Sinkronisasi otomatis dengan pengaturan sistem
       if (idPeriode) idPeriode.value = appSettings.periode;
-      if (inMateri) inMateri.value = guru.materiTopik || '';
-      if (inTujuan) inTujuan.value = guru.tujuanPembelajaran || '';
       if (inTanggal) inTanggal.value = guru.tanggalTelaah || new Date().toISOString().slice(0, 10);
+      if (inTarget) inTarget.value = guru.targetPerilaku || 'Instruksi Pembelajaran';
+
+      // Dynamic Display BK vs Guru Mapel
+      const fieldsMapel = document.getElementById('pra-fields-mapel');
+      const fieldsBk = document.getElementById('pra-fields-bk');
+      const inBkBidang = document.getElementById('pra-bk-bidang');
+      const inBkFokus = document.getElementById('pra-bk-fokus');
+      const inBkTujuan = document.getElementById('pra-bk-tujuan');
+
+      if (guru.mapel === 'BK') {
+        if (fieldsMapel) fieldsMapel.classList.add('hidden');
+        if (fieldsBk) fieldsBk.classList.remove('hidden');
+        if (inBkBidang) inBkBidang.value = guru.bkBidangLayanan || (guru.praFeedback && guru.praFeedback.bkBidangLayanan) || '';
+        if (inBkFokus) inBkFokus.value = guru.bkFokusLayanan || (guru.praFeedback && guru.praFeedback.bkFokusLayanan) || guru.materiTopik || '';
+        if (inBkTujuan) inBkTujuan.value = guru.bkTujuanLayanan || (guru.praFeedback && guru.praFeedback.bkTujuanLayanan) || guru.tujuanPembelajaran || '';
+      } else {
+        if (fieldsMapel) fieldsMapel.classList.remove('hidden');
+        if (fieldsBk) fieldsBk.classList.add('hidden');
+        if (inMateri) inMateri.value = guru.materiTopik || '';
+        if (inTujuan) inTujuan.value = guru.tujuanPembelajaran || '';
+      }
 
       const praSpvSel = document.getElementById('pra-supervisor-select');
       if (praSpvSel) {
@@ -4656,6 +4852,8 @@
         if (bkContainer) bkContainer.classList.add('hidden');
         renderPraRpp30Indikator(guru);
       }
+
+      syncAllSignatures(guru);
     }
 
     function renderPraRpp30Indikator(guru) {
@@ -4930,12 +5128,46 @@
       }
     }
 
+    function onPraTargetPerilakuChange(targetVal) {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId);
+      if (!guru) return;
+      guru.targetPerilaku = targetVal;
+      const obsTargetBadge = document.getElementById('obs-target-badge');
+      if (obsTargetBadge) obsTargetBadge.innerText = `Fokus: ${targetVal}`;
+      const editTarget = document.getElementById('edit-guru-target');
+      if (editTarget) editTarget.value = targetVal;
+      saveDataToLocalStorage();
+      // Auto sync ke server MySQL
+      apiCall('save_pra', {
+        guruId: guru.id,
+        targetPerilaku: targetVal
+      }).catch(() => {});
+    }
+
     async function savePraObservasi() {
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
 
-      guru.materiTopik = document.getElementById('pra-input-materi')?.value || '';
-      guru.tujuanPembelajaran = document.getElementById('pra-input-tujuan')?.value || '';
+      const targetPerilakuVal = document.getElementById('pra-input-target-perilaku')?.value;
+      if (targetPerilakuVal) guru.targetPerilaku = targetPerilakuVal;
+
+      if (guru.mapel === 'BK') {
+        const bkBidang = document.getElementById('pra-bk-bidang')?.value.trim() || '';
+        const bkFokus = document.getElementById('pra-bk-fokus')?.value.trim() || '';
+        const bkTujuan = document.getElementById('pra-bk-tujuan')?.value.trim() || '';
+        guru.bkBidangLayanan = bkBidang;
+        guru.bkFokusLayanan = bkFokus;
+        guru.bkTujuanLayanan = bkTujuan;
+        guru.materiTopik = bkFokus ? (bkBidang ? `${bkBidang}: ${bkFokus}` : bkFokus) : bkBidang;
+        guru.tujuanPembelajaran = bkTujuan;
+        if (!guru.praFeedback) guru.praFeedback = {};
+        guru.praFeedback.bkBidangLayanan = bkBidang;
+        guru.praFeedback.bkFokusLayanan = bkFokus;
+        guru.praFeedback.bkTujuanLayanan = bkTujuan;
+      } else {
+        guru.materiTopik = document.getElementById('pra-input-materi')?.value || '';
+        guru.tujuanPembelajaran = document.getElementById('pra-input-tujuan')?.value || '';
+      }
       guru.tanggalTelaah = document.getElementById('pra-input-tanggal')?.value || '';
 
       if (!guru.praFeedback) guru.praFeedback = {};
@@ -4957,6 +5189,7 @@
         materiTopik: guru.materiTopik,
         tujuanPembelajaran: guru.tujuanPembelajaran,
         tanggalTelaah: guru.tanggalTelaah,
+        targetPerilaku: guru.targetPerilaku,
         rppScores: guru.rppScores || {},
         bkScores: guru.bkScores || {},
         bkDlScores: guru.bkDlScores || {},
@@ -5012,6 +5245,7 @@
       if (obsCatatanFakta) obsCatatanFakta.value = guru.catatanFakta || '';
 
       calculateObsScoreLive();
+      syncAllSignatures(guru);
     }
 
     function render28Indikator() {
@@ -5239,7 +5473,8 @@
 
     function loadCoachingData() {
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
-      if (!guru || !guru.coaching) return;
+      if (!guru) return;
+      if (!guru.coaching) guru.coaching = {};
 
       const tEl = document.getElementById('coach-tujuan');
       const iEl = document.getElementById('coach-identifikasi');
@@ -5250,6 +5485,8 @@
       if (iEl) iEl.value = guru.coaching.identifikasi || '';
       if (rEl) rEl.value = guru.coaching.rencana || '';
       if (taEl) taEl.value = guru.coaching.tanggungJawab || '';
+
+      syncAllSignatures(guru);
     }
 
     async function saveCoaching() {
@@ -5276,6 +5513,146 @@
       if (res && res.success && isServerOnline) {
         showToast(res.message || 'Catatan Coaching tersimpan di server MySQL!');
       }
+    }
+
+    // ============================================================
+    // SINKRONISASI TANDA TANGAN 3 PIHAK LENGKAP PADA SELURUH MENU CETAK
+    // (Guru Yang Disupervisi, Supervisor Penilai, Mengetahui Kepala Sekolah)
+    // ============================================================
+    function syncAllSignatures(guru) {
+      if (!guru) guru = guruDatabase.find(g => g.id === selectedGuruId);
+      if (!guru) return;
+
+      const spvObj = appSettings.supervisors.find(s => s.id === guru.supervisorId);
+      const spvNama = spvObj ? spvObj.nama.replace(/\s*\(Supervisor\s*\d+\)/i, '').trim() : 'Supervisor';
+      const spvNip = spvObj ? (spvObj.nip ? `NIP. ${spvObj.nip}` : 'NIP. -') : 'NIP. -';
+      const ksNama = (appSettings.kepalaSekolah && appSettings.kepalaSekolah.nama) ? appSettings.kepalaSekolah.nama : 'Drs. Teguh Edy Purwanta';
+      const ksNip = (appSettings.kepalaSekolah && appSettings.kepalaSekolah.nip) ? `NIP. ${appSettings.kepalaSekolah.nip}` : 'NIP. -';
+      const todayFormatted = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+      // 1. Tanda Tangan Pra-Observasi (Lembar Telaah)
+      const praDateEl = document.getElementById('pra-ttd-date');
+      if (praDateEl) praDateEl.innerText = guru.tanggalTelaah ? new Date(guru.tanggalTelaah).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : todayFormatted;
+      const praGuru = document.getElementById('pra-ttd-guru');
+      const praNipGuru = document.getElementById('pra-ttd-nip-guru');
+      if (praGuru) praGuru.innerText = guru.nama;
+      if (praNipGuru) praNipGuru.innerText = `NIP. ${guru.nip || '-'}`;
+      const praSpv = document.getElementById('pra-ttd-spv');
+      const praNipSpv = document.getElementById('pra-ttd-nip-spv');
+      if (praSpv) praSpv.innerText = spvNama;
+      if (praNipSpv) praNipSpv.innerText = spvNip;
+      const praKs = document.getElementById('pra-ttd-ks');
+      const praNipKs = document.getElementById('pra-ttd-nip-ks');
+      if (praKs) praKs.innerText = ksNama;
+      if (praNipKs) praNipKs.innerText = ksNip;
+
+      // 2. Tanda Tangan Observasi Kelas
+      const obsDateEl = document.getElementById('obs-ttd-date');
+      if (obsDateEl) obsDateEl.innerText = guru.tanggalObservasi ? new Date(guru.tanggalObservasi).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : todayFormatted;
+      const obsGuru = document.getElementById('obs-ttd-guru');
+      const obsNipGuru = document.getElementById('obs-ttd-nip-guru');
+      if (obsGuru) obsGuru.innerText = guru.nama;
+      if (obsNipGuru) obsNipGuru.innerText = `NIP. ${guru.nip || '-'}`;
+      const obsSpv = document.getElementById('obs-ttd-spv');
+      const obsNipSpv = document.getElementById('obs-ttd-nip-spv');
+      if (obsSpv) obsSpv.innerText = spvNama;
+      if (obsNipSpv) obsNipSpv.innerText = spvNip;
+      const obsKs = document.getElementById('obs-ttd-ks');
+      const obsNipKs = document.getElementById('obs-ttd-nip-ks');
+      if (obsKs) obsKs.innerText = ksNama;
+      if (obsNipKs) obsNipKs.innerText = ksNip;
+
+      // 3. Tanda Tangan Pasca-Observasi (Coaching TIRTA)
+      const coachDateEl = document.getElementById('coach-ttd-date');
+      if (coachDateEl) coachDateEl.innerText = todayFormatted;
+      const coachGuru = document.getElementById('coach-ttd-guru');
+      const coachNipGuru = document.getElementById('coach-ttd-nip-guru');
+      if (coachGuru) coachGuru.innerText = guru.nama;
+      if (coachNipGuru) coachNipGuru.innerText = `NIP. ${guru.nip || '-'}`;
+      const coachSpv = document.getElementById('coach-ttd-spv');
+      const coachNipSpv = document.getElementById('coach-ttd-nip-spv');
+      if (coachSpv) coachSpv.innerText = spvNama;
+      if (coachNipSpv) coachNipSpv.innerText = spvNip;
+      const coachKs = document.getElementById('coach-ttd-ks');
+      const coachNipKs = document.getElementById('coach-ttd-nip-ks');
+      if (coachKs) coachKs.innerText = ksNama;
+      if (coachNipKs) coachNipKs.innerText = ksNip;
+
+      // 4. Tanda Tangan Laporan Individu
+      const lapDateEl = document.getElementById('lap-report-date');
+      if (lapDateEl) lapDateEl.innerText = todayFormatted;
+      const lapGuru = document.getElementById('lap-ttd-guru');
+      const lapNipGuru = document.getElementById('lap-ttd-nip-guru');
+      if (lapGuru) lapGuru.innerText = guru.nama;
+      if (lapNipGuru) lapNipGuru.innerText = `NIP. ${guru.nip || '-'}`;
+      const lapSpv = document.getElementById('lap-ttd-spv');
+      const lapNipSpv = document.getElementById('lap-ttd-nip-spv');
+      if (lapSpv) lapSpv.innerText = spvNama;
+      if (lapNipSpv) lapNipSpv.innerText = spvNip;
+      const lapKs = document.getElementById('lap-ttd-ks');
+      const lapNipKs = document.getElementById('lap-ttd-nip-ks');
+      if (lapKs) lapKs.innerText = ksNama;
+      if (lapNipKs) lapNipKs.innerText = ksNip;
+    }
+
+    // ============================================================
+    // FUNGSI RESET / KOSONGKAN ISIAN FORMULIR PENILAIAN
+    // ============================================================
+    function resetPraObservasi() {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId);
+      if (!guru) return;
+      if (!confirm(`Apakah Anda yakin ingin mengosongkan seluruh isian dan skor telaah dokumen Pra-Observasi untuk ${guru.nama}?`)) return;
+
+      guru.materiTopik = '';
+      guru.tujuanPembelajaran = '';
+      guru.bkBidangLayanan = '';
+      guru.bkFokusLayanan = '';
+      guru.bkTujuanLayanan = '';
+      guru.rppScores = {};
+      guru.bkScores = {};
+      guru.bkDlScores = {};
+      guru.bkDlNotes = {};
+      guru.praFeedback = {
+        kekuatan: '',
+        prioritas: '',
+        refleksi: '',
+        kesepakatan: '',
+        waktuBerikutnya: '',
+        bkBidangLayanan: '',
+        bkFokusLayanan: '',
+        bkTujuanLayanan: ''
+      };
+
+      loadPraObservasiData();
+      saveDataToLocalStorage();
+      showToast('Form isian Pra-Observasi berhasil dikosongkan!');
+    }
+
+    function resetObservasi() {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId);
+      if (!guru) return;
+      if (!confirm(`Apakah Anda yakin ingin mengosongkan seluruh penilaian dan catatan Observasi Kelas untuk ${guru.nama}?`)) return;
+
+      guru.obsScores = {};
+      guru.obsNotes = {};
+      guru.catatanFakta = '';
+      guru.deepLearning = { mindful: 0, meaningful: 0, joyful: 0, memahami: 0, mengaplikasi: 0, merefleksi: 0 };
+
+      loadObservasiData();
+      saveDataToLocalStorage();
+      showToast('Instrumen Observasi Kelas berhasil dikosongkan!');
+    }
+
+    function resetCoaching() {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId);
+      if (!guru) return;
+      if (!confirm(`Apakah Anda yakin ingin mengosongkan seluruh catatan percakapan Coaching TIRTA untuk ${guru.nama}?`)) return;
+
+      guru.coaching = { tujuan: '', identifikasi: '', rencana: '', tanggungJawab: '' };
+
+      loadCoachingData();
+      saveDataToLocalStorage();
+      showToast('Catatan Coaching TIRTA berhasil dikosongkan!');
     }
 
     function updateReportView() {
