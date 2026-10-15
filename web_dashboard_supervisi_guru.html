@@ -117,6 +117,21 @@
         max-width: 100% !important;
         display: inline-block !important;
       }
+      .ttd-grid-3 {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 0.5rem !important;
+        text-align: center !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      .ttd-space {
+        height: 3rem !important;
+      }
+    }
+    .ttd-grid-3 {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     }
     .nav-btn {
       text-align: left !important;
@@ -684,27 +699,27 @@
 
           <!-- Blok Tanda Tangan 3 Pihak Pra-Observasi (Lembar Telaah) -->
           <div class="mt-8 pt-4 border-t border-slate-200 avoid-break">
-            <div class="text-right text-xs text-slate-600 mb-4 mr-2">
+            <div class="text-right text-xs text-slate-600 mb-3 sm:mb-4 mr-1 sm:mr-2">
               Malang, <span class="font-semibold" id="pra-ttd-date">-</span>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-xs">
+            <div class="grid grid-cols-3 gap-2 sm:gap-6 text-center text-[10px] sm:text-xs ttd-grid-3">
               <div>
-                <p class="text-slate-500 font-medium">Guru yang Disupervisi,</p>
-                <div class="h-16"></div>
-                <p id="pra-ttd-guru" class="font-bold text-slate-900 underline">Nama Guru</p>
-                <p id="pra-ttd-nip-guru" class="text-slate-500 text-[11px]">NIP. -</p>
+                <p class="text-slate-500 font-medium leading-tight">Guru yang Disupervisi,</p>
+                <div class="h-10 sm:h-16 ttd-space"></div>
+                <p id="pra-ttd-guru" class="font-bold text-slate-900 underline leading-snug break-words">Nama Guru</p>
+                <p id="pra-ttd-nip-guru" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
               </div>
               <div>
-                <p class="text-slate-500 font-medium">Supervisor Penilai,</p>
-                <div class="h-16"></div>
-                <p id="pra-ttd-spv" class="font-bold text-slate-900 underline">Nama Supervisor</p>
-                <p id="pra-ttd-nip-spv" class="text-slate-500 text-[11px]">NIP. -</p>
+                <p class="text-slate-500 font-medium leading-tight">Supervisor Penilai,</p>
+                <div class="h-10 sm:h-16 ttd-space"></div>
+                <p id="pra-ttd-spv" class="font-bold text-slate-900 underline leading-snug break-words">Nama Supervisor</p>
+                <p id="pra-ttd-nip-spv" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
               </div>
               <div>
-                <p class="text-slate-500 font-medium">Mengetahui,<br>Kepala Sekolah</p>
-                <div class="h-12"></div>
-                <p id="pra-ttd-ks" class="font-bold text-slate-900 underline">Nama Kepala Sekolah</p>
-                <p id="pra-ttd-nip-ks" class="text-slate-500 text-[11px]">NIP. -</p>
+                <p class="text-slate-500 font-medium leading-tight">Mengetahui,<br>Kepala Sekolah</p>
+                <div class="h-6 sm:h-12 ttd-space"></div>
+                <p id="pra-ttd-ks" class="font-bold text-slate-900 underline leading-snug break-words">Nama Kepala Sekolah</p>
+                <p id="pra-ttd-nip-ks" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
               </div>
             </div>
           </div>
@@ -870,27 +885,27 @@
 
           <!-- Blok Tanda Tangan 3 Pihak Observasi Kelas -->
           <div class="mt-8 pt-4 border-t border-slate-200 avoid-break">
-            <div class="text-right text-xs text-slate-600 mb-4 mr-2">
+            <div class="text-right text-xs text-slate-600 mb-3 sm:mb-4 mr-1 sm:mr-2">
               Malang, <span class="font-semibold" id="obs-ttd-date">-</span>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-xs">
+            <div class="grid grid-cols-3 gap-2 sm:gap-6 text-center text-[10px] sm:text-xs ttd-grid-3">
               <div>
-                <p class="text-slate-500 font-medium">Guru yang Disupervisi,</p>
-                <div class="h-16"></div>
-                <p id="obs-ttd-guru" class="font-bold text-slate-900 underline">Nama Guru</p>
-                <p id="obs-ttd-nip-guru" class="text-slate-500 text-[11px]">NIP. -</p>
+                <p class="text-slate-500 font-medium leading-tight">Guru yang Disupervisi,</p>
+                <div class="h-10 sm:h-16 ttd-space"></div>
+                <p id="obs-ttd-guru" class="font-bold text-slate-900 underline leading-snug break-words">Nama Guru</p>
+                <p id="obs-ttd-nip-guru" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
               </div>
               <div>
-                <p class="text-slate-500 font-medium">Supervisor Penilai,</p>
-                <div class="h-16"></div>
-                <p id="obs-ttd-spv" class="font-bold text-slate-900 underline">Nama Supervisor</p>
-                <p id="obs-ttd-nip-spv" class="text-slate-500 text-[11px]">NIP. -</p>
+                <p class="text-slate-500 font-medium leading-tight">Supervisor Penilai,</p>
+                <div class="h-10 sm:h-16 ttd-space"></div>
+                <p id="obs-ttd-spv" class="font-bold text-slate-900 underline leading-snug break-words">Nama Supervisor</p>
+                <p id="obs-ttd-nip-spv" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
               </div>
               <div>
-                <p class="text-slate-500 font-medium">Mengetahui,<br>Kepala Sekolah</p>
-                <div class="h-12"></div>
-                <p id="obs-ttd-ks" class="font-bold text-slate-900 underline">Nama Kepala Sekolah</p>
-                <p id="obs-ttd-nip-ks" class="text-slate-500 text-[11px]">NIP. -</p>
+                <p class="text-slate-500 font-medium leading-tight">Mengetahui,<br>Kepala Sekolah</p>
+                <div class="h-6 sm:h-12 ttd-space"></div>
+                <p id="obs-ttd-ks" class="font-bold text-slate-900 underline leading-snug break-words">Nama Kepala Sekolah</p>
+                <p id="obs-ttd-nip-ks" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
               </div>
             </div>
           </div>
@@ -990,27 +1005,27 @@
 
           <!-- Blok Tanda Tangan 3 Pihak Coaching TIRTA -->
           <div class="mt-8 pt-4 border-t border-slate-200 avoid-break">
-            <div class="text-right text-xs text-slate-600 mb-4 mr-2">
+            <div class="text-right text-xs text-slate-600 mb-3 sm:mb-4 mr-1 sm:mr-2">
               Malang, <span class="font-semibold" id="coach-ttd-date">-</span>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-xs">
+            <div class="grid grid-cols-3 gap-2 sm:gap-6 text-center text-[10px] sm:text-xs ttd-grid-3">
               <div>
-                <p class="text-slate-500 font-medium">Guru / Coachee,</p>
-                <div class="h-16"></div>
-                <p id="coach-ttd-guru" class="font-bold text-slate-900 underline">Nama Guru</p>
-                <p id="coach-ttd-nip-guru" class="text-slate-500 text-[11px]">NIP. -</p>
+                <p class="text-slate-500 font-medium leading-tight">Guru / Coachee,</p>
+                <div class="h-10 sm:h-16 ttd-space"></div>
+                <p id="coach-ttd-guru" class="font-bold text-slate-900 underline leading-snug break-words">Nama Guru</p>
+                <p id="coach-ttd-nip-guru" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
               </div>
               <div>
-                <p class="text-slate-500 font-medium">Supervisor / Coach,</p>
-                <div class="h-16"></div>
-                <p id="coach-ttd-spv" class="font-bold text-slate-900 underline">Nama Supervisor</p>
-                <p id="coach-ttd-nip-spv" class="text-slate-500 text-[11px]">NIP. -</p>
+                <p class="text-slate-500 font-medium leading-tight">Supervisor / Coach,</p>
+                <div class="h-10 sm:h-16 ttd-space"></div>
+                <p id="coach-ttd-spv" class="font-bold text-slate-900 underline leading-snug break-words">Nama Supervisor</p>
+                <p id="coach-ttd-nip-spv" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
               </div>
               <div>
-                <p class="text-slate-500 font-medium">Mengetahui,<br>Kepala Sekolah</p>
-                <div class="h-12"></div>
-                <p id="coach-ttd-ks" class="font-bold text-slate-900 underline">Nama Kepala Sekolah</p>
-                <p id="coach-ttd-nip-ks" class="text-slate-500 text-[11px]">NIP. -</p>
+                <p class="text-slate-500 font-medium leading-tight">Mengetahui,<br>Kepala Sekolah</p>
+                <div class="h-6 sm:h-12 ttd-space"></div>
+                <p id="coach-ttd-ks" class="font-bold text-slate-900 underline leading-snug break-words">Nama Kepala Sekolah</p>
+                <p id="coach-ttd-nip-ks" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
               </div>
             </div>
           </div>
@@ -1244,24 +1259,24 @@
 
           <!-- Tanda Tangan 3 Pihak -->
           <div class="pt-6 avoid-break">
-            <div class="grid grid-cols-3 gap-4 text-center text-xs">
+            <div class="grid grid-cols-3 gap-2 sm:gap-4 text-center text-[10px] sm:text-xs ttd-grid-3">
               <div>
-                <p class="text-slate-500">Guru Yang Disupervisi,</p>
-                <div class="h-16"></div>
-                <p id="lap-ttd-guru" class="font-bold text-slate-900 underline">Nama Guru</p>
-                <p id="lap-ttd-nip-guru" class="text-slate-500 text-[11px]">NIP. -</p>
+                <p class="text-slate-500 font-medium leading-tight">Guru Yang Disupervisi,</p>
+                <div class="h-10 sm:h-16 ttd-space"></div>
+                <p id="lap-ttd-guru" class="font-bold text-slate-900 underline leading-snug break-words">Nama Guru</p>
+                <p id="lap-ttd-nip-guru" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
               </div>
               <div>
-                <p class="text-slate-500">Supervisor / Penilai,</p>
-                <div class="h-16"></div>
-                <p id="lap-ttd-spv" class="font-bold text-slate-900 underline">Nama Supervisor</p>
-                <p id="lap-ttd-nip-spv" class="text-slate-500 text-[11px]">NIP. -</p>
+                <p class="text-slate-500 font-medium leading-tight">Supervisor / Penilai,</p>
+                <div class="h-10 sm:h-16 ttd-space"></div>
+                <p id="lap-ttd-spv" class="font-bold text-slate-900 underline leading-snug break-words">Nama Supervisor</p>
+                <p id="lap-ttd-nip-spv" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
               </div>
               <div>
-                <p class="text-slate-500">Mengetahui,<br>Kepala Sekolah</p>
-                <div class="h-12"></div>
-                <p id="lap-ttd-ks" class="font-bold text-slate-900 underline">Nama Kepala Sekolah</p>
-                <p id="lap-ttd-nip-ks" class="text-slate-500 text-[11px]">NIP. -</p>
+                <p class="text-slate-500 font-medium leading-tight">Mengetahui,<br>Kepala Sekolah</p>
+                <div class="h-6 sm:h-12 ttd-space"></div>
+                <p id="lap-ttd-ks" class="font-bold text-slate-900 underline leading-snug break-words">Nama Kepala Sekolah</p>
+                <p id="lap-ttd-nip-ks" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
               </div>
             </div>
           </div>
