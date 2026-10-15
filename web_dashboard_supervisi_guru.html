@@ -118,6 +118,14 @@
         display: inline-block !important;
       }
     }
+    .nav-btn {
+      text-align: left !important;
+      justify-content: flex-start !important;
+    }
+    .nav-btn span {
+      text-align: left !important;
+      text-align: start !important;
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 text-sm antialiased flex h-screen overflow-hidden">
@@ -153,38 +161,38 @@
     </div>
 
     <!-- Main Navigation List -->
-    <nav class="flex-1 px-3 space-y-1 overflow-y-auto">
-      <button onclick="navigateTo('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs bg-indigo-600 text-white transition">
-        <i class="fa-solid fa-chart-pie w-4"></i>
-        <span>Dashboard Analitik</span>
+    <nav class="flex-1 px-3 space-y-1 overflow-y-auto text-left">
+      <button onclick="navigateTo('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left bg-indigo-600 text-white transition">
+        <i class="fa-solid fa-chart-pie w-4 flex-shrink-0 text-center"></i>
+        <span class="text-left leading-snug">Dashboard Analitik</span>
       </button>
-      <button onclick="navigateTo('guru')" id="nav-guru" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-slate-800 transition">
-        <i class="fa-solid fa-users w-4"></i>
-        <span>Database Guru (44 Guru)</span>
+      <button onclick="navigateTo('guru')" id="nav-guru" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
+        <i class="fa-solid fa-users w-4 flex-shrink-0 text-center"></i>
+        <span class="text-left leading-snug">Database Guru (44 Guru)</span>
       </button>
-      <button onclick="navigateTo('pra')" id="nav-pra" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-slate-800 transition">
-        <i class="fa-solid fa-file-signature w-4"></i>
-        <span id="nav-text-pra">Pra Observasi-Telaah Modul Ajar (PM)</span>
+      <button onclick="navigateTo('pra')" id="nav-pra" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
+        <i class="fa-solid fa-file-signature w-4 flex-shrink-0 text-center"></i>
+        <span id="nav-text-pra" class="text-left leading-snug">Pra Observasi-Telaah Modul Ajar (PM)</span>
       </button>
-      <button onclick="navigateTo('observasi')" id="nav-observasi" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-slate-800 transition">
-        <i class="fa-solid fa-clipboard-check w-4"></i>
-        <span id="nav-text-obs">Observasi Kelas</span>
+      <button onclick="navigateTo('observasi')" id="nav-observasi" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
+        <i class="fa-solid fa-clipboard-check w-4 flex-shrink-0 text-center"></i>
+        <span id="nav-text-obs" class="text-left leading-snug">Observasi Kelas</span>
       </button>
-      <button onclick="navigateTo('coaching')" id="nav-coaching" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-slate-800 transition">
-        <i class="fa-solid fa-comments w-4"></i>
-        <span>Coaching Model TIRTA</span>
+      <button onclick="navigateTo('coaching')" id="nav-coaching" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
+        <i class="fa-solid fa-comments w-4 flex-shrink-0 text-center"></i>
+        <span class="text-left leading-snug">Coaching Model TIRTA</span>
       </button>
-      <button onclick="navigateTo('laporan')" id="nav-laporan" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-slate-800 transition">
-        <i class="fa-solid fa-print w-4"></i>
-        <span>Laporan & Ekspor</span>
+      <button onclick="navigateTo('laporan')" id="nav-laporan" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
+        <i class="fa-solid fa-print w-4 flex-shrink-0 text-center"></i>
+        <span class="text-left leading-snug">Laporan & Ekspor</span>
       </button>
-      <button onclick="navigateTo('pengaturan')" id="nav-pengaturan" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-slate-800 transition">
-        <i class="fa-solid fa-sliders w-4"></i>
-        <span>Pengaturan Sistem</span>
+      <button onclick="navigateTo('pengaturan')" id="nav-pengaturan" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
+        <i class="fa-solid fa-sliders w-4 flex-shrink-0 text-center"></i>
+        <span class="text-left leading-snug">Pengaturan Sistem</span>
       </button>
-      <button onclick="navigateTo('users')" id="nav-users" class="nav-btn w-full hidden flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-amber-300 hover:bg-slate-800 transition">
-        <i class="fa-solid fa-user-gear w-4 text-amber-400"></i>
-        <span>Manajemen User (Admin)</span>
+      <button onclick="navigateTo('users')" id="nav-users" class="nav-btn w-full hidden flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-amber-300 hover:bg-slate-800 transition">
+        <i class="fa-solid fa-user-gear w-4 text-amber-400 flex-shrink-0 text-center"></i>
+        <span class="text-left leading-snug">Manajemen User (Admin)</span>
       </button>
     </nav>
 
@@ -4483,9 +4491,10 @@
         }
         if (btn) {
           if (v === targetView) {
-            btn.className = 'nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs bg-indigo-600 text-white transition';
+            btn.className = 'nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left bg-indigo-600 text-white transition';
           } else {
-            btn.className = 'nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-slate-800 transition';
+            const isUserAdminBtn = (v === 'users');
+            btn.className = `nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left ${isUserAdminBtn ? 'text-amber-300' : 'text-slate-300'} hover:bg-slate-800 transition`;
           }
         }
       });
