@@ -323,16 +323,16 @@
             </button>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
+            <table class="w-full min-w-[720px] text-left text-xs">
               <thead class="bg-slate-50 text-slate-500 uppercase font-semibold text-[10px]">
                 <tr>
-                  <th class="py-3 px-4">Nama Guru & NIP</th>
-                  <th class="py-3 px-4">Mata Pelajaran</th>
-                  <th class="py-3 px-4">Kelas</th>
-                  <th class="py-3 px-4">Supervisor Penilai</th>
-                  <th class="py-3 px-4 text-center">Status Supervisi</th>
-                  <th class="py-3 px-4 text-center">Predikat Riil</th>
-                  <th class="py-3 px-4 text-right no-print">Aksi Pintas</th>
+                  <th class="py-3 px-4 whitespace-nowrap">Nama Guru & NIP</th>
+                  <th class="py-3 px-4 whitespace-nowrap">Mata Pelajaran</th>
+                  <th class="py-3 px-4 whitespace-nowrap">Kelas</th>
+                  <th class="py-3 px-4 whitespace-nowrap">Supervisor Penilai</th>
+                  <th class="py-3 px-4 text-center whitespace-nowrap">Status Supervisi</th>
+                  <th class="py-3 px-4 text-center whitespace-nowrap">Predikat Riil</th>
+                  <th class="py-3 px-4 text-right no-print whitespace-nowrap">Aksi Pintas</th>
                 </tr>
               </thead>
               <tbody id="dashboard-guru-tbody" class="divide-y divide-slate-100"></tbody>
@@ -400,20 +400,20 @@
 
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
+            <table class="w-full min-w-[760px] text-left text-xs">
               <thead class="bg-slate-50 text-slate-500 uppercase font-semibold text-[10px]">
                 <tr>
-                  <th id="th-check-all" class="py-3 px-3 text-center hidden no-print">
+                  <th id="th-check-all" class="py-3 px-3 text-center hidden no-print whitespace-nowrap">
                     <input type="checkbox" id="check-all-guru" onchange="toggleSelectAllGuru(this.checked)" class="rounded text-rose-600 focus:ring-rose-500 cursor-pointer" title="Pilih Semua Guru">
                   </th>
-                  <th class="py-3 px-4">No</th>
-                  <th class="py-3 px-4">Nama Lengkap & NIP</th>
-                  <th class="py-3 px-4">Mata Pelajaran</th>
-                  <th class="py-3 px-4">Kelas</th>
-                  <th class="py-3 px-4">Supervisor</th>
-                  <th class="py-3 px-4 text-center">Status</th>
-                  <th class="py-3 px-4 text-center">Predikat Riil</th>
-                  <th class="py-3 px-4 text-center no-print">Aksi Penilaian</th>
+                  <th class="py-3 px-4 whitespace-nowrap">No</th>
+                  <th class="py-3 px-4 whitespace-nowrap">Nama Lengkap & NIP</th>
+                  <th class="py-3 px-4 whitespace-nowrap">Mata Pelajaran</th>
+                  <th class="py-3 px-4 whitespace-nowrap">Kelas</th>
+                  <th class="py-3 px-4 whitespace-nowrap">Supervisor</th>
+                  <th class="py-3 px-4 text-center whitespace-nowrap">Status</th>
+                  <th class="py-3 px-4 text-center whitespace-nowrap">Predikat Riil</th>
+                  <th class="py-3 px-4 text-center no-print whitespace-nowrap">Aksi Penilaian</th>
                 </tr>
               </thead>
               <tbody id="guru-table-tbody" class="divide-y divide-slate-100"></tbody>
@@ -1304,16 +1304,16 @@
 
           <!-- User Table -->
           <div class="overflow-x-auto rounded-lg border border-slate-200">
-            <table class="w-full text-left text-xs">
+            <table class="w-full min-w-[750px] text-left text-xs">
               <thead class="bg-slate-50 text-slate-600 uppercase font-semibold text-[10px] tracking-wider border-b border-slate-200">
                 <tr>
-                  <th class="py-3 px-3.5 text-center w-12">No</th>
-                  <th class="py-3 px-4">Nama Lengkap & NIP</th>
-                  <th class="py-3 px-4">Mata Pelajaran & Kelas</th>
-                  <th class="py-3 px-4">Hak Akses / Peran</th>
-                  <th class="py-3 px-4">Supervisor Penilai</th>
-                  <th class="py-3 px-4 text-center">Status Sandi</th>
-                  <th class="py-3 px-4 text-right">Aksi Akun</th>
+                  <th class="py-3 px-3.5 text-center w-12 whitespace-nowrap">No</th>
+                  <th class="py-3 px-4 whitespace-nowrap">Nama Lengkap & NIP</th>
+                  <th class="py-3 px-4 whitespace-nowrap">Mata Pelajaran & Kelas</th>
+                  <th class="py-3 px-4 whitespace-nowrap">Hak Akses / Peran</th>
+                  <th class="py-3 px-4 whitespace-nowrap">Supervisor Penilai</th>
+                  <th class="py-3 px-4 text-center whitespace-nowrap">Status Sandi</th>
+                  <th class="py-3 px-4 text-right whitespace-nowrap">Aksi Akun</th>
                 </tr>
               </thead>
               <tbody id="user-table-tbody" class="divide-y divide-slate-100"></tbody>
@@ -5558,25 +5558,25 @@
 
           tr.innerHTML = `
             ${checkboxHtml}
-            <td class="py-3 px-4 font-medium text-slate-500">${startIdx + idx + 1}</td>
-            <td class="py-3 px-4">
+            <td class="py-3 px-4 font-medium text-slate-500 whitespace-nowrap">${startIdx + idx + 1}</td>
+            <td class="py-3 px-4 whitespace-nowrap">
               <span class="font-bold text-slate-800 block">${g.nama}</span>
               <span class="text-[10px] text-slate-400">NIP. ${g.nip}</span>
             </td>
-            <td class="py-3 px-4 text-slate-700">${g.mapel}</td>
-            <td class="py-3 px-4 text-slate-700">${g.kelas}</td>
-            <td class="py-3 px-4 text-slate-600 text-[11px]">${spv ? spv.nama.split('(')[0] : '-'}</td>
-            <td class="py-3 px-4 text-center">
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${g.status === 'Selesai' ? 'bg-emerald-100 text-emerald-800' : (g.status === 'Tindak Lanjut' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800')}">
+            <td class="py-3 px-4 text-slate-700 whitespace-nowrap">${g.mapel}</td>
+            <td class="py-3 px-4 text-slate-700 whitespace-nowrap">${g.kelas}</td>
+            <td class="py-3 px-4 text-slate-600 text-[11px] whitespace-nowrap">${spv ? spv.nama.split('(')[0].trim() : '-'}</td>
+            <td class="py-3 px-4 text-center whitespace-nowrap">
+              <span class="inline-block whitespace-nowrap px-2.5 py-1 rounded-full text-[10px] font-bold ${g.status === 'Selesai' ? 'bg-emerald-100 text-emerald-800' : (g.status === 'Tindak Lanjut' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800')}">
                 ${g.status}
               </span>
             </td>
-            <td class="py-3 px-4 text-center">
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${metrics.badgeColor}">
+            <td class="py-3 px-4 text-center whitespace-nowrap">
+              <span class="inline-block whitespace-nowrap px-2.5 py-1 rounded-full text-[10px] font-bold ${metrics.badgeColor}">
                 ${metrics.predikat}
               </span>
             </td>
-            <td class="py-3 px-4 text-center no-print">
+            <td class="py-3 px-4 text-center no-print whitespace-nowrap">
               <div class="flex items-center justify-center space-x-1">
                 ${editBtnHtml}
                 <button onclick="pilihDanNavigasi(${g.id}, 'pra')" title="Pra-Observasi (Telaah Modul)" class="p-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600"><i class="fa-solid fa-file-signature"></i></button>
@@ -5665,24 +5665,24 @@
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50 transition';
         tr.innerHTML = `
-          <td class="py-3 px-4">
+          <td class="py-3 px-4 whitespace-nowrap">
             <span class="font-bold text-slate-800 block">${g.nama}</span>
             <span class="text-[10px] text-slate-400">NIP. ${g.nip}</span>
           </td>
-          <td class="py-3 px-4 text-slate-700">${g.mapel}</td>
-          <td class="py-3 px-4 text-slate-700">${g.kelas}</td>
-          <td class="py-3 px-4 text-slate-600">${spv ? spv.nama.split('(')[0] : '-'}</td>
-          <td class="py-3 px-4 text-center">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${g.status === 'Selesai' ? 'bg-emerald-100 text-emerald-800' : (g.status === 'Tindak Lanjut' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800')}">
+          <td class="py-3 px-4 text-slate-700 whitespace-nowrap">${g.mapel}</td>
+          <td class="py-3 px-4 text-slate-700 whitespace-nowrap">${g.kelas}</td>
+          <td class="py-3 px-4 text-slate-600 whitespace-nowrap">${spv ? spv.nama.split('(')[0].trim() : '-'}</td>
+          <td class="py-3 px-4 text-center whitespace-nowrap">
+            <span class="inline-block whitespace-nowrap px-2.5 py-1 rounded-full text-[10px] font-bold ${g.status === 'Selesai' ? 'bg-emerald-100 text-emerald-800' : (g.status === 'Tindak Lanjut' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800')}">
               ${g.status}
             </span>
           </td>
-          <td class="py-3 px-4 text-center">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${metrics.badgeColor}">
+          <td class="py-3 px-4 text-center whitespace-nowrap">
+            <span class="inline-block whitespace-nowrap px-2.5 py-1 rounded-full text-[10px] font-bold ${metrics.badgeColor}">
               ${metrics.predikat}
             </span>
           </td>
-          <td class="py-3 px-4 text-right no-print">
+          <td class="py-3 px-4 text-right no-print whitespace-nowrap">
             <button onclick="pilihDanNavigasi(${g.id}, 'observasi')" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-xs transition">
               Supervisi
             </button>
@@ -6782,19 +6782,19 @@
 
         let roleBadges = '';
         if (g.is_superadmin) {
-          roleBadges += `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 mr-1">Super Admin</span>`;
+          roleBadges += `<span class="inline-block whitespace-nowrap px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 mr-1">Super Admin</span>`;
         }
         if (g.is_supervisor) {
-          roleBadges += `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-200 mr-1">Supervisor</span>`;
+          roleBadges += `<span class="inline-block whitespace-nowrap px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-200 mr-1">Supervisor</span>`;
         }
         if (!g.is_superadmin && !g.is_supervisor) {
-          roleBadges += `<span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">Guru Biasa</span>`;
+          roleBadges += `<span class="inline-block whitespace-nowrap px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">Guru Biasa</span>`;
         }
 
         return `
           <tr class="hover:bg-slate-50 transition">
-            <td class="py-3 px-3.5 text-center font-medium text-slate-400">${idx + 1}</td>
-            <td class="py-3 px-4">
+            <td class="py-3 px-3.5 text-center font-medium text-slate-400 whitespace-nowrap">${idx + 1}</td>
+            <td class="py-3 px-4 whitespace-nowrap">
               <div class="flex items-center space-x-2.5">
                 <div class="w-7 h-7 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs flex-shrink-0 border border-indigo-100">
                   ${g.nama.charAt(0)}
@@ -6805,24 +6805,24 @@
                 </div>
               </div>
             </td>
-            <td class="py-3 px-4">
+            <td class="py-3 px-4 whitespace-nowrap">
               <p class="font-medium text-slate-700 text-xs">${g.mapel}</p>
               <p class="text-[11px] text-slate-400">${g.kelas}</p>
             </td>
-            <td class="py-3 px-4">${roleBadges}</td>
-            <td class="py-3 px-4">
+            <td class="py-3 px-4 whitespace-nowrap">${roleBadges}</td>
+            <td class="py-3 px-4 whitespace-nowrap">
               <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-50 text-slate-700 border border-slate-200">
                 <i class="fa-solid fa-user-check text-indigo-500 mr-1"></i>
                 ${spvName}
               </span>
             </td>
-            <td class="py-3 px-4 text-center">
+            <td class="py-3 px-4 text-center whitespace-nowrap">
               <button onclick="openResetPasswordModal(${g.id}, '${g.nama.replace(/'/g, "\'")}')" class="px-2.5 py-1 rounded bg-slate-100 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300 text-slate-600 border border-slate-200 text-[11px] font-semibold transition" title="Reset Kata Sandi ke 123456">
                 <i class="fa-solid fa-key mr-1 text-slate-400"></i>
                 <span>Reset Sandi</span>
               </button>
             </td>
-            <td class="py-3 px-4 text-right">
+            <td class="py-3 px-4 text-right whitespace-nowrap">
               <div class="flex items-center justify-end space-x-1.5">
                 <button onclick="openUserModal(${g.id})" class="p-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 transition" title="Edit Akun & Peran">
                   <i class="fa-solid fa-pen-to-square text-xs"></i>
