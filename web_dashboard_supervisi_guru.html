@@ -1571,9 +1571,8 @@
                   <th class="border border-slate-300 p-2 text-center w-10">No</th>
                   <th class="border border-slate-300 p-2 text-left">Nama Lengkap &amp; NIP</th>
                   <th class="border border-slate-300 p-2 text-left">Mata Pelajaran &amp; Kelas</th>
-                  <th class="border border-slate-300 p-2 text-center w-28">Hak Akses / Peran</th>
-                  <th class="border border-slate-300 p-2 text-left w-36">Username (NIP)</th>
-                  <th class="border border-slate-300 p-2 text-center w-28">Kata Sandi</th>
+                  <th class="border border-slate-300 p-2 text-left w-40">Username (NIP)</th>
+                  <th class="border border-slate-300 p-2 text-center w-32">Kata Sandi</th>
                 </tr>
               </thead>
               <tbody id="user-accounts-tbody"></tbody>
@@ -1586,15 +1585,15 @@
               <div>
                 <p class="text-slate-500 font-medium">Pengelola IT &amp; Super Admin,</p>
                 <div class="h-16"></div>
-                <p class="font-bold text-slate-900 underline">Administrator IT Sekolah</p>
-                <p class="text-slate-500 text-[11px]">SMP Negeri 24 Malang</p>
+                <p class="font-bold text-slate-900" style="display: inline-block; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 4px;">Administrator IT Sekolah</p>
+                <p class="text-slate-500 text-[11px]" style="margin: 0;">SMP Negeri 24 Malang</p>
               </div>
               <div>
                 <p class="text-slate-500">Malang, <span id="user-accounts-doc-date">-</span></p>
                 <p class="text-slate-500 font-medium">Mengetahui,<br>Kepala Sekolah</p>
                 <div class="h-16"></div>
-                <p id="user-accounts-ks-nama" class="font-bold text-slate-900 underline">Drs. Teguh Edy Purwanta</p>
-                <p id="user-accounts-ks-nip" class="text-slate-500 text-[11px]">NIP. 196710202000031006</p>
+                <p id="user-accounts-ks-nama" class="font-bold text-slate-900" style="display: inline-block; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 4px;">Drs. Teguh Edy Purwanta</p>
+                <p id="user-accounts-ks-nip" class="text-slate-500 text-[11px]" style="margin: 0;">NIP. 196710202000031006</p>
               </div>
             </div>
           </div>
@@ -6686,26 +6685,23 @@
         dateEl.textContent = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
       }
 
+      const ksNama = (appSettings.kepalaSekolah && typeof appSettings.kepalaSekolah === 'object')
+        ? (appSettings.kepalaSekolah.nama || 'Drs. Teguh Edy Purwanta')
+        : (appSettings.kepalaSekolah || 'Drs. Teguh Edy Purwanta');
+      const ksNip = (appSettings.kepalaSekolah && typeof appSettings.kepalaSekolah === 'object')
+        ? (appSettings.kepalaSekolah.nip || '196710202000031006')
+        : (appSettings.nipKepalaSekolah || '196710202000031006');
+
       const ksNamaEl = document.getElementById('user-accounts-ks-nama');
-      if (ksNamaEl) ksNamaEl.textContent = appSettings.kepalaSekolah || 'Drs. Teguh Edy Purwanta';
+      if (ksNamaEl) ksNamaEl.textContent = ksNama;
 
       const ksNipEl = document.getElementById('user-accounts-ks-nip');
-      if (ksNipEl) ksNipEl.textContent = 'NIP. ' + (appSettings.nipKepalaSekolah || '196710202000031006');
+      if (ksNipEl) ksNipEl.textContent = 'NIP. ' + ksNip;
 
       // Populate Table Body
       const tbody = document.getElementById('user-accounts-tbody');
       if (tbody) {
         tbody.innerHTML = list.map((g, idx) => {
-          let roleBadge = 'Guru Biasa';
-          let badgeBg = 'background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;';
-          if (g.is_superadmin) {
-            roleBadge = 'Super Admin';
-            badgeBg = 'background: #fef3c7; color: #92400e; border: 1px solid #fde68a;';
-          } else if (g.is_supervisor) {
-            roleBadge = 'Supervisor';
-            badgeBg = 'background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe;';
-          }
-
           return `
             <tr class="border-b border-slate-200" style="page-break-inside: avoid; break-inside: avoid;">
               <td class="border border-slate-300 p-2 text-center text-[10px] text-slate-500">${idx + 1}</td>
@@ -6715,11 +6711,6 @@
               </td>
               <td class="border border-slate-300 p-2 text-slate-700 text-[10px]">
                 ${g.mapel || '-'} ${g.kelas ? '<span class="text-slate-400 font-medium">(' + g.kelas + ')</span>' : ''}
-              </td>
-              <td class="border border-slate-300 p-2 text-center">
-                <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 9px; ${badgeBg}">
-                  ${roleBadge}
-                </span>
               </td>
               <td class="border border-slate-300 p-2 font-mono font-bold text-slate-900 text-[10.5px] tracking-wide">
                 ${g.nip}
