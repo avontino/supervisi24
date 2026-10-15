@@ -435,19 +435,19 @@
               <p id="pra-section-desc" class="text-xs text-slate-500 mt-0.5">Instrumen supervisi akademik berbasis Pembelajaran Mendalam (Deep Learning).</p>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2">
-              <button onclick="window.print()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1.5 border border-slate-200 transition no-print">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 w-full md:w-auto">
+              <button onclick="window.print()" class="w-full sm:w-auto justify-center px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1.5 border border-slate-200 transition no-print flex-shrink-0">
                 <i class="fa-solid fa-print text-indigo-600"></i>
                 <span>Cetak Lembar Telaah</span>
               </button>
 
-              <div id="pra-guru-picker-container" class="flex items-center space-x-2">
-                <label class="text-xs font-semibold text-slate-600">Pilih Guru:</label>
-                <select id="pra-guru-select" onchange="syncSelectedGuru(this.value)" class="text-xs rounded-lg border border-slate-300 py-1.5 px-3 font-medium focus:ring-2 focus:ring-indigo-500"></select>
+              <div id="pra-guru-picker-container" class="w-full sm:w-auto flex items-center space-x-2 min-w-0">
+                <label class="text-xs font-semibold text-slate-700 whitespace-nowrap flex-shrink-0">Pilih Guru:</label>
+                <select id="pra-guru-select" onchange="syncSelectedGuru(this.value)" class="w-full sm:w-auto text-xs rounded-lg border border-slate-300 py-1.5 px-3 font-medium focus:ring-2 focus:ring-indigo-500 bg-white truncate min-w-0 max-w-full sm:max-w-xs shadow-sm"></select>
               </div>
-              <div id="pra-guru-badge-container" class="hidden items-center space-x-2 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-lg">
-                <i class="fa-solid fa-user-check text-indigo-600 text-xs"></i>
-                <span id="pra-guru-badge-text" class="text-xs font-bold text-indigo-900">Guru: -</span>
+              <div id="pra-guru-badge-container" class="hidden items-center space-x-2 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-lg min-w-0">
+                <i class="fa-solid fa-user-check text-indigo-600 text-xs flex-shrink-0"></i>
+                <span id="pra-guru-badge-text" class="text-xs font-bold text-indigo-900 truncate">Guru: -</span>
               </div>
             </div>
           </div>
@@ -787,19 +787,19 @@
               <p class="text-xs text-slate-500 mt-0.5">Tujuan, Identifikasi, Rencana Aksi, dan Tanggung Jawab.</p>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2">
-              <button onclick="window.print()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1.5 border border-slate-200 transition no-print">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 w-full md:w-auto">
+              <button onclick="window.print()" class="w-full sm:w-auto justify-center px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1.5 border border-slate-200 transition no-print flex-shrink-0">
                 <i class="fa-solid fa-print text-indigo-600"></i>
                 <span>Cetak Catatan TIRTA</span>
               </button>
 
-              <div id="coaching-guru-picker-container" class="flex items-center space-x-2">
-                <label class="text-xs font-semibold text-slate-600">Guru:</label>
-                <select id="coaching-guru-select" onchange="syncSelectedGuru(this.value)" class="text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:ring-2 focus:ring-indigo-500"></select>
+              <div id="coaching-guru-picker-container" class="w-full sm:w-auto flex items-center space-x-2 min-w-0">
+                <label class="text-xs font-semibold text-slate-700 whitespace-nowrap flex-shrink-0">Pilih Guru:</label>
+                <select id="coaching-guru-select" onchange="syncSelectedGuru(this.value)" class="w-full sm:w-auto text-xs rounded-lg border border-slate-300 py-1.5 px-3 font-medium focus:ring-2 focus:ring-indigo-500 bg-white truncate min-w-0 max-w-full sm:max-w-xs shadow-sm"></select>
               </div>
-              <div id="coaching-guru-badge-container" class="hidden items-center space-x-2 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-lg">
-                <i class="fa-solid fa-user-check text-indigo-600 text-xs"></i>
-                <span id="coaching-guru-badge-text" class="text-xs font-bold text-indigo-900">Guru: -</span>
+              <div id="coaching-guru-badge-container" class="hidden items-center space-x-2 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-lg min-w-0">
+                <i class="fa-solid fa-user-check text-indigo-600 text-xs flex-shrink-0"></i>
+                <span id="coaching-guru-badge-text" class="text-xs font-bold text-indigo-900 truncate">Guru: -</span>
               </div>
             </div>
           </div>
@@ -868,13 +868,13 @@
 
       <section id="view-laporan" class="hidden space-y-5">
         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 no-print">
-          <div id="laporan-guru-picker-container" class="flex items-center space-x-3">
-            <label class="text-xs font-semibold text-slate-700">Pilih Guru Laporan:</label>
-            <select id="laporan-guru-select" onchange="syncSelectedGuru(this.value)" class="text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:ring-2 focus:ring-indigo-500"></select>
+          <div id="laporan-guru-picker-container" class="w-full md:w-auto flex items-center space-x-2.5 min-w-0">
+            <label class="text-xs font-semibold text-slate-700 whitespace-nowrap flex-shrink-0">Pilih Guru Laporan:</label>
+            <select id="laporan-guru-select" onchange="syncSelectedGuru(this.value)" class="w-full md:w-auto text-xs rounded-lg border border-slate-300 py-1.5 px-3 font-medium focus:ring-2 focus:ring-indigo-500 bg-white truncate min-w-0 max-w-full md:max-w-xs shadow-sm"></select>
           </div>
-          <div id="laporan-guru-badge-container" class="hidden items-center space-x-2 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-lg">
-            <i class="fa-solid fa-file-lines text-indigo-600 text-xs"></i>
-            <span id="laporan-guru-badge-text" class="text-xs font-bold text-indigo-900">Laporan Mandiri: -</span>
+          <div id="laporan-guru-badge-container" class="hidden items-center space-x-2 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-lg min-w-0">
+            <i class="fa-solid fa-file-lines text-indigo-600 text-xs flex-shrink-0"></i>
+            <span id="laporan-guru-badge-text" class="text-xs font-bold text-indigo-900 truncate">Laporan Mandiri: -</span>
           </div>
 
           <div class="flex flex-wrap items-center gap-2">
