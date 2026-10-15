@@ -234,7 +234,7 @@
       </div>
     </header>
 
-    <div class="flex-1 overflow-y-auto p-3.5 sm:p-5 md:p-6 space-y-4 sm:space-y-6">
+    <div class="flex-1 overflow-y-auto p-3.5 sm:p-5 md:p-6 pb-28 sm:pb-20 space-y-4 sm:space-y-6">
 
       <section id="view-dashboard" class="space-y-6">
         <!-- Action Toolbar with Print -->
@@ -615,12 +615,12 @@
             </div>
           </div>
 
-          <div class="mt-4 flex justify-between items-center no-print">
-            <button onclick="window.print()" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1.5 border border-slate-200 transition">
+          <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
+            <button onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition">
               <i class="fa-solid fa-print"></i>
               <span>Cetak Hasil Telaah</span>
             </button>
-            <button onclick="savePraObservasi()" class="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm flex items-center space-x-2 transition">
+            <button onclick="savePraObservasi()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
               <i class="fa-solid fa-floppy-disk"></i>
               <span>Simpan Hasil Telaah Dokumen</span>
             </button>
@@ -768,12 +768,12 @@
             <textarea id="obs-catatan-fakta" rows="4" placeholder="Contoh: Pada menit ke-15 guru mengajukan pertanyaan pemantik. Murid berpartisipasi aktif dalam dialog..." class="w-full text-xs p-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
           </div>
 
-          <div class="flex justify-between items-center pt-2 no-print">
-            <button onclick="window.print()" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1.5 border border-slate-200 transition">
+          <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
+            <button onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition">
               <i class="fa-solid fa-print"></i>
               <span>Cetak Hasil Observasi</span>
             </button>
-            <button onclick="saveObservasi()" class="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm flex items-center space-x-2 transition">
+            <button onclick="saveObservasi()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
               <i class="fa-solid fa-floppy-disk"></i>
               <span>Simpan Instrumen Observasi</span>
             </button>
@@ -855,12 +855,12 @@
             </div>
           </div>
 
-          <div class="flex justify-between items-center pt-2 no-print">
-            <button onclick="window.print()" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1.5 border border-slate-200 transition">
+          <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
+            <button onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition">
               <i class="fa-solid fa-print"></i>
               <span>Cetak Hasil Coaching</span>
             </button>
-            <button onclick="saveCoaching()" class="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm flex items-center space-x-2 transition">
+            <button onclick="saveCoaching()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
               <i class="fa-solid fa-floppy-disk"></i>
               <span>Simpan Catatan Coaching TIRTA</span>
             </button>
@@ -1228,12 +1228,12 @@
             <div id="supervisors-input-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs"></div>
           </div>
 
-          <div class="pt-4 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
-            <button type="button" onclick="resetToDefaultDemoData()" class="px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1.5 border border-slate-200 transition" title="Kembalikan database ke 105 data simulasi awal">
+          <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
+            <button type="button" onclick="resetToDefaultDemoData()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-200 transition" title="Kembalikan database ke data simulasi awal">
               <i class="fa-solid fa-rotate-left text-slate-500"></i>
               <span>Muat Ulang Data Simulasi Awal</span>
             </button>
-            <button onclick="saveSettings()" class="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm flex items-center space-x-2 transition">
+            <button onclick="saveSettings()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
               <i class="fa-solid fa-floppy-disk"></i>
               <span>Simpan Pengaturan Sistem</span>
             </button>
