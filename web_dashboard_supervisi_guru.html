@@ -77,11 +77,11 @@
         padding: 0 !important;
       }
       /* Pastikan elemen dengan class hidden BENAR-BENAR disembunyikan saat dicetak */
-      .hidden, .hidden *, #printable-report.hidden, #printable-all-reports.hidden {
+      .hidden, .hidden *, #printable-report.hidden, #printable-all-reports.hidden, #printable-user-accounts.hidden {
         display: none !important;
       }
       /* Hanya tampilkan laporan yang TIDAK memiliki class hidden */
-      #printable-report:not(.hidden), #printable-all-reports:not(.hidden) {
+      #printable-report:not(.hidden), #printable-all-reports:not(.hidden), #printable-user-accounts:not(.hidden) {
         display: block !important;
         border: none !important;
         box-shadow: none !important;
@@ -94,7 +94,8 @@
       #printable-report.space-y-6 > :not([hidden]) ~ :not([hidden]) {
         margin-top: 0.75rem !important;
       }
-      #printable-all-reports.space-y-6 > :not([hidden]) ~ :not([hidden]) {
+      #printable-all-reports.space-y-6 > :not([hidden]) ~ :not([hidden]),
+      #printable-user-accounts.space-y-6 > :not([hidden]) ~ :not([hidden]) {
         margin-top: 1rem !important;
       }
       table {
@@ -1450,7 +1451,7 @@
 
       <!-- SECTION: MANAJEMEN USER (SUPER ADMIN) -->
       <section id="view-users" class="hidden space-y-5">
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4 no-print">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-slate-200">
             <div>
               <div class="flex items-center space-x-2">
@@ -1463,6 +1464,10 @@
               <button onclick="downloadUserAccountsPDF()" class="px-3.5 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Unduh Berkas PDF Resmi Daftar Akun Guru (Nama, Mapel, Username NIP, Password)">
                 <i class="fa-solid fa-file-pdf"></i>
                 <span>Unduh PDF Akun</span>
+              </button>
+              <button onclick="printUserAccounts()" class="px-3.5 py-2 rounded-lg bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Cetak Berkas Daftar Akun Guru Langsung via Printer / Simpan PDF Browser">
+                <i class="fa-solid fa-print"></i>
+                <span>Cetak Akun</span>
               </button>
               <button onclick="exportUserAccountsExcel()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Unduh Berkas Excel (.xlsx) Daftar Akun Guru">
                 <i class="fa-solid fa-file-excel"></i>
@@ -1537,6 +1542,61 @@
               </thead>
               <tbody id="user-table-tbody" class="divide-y divide-slate-100"></tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- Lembar Cetak / Ekspor PDF Resmi Data Akun Pengguna -->
+        <div id="printable-user-accounts" class="hidden bg-white p-6 sm:p-8 md:p-10 rounded-xl border border-slate-200 shadow-sm space-y-6 max-w-5xl mx-auto text-slate-900">
+          <!-- Kop Surat Target Container (diisi otomatis oleh populateUserAccountsTable) -->
+          <div id="kop-user-accounts-target"></div>
+
+          <!-- Judul Dokumen -->
+          <div class="text-center" style="margin-top: 6px; margin-bottom: 14px;">
+            <h1 class="text-sm font-black uppercase tracking-wider text-slate-900" style="font-size: 12pt; margin: 0;">
+              DAFTAR AKUN PENGGUNA &amp; KATA SANDI SISTEM SUPERVISI
+            </h1>
+            <p class="text-[11px] text-slate-600 font-medium" id="user-accounts-doc-periode" style="margin-top: 2px;">
+              SMP NEGERI 24 MALANG &bull; TAHUN AJARAN 2026/2027 (Semester Ganjil)
+            </p>
+            <div class="mt-2 inline-block px-3 py-1 rounded-md bg-slate-100 border border-slate-300 text-[10px] text-slate-700 font-semibold">
+              <strong>Alamat Akses Sistem:</strong> https://supervisi.smpn24-mlg.sch.id &bull; <em>Bersifat Rahasia Khusus Bapak/Ibu Guru</em>
+            </div>
+          </div>
+
+          <!-- Tabel Akun Guru -->
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse border border-slate-300 text-xs">
+              <thead class="bg-slate-100 text-slate-700 font-semibold text-[11px]">
+                <tr>
+                  <th class="border border-slate-300 p-2 text-center w-10">No</th>
+                  <th class="border border-slate-300 p-2 text-left">Nama Lengkap &amp; NIP</th>
+                  <th class="border border-slate-300 p-2 text-left">Mata Pelajaran &amp; Kelas</th>
+                  <th class="border border-slate-300 p-2 text-center w-28">Hak Akses / Peran</th>
+                  <th class="border border-slate-300 p-2 text-left w-36">Username (NIP)</th>
+                  <th class="border border-slate-300 p-2 text-center w-28">Kata Sandi</th>
+                </tr>
+              </thead>
+              <tbody id="user-accounts-tbody"></tbody>
+            </table>
+          </div>
+
+          <!-- Tanda Tangan Resmi Pengesahan -->
+          <div class="pt-6 avoid-break" style="page-break-inside: avoid; break-inside: avoid;">
+            <div class="grid grid-cols-2 gap-8 text-center text-xs">
+              <div>
+                <p class="text-slate-500 font-medium">Pengelola IT &amp; Super Admin,</p>
+                <div class="h-16"></div>
+                <p class="font-bold text-slate-900 underline">Administrator IT Sekolah</p>
+                <p class="text-slate-500 text-[11px]">SMP Negeri 24 Malang</p>
+              </div>
+              <div>
+                <p class="text-slate-500">Malang, <span id="user-accounts-doc-date">-</span></p>
+                <p class="text-slate-500 font-medium">Mengetahui,<br>Kepala Sekolah</p>
+                <div class="h-16"></div>
+                <p id="user-accounts-ks-nama" class="font-bold text-slate-900 underline">Drs. Teguh Edy Purwanta</p>
+                <p id="user-accounts-ks-nip" class="text-slate-500 text-[11px]">NIP. 196710202000031006</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -6584,6 +6644,97 @@
       });
     }
 
+    function populateUserAccountsTable(customList) {
+      let list = customList;
+      if (!list) {
+        const q = (document.getElementById('user-search-input')?.value || '').toLowerCase();
+        const roleFilter = document.getElementById('user-filter-role')?.value || '';
+        const spvFilter = document.getElementById('user-filter-spv')?.value || '';
+
+        list = guruDatabase || [];
+        if (q || roleFilter || spvFilter) {
+          list = guruDatabase.filter(g => {
+            const matchSearch = (g.nama || '').toLowerCase().includes(q) || (g.nip || '').toLowerCase().includes(q) || (g.mapel || '').toLowerCase().includes(q);
+            let matchRole = true;
+            if (roleFilter === 'superadmin') matchRole = !!g.is_superadmin;
+            else if (roleFilter === 'supervisor') matchRole = !!g.is_supervisor;
+            else if (roleFilter === 'guru') matchRole = !g.is_supervisor && !g.is_superadmin;
+            let matchSpv = true;
+            if (spvFilter !== '') matchSpv = (String(g.supervisorId) === String(spvFilter));
+            return matchSearch && matchRole && matchSpv;
+          });
+        }
+      }
+
+      // Clone Kop Surat if target is empty
+      const targetKop = document.getElementById('kop-user-accounts-target');
+      if (targetKop) {
+        const srcKop = document.querySelector('#printable-all-reports .kop-surat-container') || document.querySelector('#printable-report .kop-surat-container');
+        if (srcKop) {
+          targetKop.innerHTML = srcKop.outerHTML;
+        }
+      }
+
+      // Update Period & Identity
+      const periodeEl = document.getElementById('user-accounts-doc-periode');
+      if (periodeEl) {
+        periodeEl.textContent = `${appSettings.sekolah || 'SMP NEGERI 24 MALANG'} • TAHUN AJARAN ${appSettings.tahunAjaran || '2026/2027'} (${appSettings.semester || 'Semester Ganjil'})`;
+      }
+
+      const dateEl = document.getElementById('user-accounts-doc-date');
+      if (dateEl) {
+        dateEl.textContent = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+      }
+
+      const ksNamaEl = document.getElementById('user-accounts-ks-nama');
+      if (ksNamaEl) ksNamaEl.textContent = appSettings.kepalaSekolah || 'Drs. Teguh Edy Purwanta';
+
+      const ksNipEl = document.getElementById('user-accounts-ks-nip');
+      if (ksNipEl) ksNipEl.textContent = 'NIP. ' + (appSettings.nipKepalaSekolah || '196710202000031006');
+
+      // Populate Table Body
+      const tbody = document.getElementById('user-accounts-tbody');
+      if (tbody) {
+        tbody.innerHTML = list.map((g, idx) => {
+          let roleBadge = 'Guru Biasa';
+          let badgeBg = 'background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;';
+          if (g.is_superadmin) {
+            roleBadge = 'Super Admin';
+            badgeBg = 'background: #fef3c7; color: #92400e; border: 1px solid #fde68a;';
+          } else if (g.is_supervisor) {
+            roleBadge = 'Supervisor';
+            badgeBg = 'background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe;';
+          }
+
+          return `
+            <tr class="border-b border-slate-200" style="page-break-inside: avoid; break-inside: avoid;">
+              <td class="border border-slate-300 p-2 text-center text-[10px] text-slate-500">${idx + 1}</td>
+              <td class="border border-slate-300 p-2 font-bold text-slate-800 text-[10.5px]">
+                <div>${g.nama}</div>
+                <div class="text-[9.5px] font-mono font-normal text-slate-500">NIP: ${g.nip || '-'}</div>
+              </td>
+              <td class="border border-slate-300 p-2 text-slate-700 text-[10px]">
+                ${g.mapel || '-'} ${g.kelas ? '<span class="text-slate-400 font-medium">(' + g.kelas + ')</span>' : ''}
+              </td>
+              <td class="border border-slate-300 p-2 text-center">
+                <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 9px; ${badgeBg}">
+                  ${roleBadge}
+                </span>
+              </td>
+              <td class="border border-slate-300 p-2 font-mono font-bold text-slate-900 text-[10.5px] tracking-wide">
+                ${g.nip}
+              </td>
+              <td class="border border-slate-300 p-2 text-center font-mono font-bold text-emerald-700 text-[10.5px] bg-slate-50 tracking-wider">
+                ${g.password || '123456'}
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      return list;
+    }
+
     function downloadUserAccountsPDF() {
       if (typeof html2pdf === 'undefined') {
         showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
@@ -6596,124 +6747,17 @@
 
       showToast('Sedang membuat berkas PDF Data Akun Guru... Mohon tunggu.');
 
-      const q = (document.getElementById('user-search-input')?.value || '').toLowerCase();
-      const roleFilter = document.getElementById('user-filter-role')?.value || '';
-      const spvFilter = document.getElementById('user-filter-spv')?.value || '';
-
-      let list = guruDatabase;
-      if (q || roleFilter || spvFilter) {
-        list = guruDatabase.filter(g => {
-          const matchSearch = g.nama.toLowerCase().includes(q) || g.nip.toLowerCase().includes(q) || g.mapel.toLowerCase().includes(q);
-          let matchRole = true;
-          if (roleFilter === 'superadmin') matchRole = !!g.is_superadmin;
-          else if (roleFilter === 'supervisor') matchRole = !!g.is_supervisor;
-          else if (roleFilter === 'guru') matchRole = !g.is_supervisor && !g.is_superadmin;
-          let matchSpv = true;
-          if (spvFilter !== '') matchSpv = (String(g.supervisorId) === String(spvFilter));
-          return matchSearch && matchRole && matchSpv;
-        });
-      }
-
-      if (!list.length) {
+      const list = populateUserAccountsTable();
+      if (!list || !list.length) {
         showToast('Tidak ada akun guru yang sesuai dengan filter pencarian!', 'error');
         return;
       }
 
-      const kopEl = document.querySelector('#printable-report .kop-surat-container') || document.querySelector('#printable-all-reports .kop-surat-container');
-      const kopHTML = kopEl ? kopEl.outerHTML : '';
-
-      const rowsHTML = list.map((g, idx) => {
-        let roleBadge = 'Guru Biasa';
-        if (g.is_superadmin) roleBadge = 'Super Admin';
-        else if (g.is_supervisor) roleBadge = 'Supervisor';
-
-        return `
-          <tr style="border-bottom: 1px solid #cbd5e1; page-break-inside: avoid; break-inside: avoid;">
-            <td style="padding: 6px 6px; text-align: center; font-size: 9.5px; color: #475569; border: 1px solid #94a3b8;">${idx + 1}</td>
-            <td style="padding: 6px 8px; font-size: 10px; font-weight: 700; color: #0f172a; border: 1px solid #94a3b8;">
-              ${g.nama}
-            </td>
-            <td style="padding: 6px 8px; font-size: 9.5px; color: #334155; border: 1px solid #94a3b8;">
-              ${g.mapel} ${g.kelas ? '<span style="color:#64748b;">(' + g.kelas + ')</span>' : ''}
-            </td>
-            <td style="padding: 6px 8px; text-align: center; font-size: 9.5px; border: 1px solid #94a3b8;">
-              <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 9px; ${g.is_superadmin ? 'background: #fef3c7; color: #92400e; border: 1px solid #fde68a;' : (g.is_supervisor ? 'background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe;' : 'background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;')}">
-                ${roleBadge}
-              </span>
-            </td>
-            <td style="padding: 6px 8px; font-family: monospace; font-size: 10px; font-weight: 700; color: #1e1b4b; border: 1px solid #94a3b8; letter-spacing: 0.5px;">
-              ${g.nip}
-            </td>
-            <td style="padding: 6px 8px; font-family: monospace; font-size: 10px; font-weight: 700; color: #047857; text-align: center; background-color: #f8fafc; border: 1px solid #94a3b8; letter-spacing: 0.5px;">
-              ${g.password || '123456'}
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      const todayStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-      const ksName = appSettings.kepalaSekolah || 'Drs. Teguh Edy Purwanta';
-      const ksNip = appSettings.nipKepalaSekolah || '196710202000031006';
-
-      const fullHTML = `
-        <div style="font-family: 'Inter', Arial, sans-serif; color: #0f172a; line-height: 1.4;">
-          ${kopHTML}
-          <div style="text-align: center; margin-top: 10px; margin-bottom: 14px;">
-            <h2 style="font-size: 13pt; font-weight: 900; text-transform: uppercase; margin: 0; color: #0f172a; letter-spacing: 0.5px;">
-              DAFTAR AKUN PENGGUNA & KATA SANDI SISTEM SUPERVISI
-            </h2>
-            <p style="font-size: 9.5pt; color: #475569; margin: 3px 0 0 0; font-weight: 600;">
-              SMP NEGERI 24 MALANG &bull; TAHUN AJARAN ${appSettings.tahunAjaran || '2026/2027'} (${appSettings.semester || 'Semester Ganjil'})
-            </p>
-            <div style="margin-top: 6px; display: inline-block; padding: 4px 10px; border-radius: 6px; background-color: #f1f5f9; border: 1px solid #cbd5e1; font-size: 8.5pt; color: #334155;">
-              <strong>Alamat Akses:</strong> https://supervisi.smpn24-mlg.sch.id &bull; <em>Bersifat Rahasia Khusus Bapak/Ibu Guru</em>
-            </div>
-          </div>
-
-          <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 10px;">
-            <thead>
-              <tr style="background-color: #f8fafc; border: 1px solid #94a3b8;">
-                <th style="padding: 7px 6px; border: 1px solid #94a3b8; text-align: center; width: 35px; font-weight: 700; color: #334155;">No</th>
-                <th style="padding: 7px 8px; border: 1px solid #94a3b8; text-align: left; font-weight: 700; color: #334155;">Nama Guru & Tenaga Pendidik</th>
-                <th style="padding: 7px 8px; border: 1px solid #94a3b8; text-align: left; width: 170px; font-weight: 700; color: #334155;">Mata Pelajaran & Kelas</th>
-                <th style="padding: 7px 8px; border: 1px solid #94a3b8; text-align: center; width: 85px; font-weight: 700; color: #334155;">Peran / Akses</th>
-                <th style="padding: 7px 8px; border: 1px solid #94a3b8; text-align: left; width: 140px; font-weight: 700; color: #334155;">Username (NIP)</th>
-                <th style="padding: 7px 8px; border: 1px solid #94a3b8; text-align: center; width: 95px; font-weight: 700; color: #334155;">Password</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHTML}
-            </tbody>
-          </table>
-
-          <div style="margin-top: 24px; display: flex; justify-content: space-between; page-break-inside: avoid; break-inside: avoid;">
-            <div style="width: 45%; text-align: center; font-size: 10px;">
-              <p style="margin: 0; color: #475569; font-weight: 600;">Pengelola IT & Super Admin,</p>
-              <div style="height: 48px;"></div>
-              <p style="margin: 0; font-weight: 800; text-decoration: underline; color: #0f172a;">Administrator IT Sekolah</p>
-              <p style="margin: 2px 0 0 0; color: #64748b; font-size: 9px;">SMP Negeri 24 Malang</p>
-            </div>
-            <div style="width: 45%; text-align: center; font-size: 10px;">
-              <p style="margin: 0; color: #475569;">Malang, ${todayStr}</p>
-              <p style="margin: 2px 0 0 0; color: #475569; font-weight: 600;">Mengetahui,<br>Kepala Sekolah</p>
-              <div style="height: 38px;"></div>
-              <p style="margin: 0; font-weight: 800; text-decoration: underline; color: #0f172a;">${ksName}</p>
-              <p style="margin: 2px 0 0 0; color: #64748b; font-size: 9px;">NIP. ${ksNip}</p>
-            </div>
-          </div>
-        </div>
-      `;
-
-      const tempContainer = document.createElement('div');
-      tempContainer.id = 'temp-user-accounts-pdf';
-      tempContainer.style.position = 'absolute';
-      tempContainer.style.left = '-9999px';
-      tempContainer.style.top = '0';
-      tempContainer.style.width = '794px';
-      tempContainer.style.backgroundColor = '#ffffff';
-      tempContainer.style.padding = '20px 24px';
-      tempContainer.innerHTML = fullHTML;
-      document.body.appendChild(tempContainer);
+      const el = document.getElementById('printable-user-accounts');
+      if (!el) {
+        showToast('Elemen cetak akun tidak ditemukan!', 'error');
+        return;
+      }
 
       const filename = `Data_Akun_Login_Guru_SMPN24_${new Date().toISOString().slice(0, 10)}.pdf`;
 
@@ -6725,18 +6769,42 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      html2pdf().set(opt).from(tempContainer).save().then(() => {
-        if (document.getElementById('temp-user-accounts-pdf')) {
-          document.body.removeChild(tempContainer);
-        }
-        showToast('File PDF Data Akun Guru berhasil diunduh!');
+      const wasHidden = el.classList.contains('hidden');
+      el.classList.remove('hidden');
+
+      html2pdf().set(opt).from(el).save().then(() => {
+        if (wasHidden) el.classList.add('hidden');
+        showToast('Berkas PDF Data Akun Guru berhasil diunduh!');
       }).catch(err => {
-        if (document.getElementById('temp-user-accounts-pdf')) {
-          document.body.removeChild(tempContainer);
-        }
+        if (wasHidden) el.classList.add('hidden');
         console.error(err);
-        showToast('Gagal membuat PDF otomatis.', 'error');
+        showToast('Gagal membuat PDF otomatis. Silakan gunakan tombol Cetak Akun.', 'error');
       });
+    }
+
+    function printUserAccounts() {
+      if (!guruDatabase || !guruDatabase.length) {
+        showToast('Tidak ada data akun guru!', 'error');
+        return;
+      }
+
+      const list = populateUserAccountsTable();
+      if (!list || !list.length) {
+        showToast('Tidak ada akun guru yang sesuai dengan filter pencarian!', 'error');
+        return;
+      }
+
+      const el = document.getElementById('printable-user-accounts');
+      if (!el) return;
+
+      const wasHidden = el.classList.contains('hidden');
+      el.classList.remove('hidden');
+
+      window.print();
+
+      setTimeout(() => {
+        if (wasHidden) el.classList.add('hidden');
+      }, 1000);
     }
 
     function exportUserAccountsExcel() {
