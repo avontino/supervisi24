@@ -1546,19 +1546,19 @@
         </div>
 
         <!-- Lembar Cetak / Ekspor PDF Resmi Data Akun Pengguna -->
-        <div id="printable-user-accounts" class="hidden bg-white p-6 sm:p-8 md:p-10 rounded-xl border border-slate-200 shadow-sm space-y-6 max-w-5xl mx-auto text-slate-900">
+        <div id="printable-user-accounts" class="hidden bg-white p-3 sm:p-4 space-y-3 max-w-5xl mx-auto text-slate-900" style="padding-bottom: 0 !important; margin-bottom: 0 !important;">
           <!-- Kop Surat Target Container (diisi otomatis oleh populateUserAccountsTable) -->
           <div id="kop-user-accounts-target"></div>
 
           <!-- Judul Dokumen -->
-          <div class="text-center" style="margin-top: 6px; margin-bottom: 14px;">
-            <h1 class="text-sm font-black uppercase tracking-wider text-slate-900" style="font-size: 12pt; margin: 0;">
+          <div class="text-center" style="margin-top: 4px; margin-bottom: 10px;">
+            <h1 class="text-sm font-black uppercase tracking-wider text-slate-900" style="font-size: 11.5pt; margin: 0;">
               DAFTAR AKUN PENGGUNA &amp; KATA SANDI SISTEM SUPERVISI
             </h1>
-            <p class="text-[11px] text-slate-600 font-medium" id="user-accounts-doc-periode" style="margin-top: 2px;">
+            <p class="text-[10.5px] text-slate-600 font-medium" id="user-accounts-doc-periode" style="margin-top: 2px;">
               SMP NEGERI 24 MALANG &bull; TAHUN AJARAN 2026/2027 (Semester Ganjil)
             </p>
-            <div class="mt-2 inline-block px-3 py-1 rounded-md bg-slate-100 border border-slate-300 text-[10px] text-slate-700 font-semibold">
+            <div class="mt-1.5 inline-block px-2.5 py-0.5 rounded-md bg-slate-100 border border-slate-300 text-[9.5px] text-slate-700 font-semibold">
               <strong>Alamat Akses Sistem:</strong> https://supervisi.smpn24-mlg.sch.id &bull; <em>Bersifat Rahasia Khusus Bapak/Ibu Guru</em>
             </div>
           </div>
@@ -1566,13 +1566,13 @@
           <!-- Tabel Akun Guru -->
           <div class="overflow-x-auto">
             <table class="w-full border-collapse border border-slate-300 text-xs">
-              <thead class="bg-slate-100 text-slate-700 font-semibold text-[11px]">
+              <thead class="bg-slate-100 text-slate-700 font-semibold text-[10.5px]">
                 <tr>
-                  <th class="border border-slate-300 p-2 text-center w-10">No</th>
-                  <th class="border border-slate-300 p-2 text-left">Nama Lengkap &amp; NIP</th>
-                  <th class="border border-slate-300 p-2 text-left">Mata Pelajaran &amp; Kelas</th>
-                  <th class="border border-slate-300 p-2 text-left w-40">Username (NIP)</th>
-                  <th class="border border-slate-300 p-2 text-center w-32">Kata Sandi</th>
+                  <th class="border border-slate-300 py-1.5 px-2 text-center w-10">No</th>
+                  <th class="border border-slate-300 py-1.5 px-2 text-left">Nama Lengkap &amp; NIP</th>
+                  <th class="border border-slate-300 py-1.5 px-2 text-left">Mata Pelajaran &amp; Kelas</th>
+                  <th class="border border-slate-300 py-1.5 px-2 text-left w-40">Username (NIP)</th>
+                  <th class="border border-slate-300 py-1.5 px-2 text-center w-32">Kata Sandi</th>
                 </tr>
               </thead>
               <tbody id="user-accounts-tbody"></tbody>
@@ -1580,20 +1580,20 @@
           </div>
 
           <!-- Tanda Tangan Resmi Pengesahan -->
-          <div class="pt-6 avoid-break" style="page-break-inside: avoid; break-inside: avoid;">
+          <div class="pt-3 avoid-break" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 0; padding-bottom: 0;">
             <div class="grid grid-cols-2 gap-8 text-center text-xs">
               <div>
-                <p class="text-slate-500 font-medium">Pengelola IT &amp; Super Admin,</p>
-                <div class="h-16"></div>
-                <p class="font-bold text-slate-900" style="display: inline-block; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 4px;">Administrator IT Sekolah</p>
-                <p class="text-slate-500 text-[11px]" style="margin: 0;">SMP Negeri 24 Malang</p>
+                <p class="text-slate-500 font-medium text-[11px]">Pengelola IT &amp; Super Admin,</p>
+                <div class="h-10"></div>
+                <p class="font-bold text-slate-900 text-xs" style="display: inline-block; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 3px;">Administrator IT Sekolah</p>
+                <p class="text-slate-500 text-[10.5px]" style="margin: 0;">SMP Negeri 24 Malang</p>
               </div>
               <div>
-                <p class="text-slate-500">Malang, <span id="user-accounts-doc-date">-</span></p>
-                <p class="text-slate-500 font-medium">Mengetahui,<br>Kepala Sekolah</p>
-                <div class="h-16"></div>
-                <p id="user-accounts-ks-nama" class="font-bold text-slate-900" style="display: inline-block; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 4px;">Drs. Teguh Edy Purwanta</p>
-                <p id="user-accounts-ks-nip" class="text-slate-500 text-[11px]" style="margin: 0;">NIP. 196710202000031006</p>
+                <p class="text-slate-500 text-[11px]">Malang, <span id="user-accounts-doc-date">-</span></p>
+                <p class="text-slate-500 font-medium text-[11px]">Mengetahui,<br>Kepala Sekolah</p>
+                <div class="h-10"></div>
+                <p id="user-accounts-ks-nama" class="font-bold text-slate-900 text-xs" style="display: inline-block; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 3px;">Drs. Teguh Edy Purwanta</p>
+                <p id="user-accounts-ks-nip" class="text-slate-500 text-[10.5px]" style="margin: 0;">NIP. 196710202000031006</p>
               </div>
             </div>
           </div>
@@ -6704,18 +6704,18 @@
         tbody.innerHTML = list.map((g, idx) => {
           return `
             <tr class="border-b border-slate-200" style="page-break-inside: avoid; break-inside: avoid;">
-              <td class="border border-slate-300 p-2 text-center text-[10px] text-slate-500">${idx + 1}</td>
-              <td class="border border-slate-300 p-2 font-bold text-slate-800 text-[10.5px]">
-                <div>${g.nama}</div>
-                <div class="text-[9.5px] font-mono font-normal text-slate-500">NIP: ${g.nip || '-'}</div>
+              <td class="border border-slate-300 py-1 px-2 text-center text-[10px] text-slate-500">${idx + 1}</td>
+              <td class="border border-slate-300 py-1 px-2.5 font-bold text-slate-800 text-[10px]">
+                <div class="leading-tight">${g.nama}</div>
+                <div class="text-[9px] font-mono font-normal text-slate-500 leading-tight">NIP: ${g.nip || '-'}</div>
               </td>
-              <td class="border border-slate-300 p-2 text-slate-700 text-[10px]">
+              <td class="border border-slate-300 py-1 px-2.5 text-slate-700 text-[10px] leading-tight">
                 ${g.mapel || '-'} ${g.kelas ? '<span class="text-slate-400 font-medium">(' + g.kelas + ')</span>' : ''}
               </td>
-              <td class="border border-slate-300 p-2 font-mono font-bold text-slate-900 text-[10.5px] tracking-wide">
+              <td class="border border-slate-300 py-1 px-2.5 font-mono font-bold text-slate-900 text-[10.5px] tracking-wide">
                 ${g.nip}
               </td>
-              <td class="border border-slate-300 p-2 text-center font-mono font-bold text-emerald-700 text-[10.5px] bg-slate-50 tracking-wider">
+              <td class="border border-slate-300 py-1 px-2 text-center font-mono font-bold text-emerald-700 text-[10.5px] bg-slate-50 tracking-wider">
                 ${g.password || '123456'}
               </td>
             </tr>
@@ -6750,23 +6750,34 @@
         return;
       }
 
-      const filename = `Data_Akun_Login_Guru_SMPN24_${new Date().toISOString().slice(0, 10)}.pdf`;
-
-      const opt = {
-        margin: [8, 8, 10, 8],
-        filename: filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
       const wasHidden = el.classList.contains('hidden');
       el.classList.remove('hidden');
 
+      // Reset outer padding and margin during canvas capture to prevent spilling an extra trailing page
+      const origPadding = el.style.padding;
+      const origMargin = el.style.margin;
+      el.style.padding = '0px';
+      el.style.margin = '0px auto';
+
+      const filename = `Data_Akun_Login_Guru_SMPN24_${new Date().toISOString().slice(0, 10)}.pdf`;
+
+      const opt = {
+        margin: [6, 8, 6, 8],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
+
       html2pdf().set(opt).from(el).save().then(() => {
+        el.style.padding = origPadding;
+        el.style.margin = origMargin;
         if (wasHidden) el.classList.add('hidden');
         showToast('Berkas PDF Data Akun Guru berhasil diunduh!');
       }).catch(err => {
+        el.style.padding = origPadding;
+        el.style.margin = origMargin;
         if (wasHidden) el.classList.add('hidden');
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Silakan gunakan tombol Cetak Akun.', 'error');
