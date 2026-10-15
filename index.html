@@ -1459,8 +1459,16 @@
               </div>
               <p class="text-xs text-slate-500 mt-1">Kelola data login seluruh akun guru, reset kata sandi, dan atur peran sistem (Super Admin, Supervisor, atau Guru Pengajar).</p>
             </div>
-            <div class="flex items-center space-x-2">
-              <button onclick="openUserModal(0)" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition">
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="downloadUserAccountsPDF()" class="px-3.5 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Unduh Berkas PDF Resmi Daftar Akun Guru (Nama, Mapel, Username NIP, Password)">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span>Unduh PDF Akun</span>
+              </button>
+              <button onclick="exportUserAccountsExcel()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Unduh Berkas Excel (.xlsx) Daftar Akun Guru">
+                <i class="fa-solid fa-file-excel"></i>
+                <span>Ekspor Excel</span>
+              </button>
+              <button onclick="openUserModal(0)" class="px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition">
                 <i class="fa-solid fa-user-plus"></i>
                 <span>Tambah Pengguna Baru</span>
               </button>
@@ -6574,6 +6582,193 @@
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
       });
+    }
+
+    function downloadUserAccountsPDF() {
+      if (typeof html2pdf === 'undefined') {
+        showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
+        return;
+      }
+      if (!guruDatabase || !guruDatabase.length) {
+        showToast('Tidak ada data akun guru!', 'error');
+        return;
+      }
+
+      showToast('Sedang membuat berkas PDF Data Akun Guru... Mohon tunggu.');
+
+      const q = (document.getElementById('user-search-input')?.value || '').toLowerCase();
+      const roleFilter = document.getElementById('user-filter-role')?.value || '';
+      const spvFilter = document.getElementById('user-filter-spv')?.value || '';
+
+      let list = guruDatabase;
+      if (q || roleFilter || spvFilter) {
+        list = guruDatabase.filter(g => {
+          const matchSearch = g.nama.toLowerCase().includes(q) || g.nip.toLowerCase().includes(q) || g.mapel.toLowerCase().includes(q);
+          let matchRole = true;
+          if (roleFilter === 'superadmin') matchRole = !!g.is_superadmin;
+          else if (roleFilter === 'supervisor') matchRole = !!g.is_supervisor;
+          else if (roleFilter === 'guru') matchRole = !g.is_supervisor && !g.is_superadmin;
+          let matchSpv = true;
+          if (spvFilter !== '') matchSpv = (String(g.supervisorId) === String(spvFilter));
+          return matchSearch && matchRole && matchSpv;
+        });
+      }
+
+      if (!list.length) {
+        showToast('Tidak ada akun guru yang sesuai dengan filter pencarian!', 'error');
+        return;
+      }
+
+      const kopEl = document.querySelector('#printable-report .kop-surat-container') || document.querySelector('#printable-all-reports .kop-surat-container');
+      const kopHTML = kopEl ? kopEl.outerHTML : '';
+
+      const rowsHTML = list.map((g, idx) => {
+        let roleBadge = 'Guru Biasa';
+        if (g.is_superadmin) roleBadge = 'Super Admin';
+        else if (g.is_supervisor) roleBadge = 'Supervisor';
+
+        return `
+          <tr style="border-bottom: 1px solid #cbd5e1; page-break-inside: avoid; break-inside: avoid;">
+            <td style="padding: 6px 6px; text-align: center; font-size: 9.5px; color: #475569; border: 1px solid #94a3b8;">${idx + 1}</td>
+            <td style="padding: 6px 8px; font-size: 10px; font-weight: 700; color: #0f172a; border: 1px solid #94a3b8;">
+              ${g.nama}
+            </td>
+            <td style="padding: 6px 8px; font-size: 9.5px; color: #334155; border: 1px solid #94a3b8;">
+              ${g.mapel} ${g.kelas ? '<span style="color:#64748b;">(' + g.kelas + ')</span>' : ''}
+            </td>
+            <td style="padding: 6px 8px; text-align: center; font-size: 9.5px; border: 1px solid #94a3b8;">
+              <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 9px; ${g.is_superadmin ? 'background: #fef3c7; color: #92400e; border: 1px solid #fde68a;' : (g.is_supervisor ? 'background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe;' : 'background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;')}">
+                ${roleBadge}
+              </span>
+            </td>
+            <td style="padding: 6px 8px; font-family: monospace; font-size: 10px; font-weight: 700; color: #1e1b4b; border: 1px solid #94a3b8; letter-spacing: 0.5px;">
+              ${g.nip}
+            </td>
+            <td style="padding: 6px 8px; font-family: monospace; font-size: 10px; font-weight: 700; color: #047857; text-align: center; background-color: #f8fafc; border: 1px solid #94a3b8; letter-spacing: 0.5px;">
+              ${g.password || '123456'}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      const todayStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+      const ksName = appSettings.kepalaSekolah || 'Drs. Teguh Edy Purwanta';
+      const ksNip = appSettings.nipKepalaSekolah || '196710202000031006';
+
+      const fullHTML = `
+        <div style="font-family: 'Inter', Arial, sans-serif; color: #0f172a; line-height: 1.4;">
+          ${kopHTML}
+          <div style="text-align: center; margin-top: 10px; margin-bottom: 14px;">
+            <h2 style="font-size: 13pt; font-weight: 900; text-transform: uppercase; margin: 0; color: #0f172a; letter-spacing: 0.5px;">
+              DAFTAR AKUN PENGGUNA & KATA SANDI SISTEM SUPERVISI
+            </h2>
+            <p style="font-size: 9.5pt; color: #475569; margin: 3px 0 0 0; font-weight: 600;">
+              SMP NEGERI 24 MALANG &bull; TAHUN AJARAN ${appSettings.tahunAjaran || '2026/2027'} (${appSettings.semester || 'Semester Ganjil'})
+            </p>
+            <div style="margin-top: 6px; display: inline-block; padding: 4px 10px; border-radius: 6px; background-color: #f1f5f9; border: 1px solid #cbd5e1; font-size: 8.5pt; color: #334155;">
+              <strong>Alamat Akses:</strong> https://supervisi.smpn24-mlg.sch.id &bull; <em>Bersifat Rahasia Khusus Bapak/Ibu Guru</em>
+            </div>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 10px;">
+            <thead>
+              <tr style="background-color: #f8fafc; border: 1px solid #94a3b8;">
+                <th style="padding: 7px 6px; border: 1px solid #94a3b8; text-align: center; width: 35px; font-weight: 700; color: #334155;">No</th>
+                <th style="padding: 7px 8px; border: 1px solid #94a3b8; text-align: left; font-weight: 700; color: #334155;">Nama Guru & Tenaga Pendidik</th>
+                <th style="padding: 7px 8px; border: 1px solid #94a3b8; text-align: left; width: 170px; font-weight: 700; color: #334155;">Mata Pelajaran & Kelas</th>
+                <th style="padding: 7px 8px; border: 1px solid #94a3b8; text-align: center; width: 85px; font-weight: 700; color: #334155;">Peran / Akses</th>
+                <th style="padding: 7px 8px; border: 1px solid #94a3b8; text-align: left; width: 140px; font-weight: 700; color: #334155;">Username (NIP)</th>
+                <th style="padding: 7px 8px; border: 1px solid #94a3b8; text-align: center; width: 95px; font-weight: 700; color: #334155;">Password</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHTML}
+            </tbody>
+          </table>
+
+          <div style="margin-top: 24px; display: flex; justify-content: space-between; page-break-inside: avoid; break-inside: avoid;">
+            <div style="width: 45%; text-align: center; font-size: 10px;">
+              <p style="margin: 0; color: #475569; font-weight: 600;">Pengelola IT & Super Admin,</p>
+              <div style="height: 48px;"></div>
+              <p style="margin: 0; font-weight: 800; text-decoration: underline; color: #0f172a;">Administrator IT Sekolah</p>
+              <p style="margin: 2px 0 0 0; color: #64748b; font-size: 9px;">SMP Negeri 24 Malang</p>
+            </div>
+            <div style="width: 45%; text-align: center; font-size: 10px;">
+              <p style="margin: 0; color: #475569;">Malang, ${todayStr}</p>
+              <p style="margin: 2px 0 0 0; color: #475569; font-weight: 600;">Mengetahui,<br>Kepala Sekolah</p>
+              <div style="height: 38px;"></div>
+              <p style="margin: 0; font-weight: 800; text-decoration: underline; color: #0f172a;">${ksName}</p>
+              <p style="margin: 2px 0 0 0; color: #64748b; font-size: 9px;">NIP. ${ksNip}</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const tempContainer = document.createElement('div');
+      tempContainer.id = 'temp-user-accounts-pdf';
+      tempContainer.style.position = 'absolute';
+      tempContainer.style.left = '-9999px';
+      tempContainer.style.top = '0';
+      tempContainer.style.width = '794px';
+      tempContainer.style.backgroundColor = '#ffffff';
+      tempContainer.style.padding = '20px 24px';
+      tempContainer.innerHTML = fullHTML;
+      document.body.appendChild(tempContainer);
+
+      const filename = `Data_Akun_Login_Guru_SMPN24_${new Date().toISOString().slice(0, 10)}.pdf`;
+
+      const opt = {
+        margin: [8, 8, 10, 8],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(tempContainer).save().then(() => {
+        if (document.getElementById('temp-user-accounts-pdf')) {
+          document.body.removeChild(tempContainer);
+        }
+        showToast('File PDF Data Akun Guru berhasil diunduh!');
+      }).catch(err => {
+        if (document.getElementById('temp-user-accounts-pdf')) {
+          document.body.removeChild(tempContainer);
+        }
+        console.error(err);
+        showToast('Gagal membuat PDF otomatis.', 'error');
+      });
+    }
+
+    function exportUserAccountsExcel() {
+      if (!guruDatabase || !guruDatabase.length) {
+        showToast('Tidak ada data akun guru!', 'error');
+        return;
+      }
+      const exportRows = guruDatabase.map((g, idx) => {
+        let roleText = 'Guru Biasa';
+        if (g.is_superadmin) roleText = 'Super Admin';
+        else if (g.is_supervisor) roleText = 'Supervisor';
+
+        const spv = appSettings.supervisors.find(s => s.id === g.supervisorId);
+
+        return {
+          "No": idx + 1,
+          "Nama Lengkap": g.nama,
+          "Mata Pelajaran": g.mapel,
+          "Kelas": g.kelas,
+          "Hak Akses / Peran": roleText,
+          "Username (NIP)": g.nip,
+          "Password (Kata Sandi)": g.password || '123456',
+          "Supervisor Penilai": spv ? spv.nama : '-'
+        };
+      });
+
+      const ws = XLSX.utils.json_to_sheet(exportRows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Data_Akun_Guru");
+      const filename = `Data_Akun_Guru_SMPN24_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      XLSX.writeFile(wb, filename);
+      showToast('Data akun guru berhasil diekspor ke Excel (.xlsx)!');
     }
 
     function openAddGuruModal() {
