@@ -186,7 +186,7 @@
       </button>
       <button onclick="navigateTo('guru')" id="nav-guru" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
         <i class="fa-solid fa-users w-4 flex-shrink-0 text-center"></i>
-        <span class="text-left leading-snug">Database Guru (44 Guru)</span>
+        <span id="nav-text-guru" class="text-left leading-snug">Database Guru (44 Guru)</span>
       </button>
       <button onclick="navigateTo('pra')" id="nav-pra" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
         <i class="fa-solid fa-file-signature w-4 flex-shrink-0 text-center"></i>
@@ -290,9 +290,9 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
-              <p class="text-xs text-slate-500 font-medium">Total Guru</p>
+              <p id="kpi-label-total" class="text-xs text-slate-500 font-medium">Total Guru</p>
               <h3 id="kpi-total" class="text-2xl font-bold text-slate-800 mt-1">0</h3>
-              <p class="text-[11px] text-slate-400 mt-0.5">Terdaftar di Sistem</p>
+              <p id="kpi-sub-total" class="text-[11px] text-slate-400 mt-0.5">Terdaftar di Sistem</p>
             </div>
             <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
               <i class="fa-solid fa-users"></i>
@@ -424,22 +424,24 @@
               <i class="fa-solid fa-print text-indigo-600"></i>
               <span>Cetak Database</span>
             </button>
-            <button onclick="downloadExcelTemplate()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1 border border-slate-200 transition">
-              <i class="fa-solid fa-download text-slate-500"></i>
-              <span>Unduh Template .xlsx</span>
-            </button>
-            <button onclick="openImportExcelModal()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center space-x-1 shadow-sm transition">
-              <i class="fa-solid fa-file-excel"></i>
-              <span>Unggah Kolektif Excel</span>
-            </button>
-            <button onclick="openAddGuruModal()" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center space-x-1 shadow-sm transition">
-              <i class="fa-solid fa-plus"></i>
-              <span>Tambah Guru</span>
-            </button>
-            <button id="btn-hapus-semua-guru" onclick="openDeleteAllGuruModal()" class="hidden px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center space-x-1 shadow-sm transition">
-              <i class="fa-solid fa-triangle-exclamation"></i>
-              <span>Kosongkan Seluruh Database</span>
-            </button>
+            <div id="admin-guru-actions" class="flex flex-wrap items-center gap-2">
+              <button onclick="downloadExcelTemplate()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1 border border-slate-200 transition">
+                <i class="fa-solid fa-download text-slate-500"></i>
+                <span>Unduh Template .xlsx</span>
+              </button>
+              <button onclick="openImportExcelModal()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center space-x-1 shadow-sm transition">
+                <i class="fa-solid fa-file-excel"></i>
+                <span>Unggah Kolektif Excel</span>
+              </button>
+              <button onclick="openAddGuruModal()" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center space-x-1 shadow-sm transition">
+                <i class="fa-solid fa-plus"></i>
+                <span>Tambah Guru</span>
+              </button>
+              <button id="btn-hapus-semua-guru" onclick="openDeleteAllGuruModal()" class="hidden px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center space-x-1 shadow-sm transition">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Kosongkan Seluruh Database</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -4588,6 +4590,9 @@
       if (currentRole === 'guru' && (targetView === 'guru' || targetView === 'pengaturan' || targetView === 'users')) {
         targetView = 'dashboard';
       }
+      if (currentRole === 'supervisor' && (targetView === 'pengaturan' || targetView === 'users')) {
+        targetView = 'dashboard';
+      }
 
       try { localStorage.setItem(STORAGE_KEY_VIEW, targetView); } catch(e) {}
       views.forEach(v => {
@@ -4614,8 +4619,8 @@
       if (topTitle) {
         const isMobileScreen = window.innerWidth < 640;
         const titlesDesktop = {
-          dashboard: 'Dashboard Analitik Supervisi',
-          guru: 'Database Guru & Jadwal Penilaian',
+          dashboard: currentRole === 'supervisor' ? 'Dashboard Analitik Supervisi (Guru Binaan)' : 'Dashboard Analitik Supervisi',
+          guru: currentRole === 'supervisor' ? 'Daftar Guru Binaan & Jadwal Supervisi' : 'Database Guru & Jadwal Penilaian',
           pra: isBk ? 'Pra Observasi-Telaah Modul Ajar (BK)' : 'Pra Observasi-Telaah Modul Ajar (PM)',
           observasi: isBk ? 'Observasi Kelas (BK & Deep Learning)' : 'Observasi Kelas (28 Indikator & Deep Learning)',
           coaching: 'Pasca-Observasi (Coaching Model TIRTA)',
@@ -4625,8 +4630,8 @@
         };
         const titlesMobile = {
           dashboard: 'Dashboard',
-          guru: 'Data Guru',
-          pra: 'Pra Observasi',
+          guru: currentRole === 'supervisor' ? 'Guru Binaan' : 'Data Guru',
+          pra: isBk ? 'Pra (BK)' : 'Pra (PM)',
           observasi: 'Observasi Kelas',
           coaching: 'Coaching TIRTA',
           laporan: 'Laporan Supervisi',
@@ -4658,15 +4663,69 @@
       }
     }
 
+    function getCurrentSupervisorId() {
+      if (!currentLoggedInUser) return 1;
+      if (currentLoggedInUser.supervisor_id) return parseInt(currentLoggedInUser.supervisor_id);
+      if (appSettings && appSettings.supervisors && Array.isArray(appSettings.supervisors)) {
+        const found = appSettings.supervisors.find(s => s.nip === currentLoggedInUser.nip || s.id === currentLoggedInUser.id);
+        if (found) return found.id;
+      }
+      return 1;
+    }
+
+    function isUserSuperadminOrPengawas() {
+      if (currentRole === 'superadmin') return true;
+      if (currentRole === 'supervisor' && currentLoggedInUser && currentLoggedInUser.nip === '196808061998021005') {
+        return true; // Pengawas sekolah has oversight
+      }
+      return false;
+    }
+
+    function getSupervisorTeachers() {
+      if (currentRole === 'guru') {
+        return guruDatabase.filter(g => g.id === selectedGuruId);
+      }
+      if (currentRole === 'superadmin') {
+        return guruDatabase;
+      }
+      // Mode Supervisor
+      if (isUserSuperadminOrPengawas()) {
+        return guruDatabase;
+      }
+      const spvId = getCurrentSupervisorId();
+      const binaan = guruDatabase.filter(g => g.supervisorId === spvId);
+      return binaan.length > 0 ? binaan : guruDatabase;
+    }
+
+    function populateTeacherSelects() {
+      const teachers = getSupervisorTeachers();
+      ['pra-guru-select', 'coaching-guru-select', 'laporan-guru-select'].forEach(selId => {
+        const el = document.getElementById(selId);
+        if (el) {
+          el.innerHTML = teachers.map(g => `<option value="${g.id}">${g.nama} (${g.mapel})</option>`).join('');
+          if (teachers.length > 0) {
+            const hasCurrent = teachers.some(g => g.id === selectedGuruId);
+            if (!hasCurrent) {
+              selectedGuruId = teachers[0].id;
+            }
+            el.value = selectedGuruId;
+          }
+        }
+      });
+      syncSelectedGuru(selectedGuruId);
+    }
+
     function switchRole(role) {
       currentRole = role;
       const rolePill = document.getElementById('role-pill');
       const navGuru = document.getElementById('nav-guru');
+      const navTextGuru = document.getElementById('nav-text-guru');
       const navPengaturan = document.getElementById('nav-pengaturan');
       const navUsers = document.getElementById('nav-users');
       const roleSwitchContainer = document.getElementById('role-switch-container');
       const dashBtnDb = document.getElementById('dash-btn-db');
       const btnHapusSemua = document.getElementById('btn-hapus-semua-guru');
+      const adminGuruActions = document.getElementById('admin-guru-actions');
       const thCheckAll = document.getElementById('th-check-all');
       const bulkBar = document.getElementById('bulk-action-bar');
 
@@ -4699,6 +4758,7 @@
           navUsers.style.display = 'none';
         }
         if (dashBtnDb) dashBtnDb.classList.add('hidden');
+        if (adminGuruActions) adminGuruActions.classList.add('hidden');
         if (btnHapusSemua) btnHapusSemua.classList.add('hidden');
         if (thCheckAll) thCheckAll.classList.add('hidden');
         if (bulkBar) bulkBar.classList.add('hidden');
@@ -4715,7 +4775,7 @@
         }
 
         const curActive = document.querySelector('section:not(.hidden)');
-        if (curActive && (curActive.id === 'view-guru' || curActive.id === 'view-pengaturan')) {
+        if (curActive && (curActive.id === 'view-guru' || curActive.id === 'view-pengaturan' || curActive.id === 'view-users')) {
           navigateTo('dashboard');
         }
       } else if (role === 'superadmin') {
@@ -4727,6 +4787,9 @@
           navGuru.classList.remove('hidden');
           navGuru.style.display = 'flex';
         }
+        if (navTextGuru) {
+          navTextGuru.innerText = `Database Guru (${guruDatabase.length} Guru)`;
+        }
         if (navPengaturan) {
           navPengaturan.classList.remove('hidden');
           navPengaturan.style.display = 'flex';
@@ -4736,17 +4799,22 @@
           navUsers.style.display = 'flex';
         }
         if (dashBtnDb) dashBtnDb.classList.remove('hidden');
+        if (adminGuruActions) adminGuruActions.classList.remove('hidden');
         if (btnHapusSemua) btnHapusSemua.classList.remove('hidden');
         if (thCheckAll) thCheckAll.classList.remove('hidden');
         if (roleSwitchContainer) roleSwitchContainer.classList.remove('hidden');
       } else {
+        // Mode Supervisor
+        const binaanCount = getSupervisorTeachers().length;
         if (rolePill) {
           const isPengawas = currentLoggedInUser && currentLoggedInUser.nip === '196808061998021005';
           if (isPengawas) {
             rolePill.innerText = 'Mode Pengawas Sekolah (Mochamad Solikin)';
             rolePill.className = 'hidden md:inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-50 text-purple-700 border border-purple-300 shadow-sm';
           } else {
-            rolePill.innerText = 'Mode Supervisor';
+            const spv = appSettings.supervisors.find(s => s.id === getCurrentSupervisorId());
+            const spvLabel = spv ? spv.nama.split('(')[0].trim() : 'Supervisor';
+            rolePill.innerText = `Mode Supervisor (${spvLabel})`;
             rolePill.className = 'hidden md:inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200';
           }
         }
@@ -4754,27 +4822,43 @@
           navGuru.classList.remove('hidden');
           navGuru.style.display = 'flex';
         }
+        if (navTextGuru) {
+          navTextGuru.innerText = `Data Guru Binaan (${binaanCount} Guru)`;
+        }
+        // Strict hiding of admin menus in supervisor mode
         if (navPengaturan) {
-          navPengaturan.classList.remove('hidden');
-          navPengaturan.style.display = 'flex';
+          navPengaturan.classList.add('hidden');
+          navPengaturan.style.display = 'none';
         }
         if (navUsers) {
-          navUsers.classList.remove('hidden');
-          navUsers.style.display = 'flex';
+          navUsers.classList.add('hidden');
+          navUsers.style.display = 'none';
         }
-        if (dashBtnDb) dashBtnDb.classList.remove('hidden');
+        if (dashBtnDb) dashBtnDb.classList.add('hidden');
+        if (adminGuruActions) adminGuruActions.classList.add('hidden');
         if (btnHapusSemua) btnHapusSemua.classList.add('hidden');
         if (thCheckAll) thCheckAll.classList.add('hidden');
         if (bulkBar) bulkBar.classList.add('hidden');
         if (roleSwitchContainer) roleSwitchContainer.classList.remove('hidden');
+
+        // Redirect away if currently on admin-only page
+        const curActive = document.querySelector('section:not(.hidden)');
+        if (curActive && (curActive.id === 'view-pengaturan' || curActive.id === 'view-users')) {
+          navigateTo('dashboard');
+        }
       }
 
+      populateTeacherSelects();
       updateTeacherPickerVisibility();
       const btnCetakRekap = document.getElementById('btn-cetak-rekap-keseluruhan');
       if (btnCetakRekap) {
         if (role === 'guru') btnCetakRekap.classList.add('hidden');
         else btnCetakRekap.classList.remove('hidden');
       }
+      updateDashboardKPI();
+      renderDashboardTable();
+      renderGuruTable();
+      renderCharts();
       renderRekapTable();
       showToast(`Mode aktif: ${role.toUpperCase()}`);
 
@@ -6019,7 +6103,8 @@
       const filterMapel = document.getElementById('guru-filter-mapel')?.value || '';
       const filterStatus = document.getElementById('guru-filter-status')?.value || '';
 
-      const filtered = guruDatabase.filter(g => {
+      const baseList = getSupervisorTeachers();
+      const filtered = baseList.filter(g => {
         const matchSearch = g.nama.toLowerCase().includes(searchVal) || g.nip.includes(searchVal);
         const matchMapel = !filterMapel || g.mapel === filterMapel;
         const matchStatus = !filterStatus || g.status === filterStatus;
@@ -6154,16 +6239,22 @@
     }
 
     function updateDashboardKPI() {
-      const total = guruDatabase.length;
-      const selesai = guruDatabase.filter(g => g.status === 'Selesai').length;
-      const tindak = guruDatabase.filter(g => g.status === 'Tindak Lanjut').length;
-      const belum = guruDatabase.filter(g => g.status === 'Belum').length;
+      const list = getSupervisorTeachers();
+      const total = list.length;
+      const selesai = list.filter(g => g.status === 'Selesai').length;
+      const tindak = list.filter(g => g.status === 'Tindak Lanjut').length;
+      const belum = list.filter(g => g.status === 'Belum').length;
 
       const kpiTotal = document.getElementById('kpi-total');
       const kpiSelesai = document.getElementById('kpi-selesai');
       const kpiSelesaiPct = document.getElementById('kpi-selesai-pct');
       const kpiTindak = document.getElementById('kpi-tindak');
       const kpiBelum = document.getElementById('kpi-belum');
+      const kpiLabelTotal = document.getElementById('kpi-label-total');
+      const kpiSubTotal = document.getElementById('kpi-sub-total');
+
+      if (kpiLabelTotal) kpiLabelTotal.innerText = currentRole === 'supervisor' ? 'Total Guru Binaan' : 'Total Guru';
+      if (kpiSubTotal) kpiSubTotal.innerText = currentRole === 'supervisor' ? 'Guru Binaan Supervisor' : 'Terdaftar di Sistem';
 
       if (kpiTotal) kpiTotal.innerText = total;
       if (kpiSelesai) kpiSelesai.innerText = selesai;
@@ -6177,7 +6268,8 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      guruDatabase.slice(0, 5).forEach(g => {
+      const list = getSupervisorTeachers();
+      list.slice(0, 5).forEach(g => {
         const spv = appSettings.supervisors.find(s => s.id === g.supervisorId);
         const metrics = getGuruEvaluationMetrics(g);
         const tr = document.createElement('tr');
@@ -6212,7 +6304,8 @@
 
     function renderCharts() {
       let sb = 0, b = 0, c = 0, d = 0;
-      guruDatabase.forEach(g => {
+      const list = getSupervisorTeachers();
+      list.forEach(g => {
         const m = getGuruEvaluationMetrics(g);
         if (m.predikat.includes('Sangat Baik')) sb++;
         else if (m.predikat.includes('Baik')) b++;
@@ -6249,7 +6342,7 @@
         const dynamicAspectData = ASPEK_OBSERVASI.map(aspek => {
           let totalScore = 0;
           let totalMax = 0;
-          guruDatabase.forEach(g => {
+          list.forEach(g => {
             if (g.obsScores && Object.keys(g.obsScores).length > 0) {
               aspek.indikator.forEach(ind => {
                 if (g.obsScores[ind.id] !== undefined && Number(g.obsScores[ind.id]) > 0) {
@@ -7597,12 +7690,7 @@
         selMapel.innerHTML = '<option value="">Semua Mapel</option>' + MAPEL_LIST.map(m => `<option value="${m}">${m}</option>`).join('');
       }
 
-      ['pra-guru-select', 'coaching-guru-select', 'laporan-guru-select'].forEach(selId => {
-        const el = document.getElementById(selId);
-        if (el) {
-          el.innerHTML = guruDatabase.map(g => `<option value="${g.id}">${g.nama} (${g.mapel})</option>`).join('');
-        }
-      });
+      populateTeacherSelects();
 
       const selRekapSpv = document.getElementById('rekap-select-supervisor');
       if (selRekapSpv) {
