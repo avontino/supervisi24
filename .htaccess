@@ -1,0 +1,19 @@
+# Apache Configuration for Sistem Supervisi SMPN 24 Malang
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Set default index
+    DirectoryIndex index.html index.php
+</IfModule>
+
+# Protect database.sql and sensitive files
+<FilesMatch "(database\.sql|\.git|\.env)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Enable CORS for REST API
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+</IfModule>

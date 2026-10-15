@@ -1,0 +1,17 @@
+# Credentials & Environment (Jangan unggah kredensial database ke publik)
+config.php
+.env
+
+# Temporary / intermediate parsed data
+clean_teachers.json
+parsed_teachers.json
+*.log
+
+# OS & Editor cache
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
