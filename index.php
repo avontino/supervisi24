@@ -190,16 +190,18 @@
     <header class="h-14 sm:h-16 bg-white border-b border-slate-200 px-2 sm:px-5 md:px-6 flex items-center justify-between flex-shrink-0 z-20 no-print">
       <div class="flex items-center space-x-1.5 sm:space-x-3 min-w-0">
         <!-- Hamburger Button Mobile -->
-        <button id="btn-toggle-sidebar" type="button" onclick="toggleMobileSidebar(true)" class="md:hidden p-1.5 -ml-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg focus:outline-none" title="Menu Navigasi">
+        <button id="btn-toggle-sidebar" type="button" onclick="toggleMobileSidebar(true)" class="md:hidden p-1.5 -ml-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg focus:outline-none flex-shrink-0" title="Menu Navigasi">
           <i class="fa-solid fa-bars text-lg"></i>
         </button>
-        <h2 id="top-title" class="text-xs sm:text-base font-bold text-slate-800 truncate max-w-[120px] sm:max-w-xs md:max-w-none">Dashboard Supervisi</h2>
+        <!-- Mobile Status Indicator Dot -->
+        <span id="mobile-status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0 md:hidden" title="MySQL Online"></span>
+        <h2 id="top-title" class="text-xs sm:text-base font-bold text-slate-800 whitespace-nowrap min-w-0">Dashboard</h2>
         <span class="hidden md:inline text-slate-300">|</span>
         <span id="role-pill" class="hidden md:inline-block px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
           Mode Supervisor
         </span>
-        <!-- Server Connection Badge -->
-        <div id="server-status-badge" class="hidden lg:flex items-center space-x-1.5 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+        <!-- Server Connection Badge (Desktop) -->
+        <div id="server-status-badge" class="hidden md:flex items-center space-x-1.5 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span id="server-status-text">MySQL Online</span>
         </div>
@@ -2096,14 +2098,19 @@
       isServerOnline = online;
       const badge = document.getElementById('server-status-badge');
       const text = document.getElementById('server-status-text');
+      const mobileDot = document.getElementById('mobile-status-dot');
+      if (mobileDot) {
+        mobileDot.className = online 
+          ? 'w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0 md:hidden'
+          : 'w-2.5 h-2.5 rounded-full bg-amber-500 flex-shrink-0 md:hidden';
+        mobileDot.title = online ? 'MySQL Online' : 'Mode Offline';
+      }
       if (!badge || !text) return;
-      badge.classList.remove('hidden');
-      badge.classList.add('flex');
       if (online) {
-        badge.className = 'flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200';
+        badge.className = 'hidden md:flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200';
         text.innerText = 'MySQL Online';
       } else {
-        badge.className = 'flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200';
+        badge.className = 'hidden md:flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200';
         text.innerText = 'Mode Offline (Lokal)';
       }
     }
@@ -4307,17 +4314,30 @@
       const isBk = activeGuru && activeGuru.mapel === 'BK';
 
       if (topTitle) {
-        const titles = {
+        const isMobileScreen = window.innerWidth < 640;
+        const titlesDesktop = {
           dashboard: 'Dashboard Analitik Supervisi',
           guru: 'Database Guru & Jadwal Penilaian',
           pra: isBk ? 'Pra Observasi-Telaah Modul Ajar (BK)' : 'Pra Observasi-Telaah Modul Ajar (PM)',
-          observasi: isBk ? 'Tahap 2: Observasi Kelas (27 Indikator & Deep Learning)' : 'Tahap 2: Observasi Kelas (28 Indikator & Deep Learning)',
-          coaching: 'Tahap 3: Pasca-Observasi (Coaching Model TIRTA)',
-          laporan: 'Tahap 4: Rekapitulasi Laporan & Lembar Pengesahan',
-          pengaturan: 'Pengaturan Sistem & Data Supervisor',
-          users: 'Manajemen Pengguna & Hak Akses (Super Admin)'
+          observasi: isBk ? 'Observasi Kelas (BK & Deep Learning)' : 'Observasi Kelas (28 Indikator & Deep Learning)',
+          coaching: 'Pasca-Observasi (Coaching Model TIRTA)',
+          laporan: 'Rekapitulasi Laporan Supervisi',
+          pengaturan: 'Pengaturan Sistem & Supervisor',
+          users: 'Manajemen Pengguna (Super Admin)'
         };
-        topTitle.innerText = titles[targetView] || 'Dashboard Supervisi';
+        const titlesMobile = {
+          dashboard: 'Dashboard',
+          guru: 'Data Guru',
+          pra: 'Pra Observasi',
+          observasi: 'Observasi Kelas',
+          coaching: 'Coaching TIRTA',
+          laporan: 'Laporan Supervisi',
+          pengaturan: 'Pengaturan',
+          users: 'Manajemen User'
+        };
+        topTitle.innerText = isMobileScreen 
+          ? (titlesMobile[targetView] || 'Dashboard') 
+          : (titlesDesktop[targetView] || 'Dashboard Supervisi');
       }
 
       if (targetView === 'dashboard') {
