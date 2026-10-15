@@ -371,20 +371,22 @@
         </div>
 
         <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 no-print">
-          <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 flex-1 w-full">
+          <div class="flex flex-wrap items-center gap-2 flex-1 w-full min-w-0">
             <div class="relative flex-1 min-w-[160px] sm:max-w-sm w-full">
               <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400"></i>
               <input type="text" id="guru-search" oninput="filterGuruTable()" placeholder="Cari Nama Guru / NIP..." class="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
-            <select id="guru-filter-mapel" onchange="filterGuruTable()" class="text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="">Semua Mapel</option>
-            </select>
-            <select id="guru-filter-status" onchange="filterGuruTable()" class="text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="">Semua Status</option>
-              <option value="Selesai">Selesai</option>
-              <option value="Tindak Lanjut">Tindak Lanjut</option>
-              <option value="Belum">Belum</option>
-            </select>
+            <div class="flex items-center gap-2 flex-1 sm:flex-initial w-full sm:w-auto min-w-0">
+              <select id="guru-filter-mapel" onchange="filterGuruTable()" class="flex-1 sm:flex-initial text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white min-w-0 max-w-full sm:max-w-[180px] truncate">
+                <option value="">Semua Mapel</option>
+              </select>
+              <select id="guru-filter-status" onchange="filterGuruTable()" class="flex-1 sm:flex-initial text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white min-w-0 max-w-full sm:max-w-[140px] truncate">
+                <option value="">Semua Status</option>
+                <option value="Selesai">Selesai</option>
+                <option value="Tindak Lanjut">Tindak Lanjut</option>
+                <option value="Belum">Belum</option>
+              </select>
+            </div>
           </div>
 
           <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
@@ -1442,22 +1444,24 @@
 
           <!-- Filter & Search Toolbar -->
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2">
-            <div class="flex items-center space-x-2 flex-1">
-              <div class="relative flex-1 max-w-xs">
+            <div class="flex flex-wrap items-center gap-2 flex-1 w-full min-w-0">
+              <div class="relative flex-1 min-w-[160px] sm:max-w-xs w-full">
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
                 <input type="text" id="user-search-input" oninput="filterUserTable()" placeholder="Cari Nama / NIP..." class="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
               </div>
-              <select id="user-filter-role" onchange="filterUserTable()" class="text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
-                <option value="">Semua Peran</option>
-                <option value="superadmin">Super Admin</option>
-                <option value="supervisor">Supervisor</option>
-                <option value="guru">Guru Biasa</option>
-              </select>
-              <select id="user-filter-spv" onchange="filterUserTable()" class="text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
-                <option value="">Semua Supervisor</option>
-              </select>
+              <div class="flex items-center gap-2 flex-1 sm:flex-initial w-full sm:w-auto min-w-0">
+                <select id="user-filter-role" onchange="filterUserTable()" class="flex-1 sm:flex-initial text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white min-w-0 max-w-full sm:max-w-[140px] truncate">
+                  <option value="">Semua Peran</option>
+                  <option value="superadmin">Super Admin</option>
+                  <option value="supervisor">Supervisor</option>
+                  <option value="guru">Guru Biasa</option>
+                </select>
+                <select id="user-filter-spv" onchange="filterUserTable()" class="flex-1 sm:flex-initial text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white min-w-0 max-w-full sm:max-w-[210px] truncate">
+                  <option value="">Semua Supervisor</option>
+                </select>
+              </div>
             </div>
-            <span class="text-xs text-slate-500">Menampilkan <strong id="user-count-display">0</strong> akun</span>
+            <span class="text-xs text-slate-500 whitespace-nowrap">Menampilkan <strong id="user-count-display">0</strong> akun</span>
           </div>
 
           <!-- User Table -->
@@ -7140,7 +7144,7 @@
       const sel = document.getElementById('user-filter-spv');
       if (!sel) return;
       const curVal = sel.value;
-      sel.innerHTML = '<option value="">Semua Supervisor</option>' + appSettings.supervisors.map(s => `<option value="${s.id}">${s.nama}</option>`).join('');
+      sel.innerHTML = '<option value="">Semua Supervisor</option>' + appSettings.supervisors.map(s => `<option value="${s.id}" title="${s.nama}">${s.nama}</option>`).join('');
       sel.value = curVal;
     }
 
