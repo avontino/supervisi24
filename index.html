@@ -6519,10 +6519,9 @@
 
           if (res.user.active_role === 'guru') {
             syncSelectedGuru(selectedGuruId);
-            navigateTo('laporan');
-          } else {
-            navigateTo('dashboard');
           }
+          try { localStorage.setItem(STORAGE_KEY_VIEW, 'dashboard'); } catch(e) {}
+          navigateTo('dashboard');
           showToast(`Selamat datang, ${res.user.nama}!`);
           return;
         } else if (res && res.error) {
@@ -6563,10 +6562,9 @@
           switchRole(currentLoggedInUser.active_role);
           if (currentLoggedInUser.active_role === 'guru') {
             syncSelectedGuru(matchGuru.id);
-            navigateTo('laporan');
-          } else {
-            navigateTo('dashboard');
           }
+          try { localStorage.setItem(STORAGE_KEY_VIEW, 'dashboard'); } catch(e) {}
+          navigateTo('dashboard');
           showToast(`Selamat datang, ${matchGuru.nama}!`);
           return;
         } else {
@@ -7078,7 +7076,7 @@
         }
 
         // Restore halaman/tab yang sedang dibuka sebelum refresh
-        const savedView = localStorage.getItem(STORAGE_KEY_VIEW) || (activeRole === 'guru' ? 'laporan' : 'dashboard');
+        const savedView = localStorage.getItem(STORAGE_KEY_VIEW) || 'dashboard';
         navigateTo(savedView);
       } else {
         const defaultGuruId = (guruDatabase && guruDatabase.length > 0) ? guruDatabase[0].id : 1;
