@@ -790,6 +790,23 @@
           </div>
         </div>
 
+        <!-- Kotak Fokus Target Perilaku PMM dari Pra Observasi -->
+        <div class="bg-indigo-50/90 border border-indigo-200/90 p-3.5 sm:p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div class="flex items-center space-x-3 min-w-0">
+            <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+              <i class="fa-solid fa-bullseye text-base"></i>
+            </div>
+            <div class="min-w-0">
+              <span class="text-[10px] uppercase font-bold text-indigo-600 tracking-wider block">Fokus Target Perilaku (PMM) Disepakati di Pra-Observasi</span>
+              <p id="obs-fokus-pmm-text" class="font-bold text-slate-800 text-xs sm:text-sm truncate">Instruksi Pembelajaran</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 text-[11px] text-indigo-700 bg-white/90 px-3 py-1.5 rounded-lg border border-indigo-100 flex-shrink-0 shadow-xs">
+            <i class="fa-solid fa-circle-check text-emerald-600"></i>
+            <span>Sinkron Otomatis dari Pra-Observasi</span>
+          </div>
+        </div>
+
         <!-- Standalone Deep Learning Panel for Regular Teachers -->
         <div id="panel-standalone-dl" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
           <div class="flex items-center justify-between border-b border-slate-200 pb-3">
@@ -4707,14 +4724,17 @@
 
     function populateTeacherSelects() {
       const teachers = getSupervisorTeachers();
+      // Urutkan nama guru secara alfabetis (A-Z) agar memudahkan pencarian cepat
+      const sortedTeachers = [...teachers].sort((a, b) => a.nama.localeCompare(b.nama, 'id', { sensitivity: 'base' }));
+
       ['pra-guru-select', 'obs-guru-select', 'coaching-guru-select', 'laporan-guru-select'].forEach(selId => {
         const el = document.getElementById(selId);
         if (el) {
-          el.innerHTML = teachers.map(g => `<option value="${g.id}">${g.nama} (${g.mapel})</option>`).join('');
-          if (teachers.length > 0) {
-            const hasCurrent = teachers.some(g => g.id === selectedGuruId);
+          el.innerHTML = sortedTeachers.map(g => `<option value="${g.id}">${g.nama} (${g.mapel})</option>`).join('');
+          if (sortedTeachers.length > 0) {
+            const hasCurrent = sortedTeachers.some(g => g.id === selectedGuruId);
             if (!hasCurrent) {
-              selectedGuruId = teachers[0].id;
+              selectedGuruId = sortedTeachers[0].id;
             }
             el.value = selectedGuruId;
           }
@@ -4974,7 +4994,10 @@
 
       if (obsNamaBanner) obsNamaBanner.innerText = guru.nama;
       if (obsMetaBanner) obsMetaBanner.innerText = `${guru.mapel} • ${guru.kelas} • NIP: ${guru.nip}`;
-      if (obsTargetBadge) obsTargetBadge.innerText = `Fokus: ${guru.targetPerilaku || 'Instruksi Pembelajaran'}`;
+      const targetPerilakuVal = guru.targetPerilaku || 'Instruksi Pembelajaran';
+      if (obsTargetBadge) obsTargetBadge.innerText = `Fokus: ${targetPerilakuVal}`;
+      const obsFokusPmmText = document.getElementById('obs-fokus-pmm-text');
+      if (obsFokusPmmText) obsFokusPmmText.innerText = targetPerilakuVal;
 
       const navPra = document.getElementById('nav-text-pra');
       const navObs = document.getElementById('nav-text-obs');
@@ -4988,7 +5011,7 @@
 
       updateTeacherPickerVisibility();
 
-      const curSection = document.querySelector('main > div > section:not(.hidden)');
+      const curSection = document.querySelector('section[id^="view-"]:not(.hidden)') || document.querySelector('section:not(.hidden)');
       if (curSection) {
         if (curSection.id === 'view-pra') loadPraObservasiData();
         else if (curSection.id === 'view-observasi') loadObservasiData();
@@ -5363,6 +5386,8 @@
       guru.targetPerilaku = targetVal;
       const obsTargetBadge = document.getElementById('obs-target-badge');
       if (obsTargetBadge) obsTargetBadge.innerText = `Fokus: ${targetVal}`;
+      const obsFokusPmmText = document.getElementById('obs-fokus-pmm-text');
+      if (obsFokusPmmText) obsFokusPmmText.innerText = targetVal;
       const editTarget = document.getElementById('edit-guru-target');
       if (editTarget) editTarget.value = targetVal;
       saveDataToLocalStorage();
@@ -5378,7 +5403,13 @@
       if (!guru) return;
 
       const targetPerilakuVal = document.getElementById('pra-input-target-perilaku')?.value;
-      if (targetPerilakuVal) guru.targetPerilaku = targetPerilakuVal;
+      if (targetPerilakuVal) {
+        guru.targetPerilaku = targetPerilakuVal;
+        const obsTargetBadge = document.getElementById('obs-target-badge');
+        if (obsTargetBadge) obsTargetBadge.innerText = `Fokus: ${targetPerilakuVal}`;
+        const obsFokusPmmText = document.getElementById('obs-fokus-pmm-text');
+        if (obsFokusPmmText) obsFokusPmmText.innerText = targetPerilakuVal;
+      }
 
       if (guru.mapel === 'BK') {
         const bkBidang = document.getElementById('pra-bk-bidang')?.value.trim() || '';
@@ -5441,6 +5472,11 @@
       const scaleLegend = document.getElementById('obs-scale-legend');
       const standaloneDl = document.getElementById('panel-standalone-dl');
       const bannerTag = document.getElementById('obs-tag-banner');
+      const obsTargetBadge = document.getElementById('obs-target-badge');
+      const obsFokusPmmText = document.getElementById('obs-fokus-pmm-text');
+      const targetPerilakuVal = guru.targetPerilaku || 'Instruksi Pembelajaran';
+      if (obsTargetBadge) obsTargetBadge.innerText = `Fokus: ${targetPerilakuVal}`;
+      if (obsFokusPmmText) obsFokusPmmText.innerText = targetPerilakuVal;
 
       if (guru.mapel === 'BK') {
         if (bannerTag) bannerTag.innerText = 'Instrumen Observasi Layanan BK (27 Indikator & Deep Learning)';
