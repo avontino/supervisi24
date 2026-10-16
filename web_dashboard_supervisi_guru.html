@@ -4652,11 +4652,11 @@
         }
       });
  
-      // Tampilkan kartu 'Guru Yang Dinilai' di sidebar HANYA pada menu evaluasi/penilaian guru
+      // Tampilkan kartu 'Guru Yang Dinilai' di sidebar HANYA untuk Supervisor & Superadmin pada menu evaluasi guru
       const sideTargetCard = document.getElementById('side-target-guru-card');
       if (sideTargetCard) {
         const evaluationViews = ['pra', 'observasi', 'coaching', 'laporan'];
-        if (evaluationViews.includes(targetView)) {
+        if (currentRole !== 'guru' && evaluationViews.includes(targetView)) {
           sideTargetCard.classList.remove('hidden');
         } else {
           sideTargetCard.classList.add('hidden');
@@ -5008,6 +5008,18 @@
           lapPicker.classList.remove('hidden');
           lapBadge.classList.add('hidden');
           lapBadge.classList.remove('flex');
+        }
+      }
+
+      const sideTargetCard = document.getElementById('side-target-guru-card');
+      if (sideTargetCard) {
+        const curActive = document.querySelector('section:not(.hidden)');
+        const activeViewId = curActive ? curActive.id.replace('view-', '') : '';
+        const evaluationViews = ['pra', 'observasi', 'coaching', 'laporan'];
+        if (!isGuru && evaluationViews.includes(activeViewId)) {
+          sideTargetCard.classList.remove('hidden');
+        } else {
+          sideTargetCard.classList.add('hidden');
         }
       }
     }
