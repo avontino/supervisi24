@@ -4705,11 +4705,44 @@
 
     function getCurrentSupervisorId() {
       if (!currentLoggedInUser) return 1;
-      if (currentLoggedInUser.supervisor_id) return parseInt(currentLoggedInUser.supervisor_id);
-      if (appSettings && appSettings.supervisors && Array.isArray(appSettings.supervisors)) {
-        const found = appSettings.supervisors.find(s => s.nip === currentLoggedInUser.nip || s.id === currentLoggedInUser.id);
-        if (found) return found.id;
+
+      // 1. Cek jika user login memiliki active_spv_id langsung dari API
+      if (currentLoggedInUser.active_spv_id) {
+        return parseInt(currentLoggedInUser.active_spv_id);
       }
+
+      const spvList = (appSettings && Array.isArray(appSettings.supervisors)) ? appSettings.supervisors : [];
+      if (spvList.length === 0) return 1;
+
+      // 2. Cocokkan berdasarkan NIP (hanya angka)
+      const userNipClean = String(currentLoggedInUser.nip || '').replace(/\D/g, '');
+      if (userNipClean) {
+        const foundByNip = spvList.find(s => {
+          const sNipClean = String(s.nip || '').replace(/\D/g, '');
+          return sNipClean && sNipClean === userNipClean;
+        });
+        if (foundByNip) return parseInt(foundByNip.id);
+      }
+
+      // 3. Cocokkan berdasarkan Nama (abaikan gelar & karakter non-alfanumerik)
+      const cleanName = (str) => {
+        return (str || '')
+          .toLowerCase()
+          .replace(/(drs\.|dr\.|dra\.|s\.pd\.|m\.pd\.|s\.si\.|s\.p\.|s\.e\.|s\.ag\.|s\.h\.|m\.si\.|gr\.?|\(|\)|supervisor\s*\d*)/gi, '')
+          .replace(/[^a-z0-9]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+      };
+
+      const userClean = cleanName(currentLoggedInUser.nama);
+      if (userClean) {
+        const foundByName = spvList.find(s => {
+          const sClean = cleanName(s.nama);
+          return sClean && (sClean.includes(userClean) || userClean.includes(sClean));
+        });
+        if (foundByName) return parseInt(foundByName.id);
+      }
+
       return 1;
     }
 
@@ -7724,7 +7757,8 @@
           const roles = ['guru'];
           if (matchGuru.is_supervisor) roles.push('supervisor');
           if (matchGuru.is_superadmin) roles.push('superadmin');
-          const guruObj = { ...matchGuru, available_roles: roles, active_role: roles[roles.length - 1] };
+          const spvMatch = appSettings.supervisors.find(s => s.nip === matchGuru.nip);
+          const guruObj = { ...matchGuru, active_spv_id: spvMatch ? spvMatch.id : null, available_roles: roles, active_role: roles[roles.length - 1] };
           saveUserSession(guruObj);
           selectedGuruId = matchGuru.id;
           try { localStorage.setItem(STORAGE_KEY_SELECTED_GURU, String(selectedGuruId)); } catch(e) {}
@@ -7747,7 +7781,7 @@
 
       const matchSpv = appSettings.supervisors.find(s => s.nip === u);
       if (matchSpv && (p === '123456' || p === '12345678' || p === matchSpv.nip)) {
-        const spvObj = { id: matchSpv.id, nama: matchSpv.nama, nip: matchSpv.nip, role: 'supervisor', available_roles: ['guru', 'supervisor'], active_role: 'supervisor' };
+        const spvObj = { id: matchSpv.id, active_spv_id: matchSpv.id, nama: matchSpv.nama, nip: matchSpv.nip, role: 'supervisor', available_roles: ['guru', 'supervisor'], active_role: 'supervisor' };
         saveUserSession(spvObj);
         document.getElementById('modal-login').classList.add('hidden');
         renderRoleSwitcher(['guru', 'supervisor']);

@@ -233,6 +233,22 @@ try {
             if ((int)$guru['is_superadmin'] === 1) $activeRole = 'superadmin';
             elseif ((int)$guru['is_supervisor'] === 1) $activeRole = 'supervisor';
 
+            // Cari apakah user ini terdaftar sebagai supervisor di tabel pengaturan
+            $spvId = null;
+            $setStmt = $pdo->query("SELECT supervisors_json FROM pengaturan LIMIT 1");
+            $spvJson = $setStmt ? $setStmt->fetchColumn() : null;
+            if ($spvJson) {
+                $spvArr = json_decode($spvJson, true) ?: [];
+                $cleanUserNip = preg_replace('/\D/', '', (string)$guru['nip']);
+                foreach ($spvArr as $spvItem) {
+                    $itemNip = preg_replace('/\D/', '', (string)($spvItem['nip'] ?? ''));
+                    if ($itemNip && $cleanUserNip && $itemNip === $cleanUserNip) {
+                        $spvId = (int)$spvItem['id'];
+                        break;
+                    }
+                }
+            }
+
             $user = [
                 'id' => (int)$guru['id'],
                 'nip' => (string)$guru['nip'],
@@ -241,6 +257,7 @@ try {
                 'kelas' => $guru['kelas'],
                 'is_supervisor' => (int)$guru['is_supervisor'],
                 'is_superadmin' => (int)$guru['is_superadmin'],
+                'active_spv_id' => $spvId,
                 'available_roles' => $roles,
                 'active_role' => $activeRole
             ];
