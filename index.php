@@ -44,6 +44,32 @@
     .generating-pdf button, .generating-pdf .no-print {
       display: none !important;
     }
+    .generating-pdf .ttd-table {
+      width: 100% !important;
+      border-collapse: collapse !important;
+      border: none !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+    .generating-pdf .ttd-table td {
+      border: none !important;
+    }
+    .generating-pdf .ttd-container {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+      padding-bottom: 30px !important;
+    }
+    .generating-pdf #view-pra > div.bg-white,
+    .generating-pdf #view-observasi > div.bg-white,
+    .generating-pdf #view-coaching > div.bg-white,
+    .generating-pdf #view-laporan > div.bg-white,
+    .generating-pdf #printable-report,
+    .generating-pdf #printable-all-reports {
+      border: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      padding-bottom: 35px !important;
+    }
 
     @media print {
       * {
@@ -152,13 +178,20 @@
         max-width: 100% !important;
         display: inline-block !important;
       }
-      .ttd-grid-3 {
-        display: grid !important;
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-        gap: 0.5rem !important;
-        text-align: center !important;
+      .ttd-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        border: none !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
+      }
+      .ttd-table td {
+        border: none !important;
+      }
+      .ttd-container {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        padding-bottom: 25px !important;
       }
       .ttd-space {
         height: 3rem !important;
@@ -784,30 +817,40 @@
           </div>
 
           <!-- Blok Tanda Tangan 3 Pihak Pra-Observasi (Lembar Telaah) -->
-          <div class="mt-8 pt-4 border-t border-slate-200 avoid-break">
-            <div class="text-right text-xs text-slate-600 mb-3 sm:mb-4 mr-1 sm:mr-2">
-              Malang, <span class="font-semibold" id="pra-ttd-date">-</span>
-            </div>
-            <div class="grid grid-cols-3 gap-2 sm:gap-6 text-center text-[10px] sm:text-xs ttd-grid-3">
-              <div>
-                <p class="text-slate-500 font-medium leading-tight">Guru yang Disupervisi,</p>
-                <div class="h-10 sm:h-16 ttd-space"></div>
-                <p id="pra-ttd-guru" class="font-bold text-slate-900 underline leading-snug break-words">Nama Guru</p>
-                <p id="pra-ttd-nip-guru" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
-              </div>
-              <div>
-                <p class="text-slate-500 font-medium leading-tight">Supervisor Penilai,</p>
-                <div class="h-10 sm:h-16 ttd-space"></div>
-                <p id="pra-ttd-spv" class="font-bold text-slate-900 underline leading-snug break-words">Nama Supervisor</p>
-                <p id="pra-ttd-nip-spv" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
-              </div>
-              <div>
-                <p class="text-slate-500 font-medium leading-tight">Mengetahui,<br>Kepala Sekolah</p>
-                <div class="h-6 sm:h-12 ttd-space"></div>
-                <p id="pra-ttd-ks" class="font-bold text-slate-900 underline leading-snug break-words">Nama Kepala Sekolah</p>
-                <p id="pra-ttd-nip-ks" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
-              </div>
-            </div>
+          <div class="mt-8 pt-6 border-t border-slate-200 pb-8 avoid-break ttd-container">
+            <table class="ttd-table" style="width: 100%; border-collapse: collapse; border: none; margin: 0 auto; table-layout: fixed;">
+              <tr>
+                <td style="width: 33.3%; text-align: center; vertical-align: top; border: none; padding: 0 8px;">
+                  <div style="visibility: hidden; font-size: 10pt; line-height: 1.4; margin-bottom: 3px;">&nbsp;</div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Guru yang Disupervisi,
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="pra-ttd-guru" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Guru</div>
+                  <div id="pra-ttd-nip-guru" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+                <td style="width: 33.3%; text-align: center; vertical-align: top; border: none; padding: 0 8px;">
+                  <div style="visibility: hidden; font-size: 10pt; line-height: 1.4; margin-bottom: 3px;">&nbsp;</div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Supervisor Penilai,
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="pra-ttd-spv" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Supervisor</div>
+                  <div id="pra-ttd-nip-spv" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+                <td style="width: 33.3%; text-align: center; vertical-align: top; border: none; padding: 0 8px;">
+                  <div style="font-size: 10pt; color: #334155; line-height: 1.4; margin-bottom: 3px;">
+                    Malang, <span class="font-semibold" id="pra-ttd-date">-</span>
+                  </div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Mengetahui,<br>Kepala Sekolah
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="pra-ttd-ks" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Kepala Sekolah</div>
+                  <div id="pra-ttd-nip-ks" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+              </tr>
+            </table>
           </div>
 
           <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
@@ -1059,30 +1102,40 @@
           </div>
 
           <!-- Blok Tanda Tangan 3 Pihak Observasi Kelas -->
-          <div class="mt-8 pt-4 border-t border-slate-200 avoid-break">
-            <div class="text-right text-xs text-slate-600 mb-3 sm:mb-4 mr-1 sm:mr-2">
-              Malang, <span class="font-semibold" id="obs-ttd-date">-</span>
-            </div>
-            <div class="grid grid-cols-3 gap-2 sm:gap-6 text-center text-[10px] sm:text-xs ttd-grid-3">
-              <div>
-                <p class="text-slate-500 font-medium leading-tight">Guru yang Disupervisi,</p>
-                <div class="h-10 sm:h-16 ttd-space"></div>
-                <p id="obs-ttd-guru" class="font-bold text-slate-900 underline leading-snug break-words">Nama Guru</p>
-                <p id="obs-ttd-nip-guru" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
-              </div>
-              <div>
-                <p class="text-slate-500 font-medium leading-tight">Supervisor Penilai,</p>
-                <div class="h-10 sm:h-16 ttd-space"></div>
-                <p id="obs-ttd-spv" class="font-bold text-slate-900 underline leading-snug break-words">Nama Supervisor</p>
-                <p id="obs-ttd-nip-spv" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
-              </div>
-              <div>
-                <p class="text-slate-500 font-medium leading-tight">Mengetahui,<br>Kepala Sekolah</p>
-                <div class="h-6 sm:h-12 ttd-space"></div>
-                <p id="obs-ttd-ks" class="font-bold text-slate-900 underline leading-snug break-words">Nama Kepala Sekolah</p>
-                <p id="obs-ttd-nip-ks" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
-              </div>
-            </div>
+          <div class="mt-8 pt-6 border-t border-slate-200 pb-8 avoid-break ttd-container">
+            <table class="ttd-table" style="width: 100%; border-collapse: collapse; border: none; margin: 0 auto; table-layout: fixed;">
+              <tr>
+                <td style="width: 33.3%; text-align: center; vertical-align: top; border: none; padding: 0 8px;">
+                  <div style="visibility: hidden; font-size: 10pt; line-height: 1.4; margin-bottom: 3px;">&nbsp;</div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Guru yang Disupervisi,
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="obs-ttd-guru" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Guru</div>
+                  <div id="obs-ttd-nip-guru" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+                <td style="width: 33.3%; text-align: center; vertical-align: top; border: none; padding: 0 8px;">
+                  <div style="visibility: hidden; font-size: 10pt; line-height: 1.4; margin-bottom: 3px;">&nbsp;</div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Supervisor Penilai,
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="obs-ttd-spv" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Supervisor</div>
+                  <div id="obs-ttd-nip-spv" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+                <td style="width: 33.3%; text-align: center; vertical-align: top; border: none; padding: 0 8px;">
+                  <div style="font-size: 10pt; color: #334155; line-height: 1.4; margin-bottom: 3px;">
+                    Malang, <span class="font-semibold" id="obs-ttd-date">-</span>
+                  </div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Mengetahui,<br>Kepala Sekolah
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="obs-ttd-ks" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Kepala Sekolah</div>
+                  <div id="obs-ttd-nip-ks" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+              </tr>
+            </table>
           </div>
 
           <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
@@ -1207,30 +1260,40 @@
           </div>
 
           <!-- Blok Tanda Tangan 3 Pihak Coaching TIRTA -->
-          <div class="mt-8 pt-4 border-t border-slate-200 avoid-break">
-            <div class="text-right text-xs text-slate-600 mb-3 sm:mb-4 mr-1 sm:mr-2">
-              Malang, <span class="font-semibold" id="coach-ttd-date">-</span>
-            </div>
-            <div class="grid grid-cols-3 gap-2 sm:gap-6 text-center text-[10px] sm:text-xs ttd-grid-3">
-              <div>
-                <p class="text-slate-500 font-medium leading-tight">Guru / Coachee,</p>
-                <div class="h-10 sm:h-16 ttd-space"></div>
-                <p id="coach-ttd-guru" class="font-bold text-slate-900 underline leading-snug break-words">Nama Guru</p>
-                <p id="coach-ttd-nip-guru" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
-              </div>
-              <div>
-                <p class="text-slate-500 font-medium leading-tight">Supervisor / Coach,</p>
-                <div class="h-10 sm:h-16 ttd-space"></div>
-                <p id="coach-ttd-spv" class="font-bold text-slate-900 underline leading-snug break-words">Nama Supervisor</p>
-                <p id="coach-ttd-nip-spv" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
-              </div>
-              <div>
-                <p class="text-slate-500 font-medium leading-tight">Mengetahui,<br>Kepala Sekolah</p>
-                <div class="h-6 sm:h-12 ttd-space"></div>
-                <p id="coach-ttd-ks" class="font-bold text-slate-900 underline leading-snug break-words">Nama Kepala Sekolah</p>
-                <p id="coach-ttd-nip-ks" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
-              </div>
-            </div>
+          <div class="mt-8 pt-6 border-t border-slate-200 pb-8 avoid-break ttd-container">
+            <table class="ttd-table" style="width: 100%; border-collapse: collapse; border: none; margin: 0 auto; table-layout: fixed;">
+              <tr>
+                <td style="width: 33.3%; text-align: center; vertical-align: top; border: none; padding: 0 8px;">
+                  <div style="visibility: hidden; font-size: 10pt; line-height: 1.4; margin-bottom: 3px;">&nbsp;</div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Guru / Coachee,
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="coach-ttd-guru" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Guru</div>
+                  <div id="coach-ttd-nip-guru" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+                <td style="width: 33.3%; text-align: center; vertical-align: top; border: none; padding: 0 8px;">
+                  <div style="visibility: hidden; font-size: 10pt; line-height: 1.4; margin-bottom: 3px;">&nbsp;</div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Supervisor / Coach,
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="coach-ttd-spv" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Supervisor</div>
+                  <div id="coach-ttd-nip-spv" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+                <td style="width: 33.3%; text-align: center; vertical-align: top; border: none; padding: 0 8px;">
+                  <div style="font-size: 10pt; color: #334155; line-height: 1.4; margin-bottom: 3px;">
+                    Malang, <span class="font-semibold" id="coach-ttd-date">-</span>
+                  </div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Mengetahui,<br>Kepala Sekolah
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="coach-ttd-ks" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Kepala Sekolah</div>
+                  <div id="coach-ttd-nip-ks" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+              </tr>
+            </table>
           </div>
 
           <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
@@ -1472,28 +1535,41 @@
             </div>
           </div>
 
-          <!-- Tanda Tangan 3 Pihak -->
-          <div class="pt-6 avoid-break">
-            <div class="grid grid-cols-3 gap-2 sm:gap-4 text-center text-[10px] sm:text-xs ttd-grid-3">
-              <div>
-                <p class="text-slate-500 font-medium leading-tight">Guru Yang Disupervisi,</p>
-                <div class="h-10 sm:h-16 ttd-space"></div>
-                <p id="lap-ttd-guru" class="font-bold text-slate-900 underline leading-snug break-words">Nama Guru</p>
-                <p id="lap-ttd-nip-guru" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
-              </div>
-              <div>
-                <p class="text-slate-500 font-medium leading-tight">Supervisor / Penilai,</p>
-                <div class="h-10 sm:h-16 ttd-space"></div>
-                <p id="lap-ttd-spv" class="font-bold text-slate-900 underline leading-snug break-words">Nama Supervisor</p>
-                <p id="lap-ttd-nip-spv" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
-              </div>
-              <div>
-                <p class="text-slate-500 font-medium leading-tight">Mengetahui,<br>Kepala Sekolah</p>
-                <div class="h-6 sm:h-12 ttd-space"></div>
-                <p id="lap-ttd-ks" class="font-bold text-slate-900 underline leading-snug break-words">Nama Kepala Sekolah</p>
-                <p id="lap-ttd-nip-ks" class="text-slate-500 text-[9px] sm:text-[11px] break-all sm:break-normal">NIP. -</p>
-              </div>
-            </div>
+          <!-- Tanda Tangan 3 Pihak Laporan Individu -->
+          <div class="pt-6 pb-8 avoid-break ttd-container">
+            <table class="ttd-table" style="width: 100%; border-collapse: collapse; border: none; margin: 0 auto; table-layout: fixed;">
+              <tr>
+                <td style="width: 33.3%; text-align: center; vertical-align: top; border: none; padding: 0 8px;">
+                  <div style="visibility: hidden; font-size: 10pt; line-height: 1.4; margin-bottom: 3px;">&nbsp;</div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Guru Yang Disupervisi,
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="lap-ttd-guru" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Guru</div>
+                  <div id="lap-ttd-nip-guru" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+                <td style="width: 33.3%; text-align: center; vertical-align: top; border: none; padding: 0 8px;">
+                  <div style="visibility: hidden; font-size: 10pt; line-height: 1.4; margin-bottom: 3px;">&nbsp;</div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Supervisor / Penilai,
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="lap-ttd-spv" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Supervisor</div>
+                  <div id="lap-ttd-nip-spv" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+                <td style="width: 33.3%; text-align: center; vertical-align: top; border: none; padding: 0 8px;">
+                  <div style="font-size: 10pt; color: #334155; line-height: 1.4; margin-bottom: 3px;">
+                    Malang, <span class="font-semibold" id="lap-report-date">-</span>
+                  </div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Mengetahui,<br>Kepala Sekolah
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="lap-ttd-ks" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Kepala Sekolah</div>
+                  <div id="lap-ttd-nip-ks" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
 
@@ -1552,24 +1628,32 @@
             </table>
           </div>
 
-          <!-- Tanda Tangan Resmi Pengesahan -->
-          <div class="pt-6 avoid-break">
-            <div class="grid grid-cols-2 gap-8 text-center text-xs">
-              <div>
-                <p class="text-slate-500">Malang, <span id="all-report-date">-</span></p>
-                <p class="text-slate-500 font-medium">Supervisor Penilai / Koordinator,</p>
-                <div class="h-16"></div>
-                <p id="all-report-spv-ttd" class="font-bold text-slate-900 underline">Koordinator Supervisor Sekolah</p>
-                <p class="text-slate-500 text-[11px]">NIP. -</p>
-              </div>
-              <div>
-                <p class="text-slate-500">&nbsp;</p>
-                <p class="text-slate-500 font-medium">Mengetahui,<br>Kepala Sekolah</p>
-                <div class="h-16"></div>
-                <p id="all-report-ks-ttd" class="font-bold text-slate-900 underline">Nama Kepala Sekolah</p>
-                <p id="all-report-ks-nip" class="text-slate-500 text-[11px]">NIP. -</p>
-              </div>
-            </div>
+          <!-- Tanda Tangan Resmi Pengesahan Rekapitulasi -->
+          <div class="pt-6 pb-8 avoid-break ttd-container">
+            <table class="ttd-table" style="width: 100%; border-collapse: collapse; border: none; margin: 0 auto; table-layout: fixed;">
+              <tr>
+                <td style="width: 50%; text-align: center; vertical-align: top; border: none; padding: 0 15px;">
+                  <div style="visibility: hidden; font-size: 10pt; line-height: 1.4; margin-bottom: 3px;">&nbsp;</div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Supervisor Penilai / Koordinator,
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="all-report-spv-ttd" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Koordinator Supervisor Sekolah</div>
+                  <div style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+                <td style="width: 50%; text-align: center; vertical-align: top; border: none; padding: 0 15px;">
+                  <div style="font-size: 10pt; color: #334155; line-height: 1.4; margin-bottom: 3px;">
+                    Malang, <span class="font-semibold" id="all-report-date">-</span>
+                  </div>
+                  <div style="font-size: 10pt; font-weight: 600; color: #334155; line-height: 1.35; min-height: 2.8em;">
+                    Mengetahui,<br>Kepala Sekolah
+                  </div>
+                  <div class="ttd-space" style="height: 60px;"></div>
+                  <div id="all-report-ks-ttd" style="font-size: 10.5pt; font-weight: 700; color: #0f172a; text-decoration: underline; text-underline-offset: 4px; line-height: 1.35;">Nama Kepala Sekolah</div>
+                  <div id="all-report-ks-nip" style="font-size: 9.5pt; color: #475569; margin-top: 3px; line-height: 1.3;">NIP. -</div>
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
       </section>
@@ -7221,22 +7305,26 @@
       const filename = `Laporan_Supervisi_${rawName}_${nip}.pdf`;
 
       showToast('Sedang membuat file PDF Laporan Individu... Mohon tunggu.');
+      document.body.classList.add('generating-pdf');
 
       const opt = {
-        margin: [8, 10, 10, 10],
+        margin: [10, 10, 15, 10],
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: ['.avoid-break', '.ttd-container', '.ttd-table'] }
       };
 
       const wasHidden = el.classList.contains('hidden');
       if (wasHidden) el.classList.remove('hidden');
 
       html2pdf().set(opt).from(el).save().then(() => {
+        document.body.classList.remove('generating-pdf');
         if (wasHidden) el.classList.add('hidden');
         showToast('File PDF Laporan Individu berhasil diunduh!');
       }).catch(err => {
+        document.body.classList.remove('generating-pdf');
         if (wasHidden) el.classList.add('hidden');
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
@@ -7255,22 +7343,26 @@
       const filename = `Rekapitulasi_Supervisi_SMPN24_${dateStr}.pdf`;
 
       showToast('Sedang membuat file PDF Rekapitulasi... Mohon tunggu.');
+      document.body.classList.add('generating-pdf');
 
       const opt = {
-        margin: [8, 10, 10, 10],
+        margin: [10, 10, 15, 10],
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: ['.avoid-break', '.ttd-container', '.ttd-table'] }
       };
 
       const wasHidden = el.classList.contains('hidden');
       el.classList.remove('hidden');
 
       html2pdf().set(opt).from(el).save().then(() => {
+        document.body.classList.remove('generating-pdf');
         if (wasHidden) el.classList.add('hidden');
         showToast('File PDF Rekapitulasi berhasil diunduh!');
       }).catch(err => {
+        document.body.classList.remove('generating-pdf');
         if (wasHidden) el.classList.add('hidden');
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
@@ -7284,18 +7376,19 @@
       }
       const g = guruDatabase.find(x => x.id === selectedGuruId) || guruDatabase[0];
       const rawName = g ? g.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Guru';
-      const el = document.getElementById('view-pra') || document.querySelector('#view-pra > div.bg-white');
+      const el = document.querySelector('#view-pra > div.bg-white') || document.getElementById('view-pra');
       if (!el) return;
       const filename = `Pra_Observasi_${rawName}_${g ? g.nip : ''}.pdf`;
 
       showToast('Sedang membuat file PDF Pra-Observasi...');
       document.body.classList.add('generating-pdf');
       const opt = {
-        margin: [8, 10, 10, 10],
+        margin: [10, 10, 15, 10],
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: ['.avoid-break', '.ttd-container', '.ttd-table'] }
       };
       html2pdf().set(opt).from(el).save().then(() => {
         document.body.classList.remove('generating-pdf');
@@ -7314,18 +7407,19 @@
       }
       const g = guruDatabase.find(x => x.id === selectedGuruId) || guruDatabase[0];
       const rawName = g ? g.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Guru';
-      const el = document.getElementById('view-observasi') || document.querySelector('#view-observasi > div.bg-white');
+      const el = document.querySelector('#view-observasi > div.bg-white') || document.getElementById('view-observasi');
       if (!el) return;
       const filename = `Observasi_Kelas_${rawName}_${g ? g.nip : ''}.pdf`;
 
       showToast('Sedang membuat file PDF Observasi Kelas...');
       document.body.classList.add('generating-pdf');
       const opt = {
-        margin: [8, 10, 10, 10],
+        margin: [10, 10, 15, 10],
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: ['.avoid-break', '.ttd-container', '.ttd-table'] }
       };
       html2pdf().set(opt).from(el).save().then(() => {
         document.body.classList.remove('generating-pdf');
@@ -7344,18 +7438,19 @@
       }
       const g = guruDatabase.find(x => x.id === selectedGuruId) || guruDatabase[0];
       const rawName = g ? g.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Guru';
-      const el = document.getElementById('view-coaching') || document.querySelector('#view-coaching > div.bg-white');
+      const el = document.querySelector('#view-coaching > div.bg-white') || document.getElementById('view-coaching');
       if (!el) return;
       const filename = `Coaching_TIRTA_${rawName}_${g ? g.nip : ''}.pdf`;
 
       showToast('Sedang membuat file PDF Coaching TIRTA...');
       document.body.classList.add('generating-pdf');
       const opt = {
-        margin: [8, 10, 10, 10],
+        margin: [10, 10, 15, 10],
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: ['.avoid-break', '.ttd-container', '.ttd-table'] }
       };
       html2pdf().set(opt).from(el).save().then(() => {
         document.body.classList.remove('generating-pdf');
