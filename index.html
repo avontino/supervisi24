@@ -554,7 +554,7 @@
               </div>
               <div>
                 <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Tanggal Telaah</label>
-                <input type="date" id="pra-input-tanggal" class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 font-medium">
+                <input type="date" id="pra-input-tanggal" onchange="autoSavePraInput()" class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 font-medium">
               </div>
               <div>
                 <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Penelaah (Supervisor)</label>
@@ -566,11 +566,11 @@
             <div id="pra-fields-mapel" class="space-y-3">
               <div class="text-xs">
                 <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Materi / Topik Pembelajaran</label>
-                <input type="text" id="pra-input-materi" placeholder="Masukkan materi / topik pembelajaran..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
+                <input type="text" id="pra-input-materi" oninput="autoSavePraInput()" placeholder="Masukkan materi / topik pembelajaran..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
               </div>
               <div class="text-xs">
                 <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Tujuan Pembelajaran</label>
-                <textarea id="pra-input-tujuan" rows="2" placeholder="Tuliskan tujuan pembelajaran yang ditargetkan..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+                <textarea id="pra-input-tujuan" oninput="autoSavePraInput()" rows="2" placeholder="Tuliskan tujuan pembelajaran yang ditargetkan..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
               </div>
             </div>
 
@@ -582,14 +582,14 @@
                     <i class="fa-solid fa-shapes text-indigo-600"></i>
                     <span>Bidang Layanan (BK)</span>
                   </label>
-                  <input type="text" id="pra-bk-bidang" placeholder="Contoh: Pribadi / Sosial / Belajar / Karir" class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium">
+                  <input type="text" id="pra-bk-bidang" oninput="autoSavePraInput()" placeholder="Contoh: Pribadi / Sosial / Belajar / Karir" class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium">
                 </div>
                 <div>
                   <label class="block text-[11px] font-bold text-indigo-900 uppercase mb-1 flex items-center space-x-1">
                     <i class="fa-solid fa-crosshairs text-indigo-600"></i>
                     <span>Fokus Layanan (BK)</span>
                   </label>
-                  <input type="text" id="pra-bk-fokus" placeholder="Contoh: Manajemen Waktu Belajar & Regulasi Emosi..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium">
+                  <input type="text" id="pra-bk-fokus" oninput="autoSavePraInput()" placeholder="Contoh: Manajemen Waktu Belajar & Regulasi Emosi..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium">
                 </div>
               </div>
               <div class="text-xs">
@@ -597,7 +597,7 @@
                   <i class="fa-solid fa-flag-checkered text-indigo-600"></i>
                   <span>Tujuan Layanan (BK)</span>
                 </label>
-                <textarea id="pra-bk-tujuan" rows="2" placeholder="Tuliskan tujuan layanan bimbingan konseling yang ingin dicapai..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium"></textarea>
+                <textarea id="pra-bk-tujuan" oninput="autoSavePraInput()" rows="2" placeholder="Tuliskan tujuan layanan bimbingan konseling yang ingin dicapai..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium"></textarea>
               </div>
             </div>
           </div>
@@ -687,11 +687,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               <div>
                 <label class="block font-bold text-slate-700 mb-1">1. Kekuatan rancangan yang perlu dipertahankan</label>
-                <textarea id="pra-fb-kekuatan" rows="3" placeholder="Tuliskan kekuatan modul ajar yang patut diapresiasi..." class="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+                <textarea id="pra-fb-kekuatan" oninput="autoSavePraInput()" rows="3" placeholder="Tuliskan kekuatan modul ajar yang patut diapresiasi..." class="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
               </div>
               <div>
                 <label class="block font-bold text-slate-700 mb-1">2. Aspek paling prioritas untuk diperbaiki</label>
-                <textarea id="pra-fb-prioritas" rows="3" placeholder="Tuliskan aspek utama yang mendesak untuk disempurnakan..." class="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+                <textarea id="pra-fb-prioritas" oninput="autoSavePraInput()" rows="3" placeholder="Tuliskan aspek utama yang mendesak untuk disempurnakan..." class="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
               </div>
             </div>
 
@@ -706,17 +706,17 @@
                 <li>Bukti apa yang akan menunjukkan bahwa murid benar-benar memahami, bukan sekadar mengikuti instruksi?</li>
                 <li>Jika murid mengalami kesulitan, bagaimana pembelajaran akan disesuaikan?</li>
               </ul>
-              <textarea id="pra-fb-refleksi" rows="2" placeholder="Catatan respon guru terhadap pertanyaan reflektif..." class="w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+              <textarea id="pra-fb-refleksi" oninput="autoSavePraInput()" rows="2" placeholder="Catatan respon guru terhadap pertanyaan reflektif..." class="w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               <div>
                 <label class="block font-bold text-slate-700 mb-1">4. Kesepakatan Tindak Lanjut</label>
-                <input type="text" id="pra-fb-kesepakatan" placeholder="Contoh: Menambahkan rubrik asesmen formatif proses..." class="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
+                <input type="text" id="pra-fb-kesepakatan" oninput="autoSavePraInput()" placeholder="Contoh: Menambahkan rubrik asesmen formatif proses..." class="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
               </div>
               <div>
                 <label class="block font-bold text-slate-700 mb-1">5. Waktu Peninjauan atau Observasi Berikutnya</label>
-                <input type="text" id="pra-fb-waktu" placeholder="Contoh: Selasa, 21 Oktober 2026 Jam Ke-3" class="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
+                <input type="text" id="pra-fb-waktu" oninput="autoSavePraInput()" placeholder="Contoh: Selasa, 21 Oktober 2026 Jam Ke-3" class="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
               </div>
             </div>
           </div>
@@ -933,7 +933,7 @@
               <i class="fa-solid fa-feather text-indigo-600"></i>
               <span>Catatan Fakta Obyektif Observasi (Bebas Bias / Berbasis Bukti Nyata)</span>
             </label>
-            <textarea id="obs-catatan-fakta" rows="4" placeholder="Contoh: Pada menit ke-15 guru mengajukan pertanyaan pemantik. Murid berpartisipasi aktif dalam dialog..." class="w-full text-xs p-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            <textarea id="obs-catatan-fakta" oninput="autoSaveObsInput()" rows="4" placeholder="Contoh: Pada menit ke-15 guru mengajukan pertanyaan pemantik. Murid berpartisipasi aktif dalam dialog..." class="w-full text-xs p-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
           </div>
 
           <!-- Blok Tanda Tangan 3 Pihak Observasi Kelas -->
@@ -1035,28 +1035,28 @@
                 <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px]">T</span>
                 <span>Tujuan Percakapan (Goal)</span>
               </label>
-              <textarea id="coach-tujuan" rows="3" placeholder="Apa tujuan yang ingin dicapai guru dari sesi refleksi pasca observasi ini?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+              <textarea id="coach-tujuan" oninput="autoSaveCoachingInput()" rows="3" placeholder="Apa tujuan yang ingin dicapai guru dari sesi refleksi pasca observasi ini?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
             </div>
             <div class="space-y-1">
               <label class="font-bold text-slate-700 flex items-center space-x-1">
                 <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px]">I</span>
                 <span>Identifikasi Masalah & Potensi (Reality)</span>
               </label>
-              <textarea id="coach-identifikasi" rows="3" placeholder="Apa saja tantangan yang dirasakan guru saat pembelajaran di kelas?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+              <textarea id="coach-identifikasi" oninput="autoSaveCoachingInput()" rows="3" placeholder="Apa saja tantangan yang dirasakan guru saat pembelajaran di kelas?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
             </div>
             <div class="space-y-1">
               <label class="font-bold text-slate-700 flex items-center space-x-1">
                 <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-[10px]">R</span>
                 <span>Rencana Aksi Pengembangan (Options)</span>
               </label>
-              <textarea id="coach-rencana" rows="3" placeholder="Langkah konkret apa yang akan dilakukan guru untuk meningkatkan kompetensi?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+              <textarea id="coach-rencana" oninput="autoSaveCoachingInput()" rows="3" placeholder="Langkah konkret apa yang akan dilakukan guru untuk meningkatkan kompetensi?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
             </div>
             <div class="space-y-1">
               <label class="font-bold text-slate-700 flex items-center space-x-1">
                 <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[10px]">TA</span>
                 <span>Tanggung Jawab & Komitmen (Will)</span>
               </label>
-              <textarea id="coach-tanggungjawab" rows="3" placeholder="Kapan rencana dilaksanakan dan siapa yang akan dimintai dukungan/kolaborasi?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+              <textarea id="coach-tanggungjawab" oninput="autoSaveCoachingInput()" rows="3" placeholder="Kapan rencana dilaksanakan dan siapa yang akan dimintai dukungan/kolaborasi?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
             </div>
           </div>
 
@@ -5013,8 +5013,73 @@
       }
     }
 
-    function syncSelectedGuru(id) {
-      selectedGuruId = parseInt(id) || 1;
+    function updateSidebarPredikat(guru) {
+      if (!guru) return;
+      const sidePred = document.getElementById('side-predikat');
+      if (sidePred) {
+        const metrics = getGuruEvaluationMetrics(guru);
+        sidePred.innerText = metrics.predikat;
+        sidePred.className = `px-2 py-0.5 rounded text-[10px] font-bold ${metrics.badgeColor}`;
+      }
+    }
+
+    function autoSavePraInput() {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId);
+      if (!guru) return;
+      if (guru.mapel === 'BK') {
+        const bkBidang = document.getElementById('pra-bk-bidang')?.value.trim() || '';
+        const bkFokus = document.getElementById('pra-bk-fokus')?.value.trim() || '';
+        const bkTujuan = document.getElementById('pra-bk-tujuan')?.value.trim() || '';
+        guru.bkBidangLayanan = bkBidang;
+        guru.bkFokusLayanan = bkFokus;
+        guru.bkTujuanLayanan = bkTujuan;
+        guru.materiTopik = bkFokus ? (bkBidang ? `${bkBidang}: ${bkFokus}` : bkFokus) : bkBidang;
+        guru.tujuanPembelajaran = bkTujuan;
+        if (!guru.praFeedback) guru.praFeedback = {};
+        guru.praFeedback.bkBidangLayanan = bkBidang;
+        guru.praFeedback.bkFokusLayanan = bkFokus;
+        guru.praFeedback.bkTujuanLayanan = bkTujuan;
+      } else {
+        guru.materiTopik = document.getElementById('pra-input-materi')?.value || '';
+        guru.tujuanPembelajaran = document.getElementById('pra-input-tujuan')?.value || '';
+      }
+      guru.tanggalTelaah = document.getElementById('pra-input-tanggal')?.value || '';
+      guru.targetPerilaku = document.getElementById('pra-input-target-perilaku')?.value || '';
+
+      if (!guru.praFeedback) guru.praFeedback = {};
+      guru.praFeedback.kekuatan = document.getElementById('pra-fb-kekuatan')?.value || '';
+      guru.praFeedback.prioritas = document.getElementById('pra-fb-prioritas')?.value || '';
+      guru.praFeedback.refleksi = document.getElementById('pra-fb-refleksi')?.value || '';
+      guru.praFeedback.kesepakatan = document.getElementById('pra-fb-kesepakatan')?.value || '';
+      guru.praFeedback.waktuBerikutnya = document.getElementById('pra-fb-waktu')?.value || '';
+
+      saveDataToLocalStorage();
+    }
+
+    function autoSaveObsInput() {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId);
+      if (!guru) return;
+      guru.catatanFakta = document.getElementById('obs-catatan-fakta')?.value || '';
+      guru.tanggalObservasi = document.getElementById('obs-input-tanggal')?.value || '';
+      guru.targetPerilaku = document.getElementById('obs-input-target-perilaku')?.value || '';
+      saveDataToLocalStorage();
+    }
+
+    function autoSaveCoachingInput() {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId);
+      if (!guru) return;
+      if (!guru.coaching) guru.coaching = {};
+      guru.coaching.tujuan = document.getElementById('coach-tujuan')?.value || '';
+      guru.coaching.identifikasi = document.getElementById('coach-identifikasi')?.value || '';
+      guru.coaching.rencana = document.getElementById('coach-rencana')?.value || '';
+      guru.coaching.tanggungJawab = document.getElementById('coach-tanggungjawab')?.value || '';
+      saveDataToLocalStorage();
+    }
+
+    function syncSelectedGuru(id, forceReload = false) {
+      const targetId = parseInt(id) || 1;
+      const isTeacherChanged = (selectedGuruId !== targetId);
+      selectedGuruId = targetId;
       try { localStorage.setItem(STORAGE_KEY_SELECTED_GURU, String(selectedGuruId)); } catch(e) {}
       const guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
       if (!guru) return;
@@ -5026,11 +5091,7 @@
       if (sideNama) sideNama.innerText = guru.nama;
       if (sideMapel) sideMapel.innerText = `${guru.mapel} • ${guru.kelas}`;
 
-      if (sidePred) {
-        const metrics = getGuruEvaluationMetrics(guru);
-        sidePred.innerText = metrics.predikat;
-        sidePred.className = `px-2 py-0.5 rounded text-[10px] font-bold ${metrics.badgeColor}`;
-      }
+      updateSidebarPredikat(guru);
 
       ['pra-guru-select', 'obs-guru-select', 'coaching-guru-select', 'laporan-guru-select'].forEach(selId => {
         const el = document.getElementById(selId);
@@ -5060,12 +5121,15 @@
 
       updateTeacherPickerVisibility();
 
-      const curSection = document.querySelector('section[id^="view-"]:not(.hidden)') || document.querySelector('section:not(.hidden)');
-      if (curSection) {
-        if (curSection.id === 'view-pra') loadPraObservasiData();
-        else if (curSection.id === 'view-observasi') loadObservasiData();
-        else if (curSection.id === 'view-coaching') loadCoachingData();
-        else if (curSection.id === 'view-laporan') updateReportView();
+      // Hanya reload isi form jika guru yang dipilih benar-benar berganti ATAU dipaksa (forceReload)
+      if (isTeacherChanged || forceReload) {
+        const curSection = document.querySelector('section[id^="view-"]:not(.hidden)') || document.querySelector('section:not(.hidden)');
+        if (curSection) {
+          if (curSection.id === 'view-pra') loadPraObservasiData();
+          else if (curSection.id === 'view-observasi') loadObservasiData();
+          else if (curSection.id === 'view-coaching') loadCoachingData();
+          else if (curSection.id === 'view-laporan') updateReportView();
+        }
       }
     }
 
@@ -5258,7 +5322,7 @@
       }
 
       calculateRppScoreLive();
-      syncSelectedGuru(guru.id);
+      updateSidebarPredikat(guru);
       saveDataToLocalStorage();
     }
 
@@ -5390,7 +5454,7 @@
       }
 
       calculateRppScoreLive();
-      syncSelectedGuru(guru.id);
+      updateSidebarPredikat(guru);
       saveDataToLocalStorage();
     }
 
@@ -5408,7 +5472,7 @@
       }
 
       calculateRppScoreLive();
-      syncSelectedGuru(guru.id);
+      updateSidebarPredikat(guru);
       saveDataToLocalStorage();
     }
 
@@ -5691,7 +5755,7 @@
       }
 
       calculateObsScoreLive();
-      syncSelectedGuru(guru.id);
+      updateSidebarPredikat(guru);
       saveDataToLocalStorage();
     }
 
@@ -5717,7 +5781,7 @@
       }
 
       calculateObsScoreLive();
-      syncSelectedGuru(guru.id);
+      updateSidebarPredikat(guru);
       saveDataToLocalStorage();
     }
 
