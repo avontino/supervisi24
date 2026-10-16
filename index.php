@@ -5423,7 +5423,7 @@
         if (instTitle) instTitle.innerText = 'Tahap 2: Observasi Kelas (27 Indikator & Deep Learning)';
         if (instSubtitle) instSubtitle.innerText = 'Observasi layanan bimbingan dan konseling berbasis prinsip dan siklus belajar mendalam.';
         if (scaleLegend) {
-          scaleLegend.innerText = 'Skala: 1 = Belum tampak, 2 = Mulai berkembang, 3 = Berkembang sesuai harapan, 4 = Berkembang sangat baik';
+          scaleLegend.innerText = 'Skala: 1 = Belum tampak, 2 = Mulai berkembang, 3 = Sesuai harapan, 4 = Sangat baik';
           scaleLegend.className = 'text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200';
         }
         if (standaloneDl) standaloneDl.style.display = 'none';
@@ -5501,8 +5501,8 @@
       const scaleLabels = {
         1: '1: Belum tampak',
         2: '2: Mulai berkembang',
-        3: '3: Berkembang sesuai harapan',
-        4: '4: Berkembang sangat baik'
+        3: '3: Sesuai harapan',
+        4: '4: Sangat baik'
       };
 
       ASPEK_BK_OBSERVASI.forEach(grup => {
