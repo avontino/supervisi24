@@ -26,6 +26,10 @@
       margin: 12mm 15mm 15mm 15mm;
     }
 
+    .print-score-badge {
+      display: none;
+    }
+
     @media print {
       * {
         -webkit-print-color-adjust: exact !important;
@@ -45,6 +49,34 @@
       aside, header, #bulk-action-bar, .no-print, button, #toast, .nav-btn, .hidden {
         display: none !important;
       }
+      .print-score-badge {
+        display: inline-block !important;
+        font-weight: 700 !important;
+        font-size: 11px !important;
+        color: #0f172a !important;
+        border: 1.5px solid #0f172a !important;
+        background-color: #f8fafc !important;
+        padding: 2px 8px !important;
+        border-radius: 4px !important;
+        white-space: nowrap !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+    .generating-pdf .print-score-badge {
+      display: inline-block !important;
+      font-weight: 700 !important;
+      font-size: 11px !important;
+      color: #0f172a !important;
+      border: 1.5px solid #0f172a !important;
+      background-color: #f8fafc !important;
+      padding: 2px 8px !important;
+      border-radius: 4px !important;
+      white-space: nowrap !important;
+    }
+    .generating-pdf button, .generating-pdf .no-print {
+      display: none !important;
+    }
       input, select, textarea {
         border: 1px solid #94a3b8 !important;
         background: transparent !important;
@@ -565,12 +597,24 @@
             <!-- Form Isian Guru Mapel (Materi & Tujuan) -->
             <div id="pra-fields-mapel" class="space-y-3">
               <div class="text-xs">
-                <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Materi / Topik Pembelajaran</label>
-                <input type="text" id="pra-input-materi" oninput="autoSavePraInput()" placeholder="Masukkan materi / topik pembelajaran..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500">
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-[11px] font-bold text-slate-600 uppercase">Materi / Topik Pembelajaran</label>
+                  <span id="pra-warn-materi" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                    <span>Wajib diisi</span>
+                  </span>
+                </div>
+                <input type="text" id="pra-input-materi" oninput="autoSavePraInput()" placeholder="Masukkan materi / topik pembelajaran..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 transition-colors">
               </div>
               <div class="text-xs">
-                <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Tujuan Pembelajaran</label>
-                <textarea id="pra-input-tujuan" oninput="autoSavePraInput()" rows="2" placeholder="Tuliskan tujuan pembelajaran yang ditargetkan..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-[11px] font-bold text-slate-600 uppercase">Tujuan Pembelajaran</label>
+                  <span id="pra-warn-tujuan" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                    <span>Wajib diisi</span>
+                  </span>
+                </div>
+                <textarea id="pra-input-tujuan" oninput="autoSavePraInput()" rows="2" placeholder="Tuliskan tujuan pembelajaran yang ditargetkan..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 transition-colors"></textarea>
               </div>
             </div>
 
@@ -578,26 +622,44 @@
             <div id="pra-fields-bk" class="hidden space-y-3 bg-indigo-50/50 p-3.5 rounded-xl border border-indigo-200">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                 <div>
-                  <label class="block text-[11px] font-bold text-indigo-900 uppercase mb-1 flex items-center space-x-1">
-                    <i class="fa-solid fa-shapes text-indigo-600"></i>
-                    <span>Bidang Layanan (BK)</span>
-                  </label>
-                  <input type="text" id="pra-bk-bidang" oninput="autoSavePraInput()" placeholder="Contoh: Pribadi / Sosial / Belajar / Karir" class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium">
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="block text-[11px] font-bold text-indigo-900 uppercase flex items-center space-x-1">
+                      <i class="fa-solid fa-shapes text-indigo-600"></i>
+                      <span>Bidang Layanan (BK)</span>
+                    </label>
+                    <span id="pra-warn-bk-bidang" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                      <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                      <span>Wajib diisi</span>
+                    </span>
+                  </div>
+                  <input type="text" id="pra-bk-bidang" oninput="autoSavePraInput()" placeholder="Contoh: Pribadi / Sosial / Belajar / Karir" class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium transition-colors">
                 </div>
                 <div>
-                  <label class="block text-[11px] font-bold text-indigo-900 uppercase mb-1 flex items-center space-x-1">
-                    <i class="fa-solid fa-crosshairs text-indigo-600"></i>
-                    <span>Fokus Layanan (BK)</span>
-                  </label>
-                  <input type="text" id="pra-bk-fokus" oninput="autoSavePraInput()" placeholder="Contoh: Manajemen Waktu Belajar & Regulasi Emosi..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium">
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="block text-[11px] font-bold text-indigo-900 uppercase flex items-center space-x-1">
+                      <i class="fa-solid fa-crosshairs text-indigo-600"></i>
+                      <span>Fokus Layanan (BK)</span>
+                    </label>
+                    <span id="pra-warn-bk-fokus" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                      <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                      <span>Wajib diisi</span>
+                    </span>
+                  </div>
+                  <input type="text" id="pra-bk-fokus" oninput="autoSavePraInput()" placeholder="Contoh: Manajemen Waktu Belajar & Regulasi Emosi..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium transition-colors">
                 </div>
               </div>
               <div class="text-xs">
-                <label class="block text-[11px] font-bold text-indigo-900 uppercase mb-1 flex items-center space-x-1">
-                  <i class="fa-solid fa-flag-checkered text-indigo-600"></i>
-                  <span>Tujuan Layanan (BK)</span>
-                </label>
-                <textarea id="pra-bk-tujuan" oninput="autoSavePraInput()" rows="2" placeholder="Tuliskan tujuan layanan bimbingan konseling yang ingin dicapai..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium"></textarea>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-[11px] font-bold text-indigo-900 uppercase flex items-center space-x-1">
+                    <i class="fa-solid fa-flag-checkered text-indigo-600"></i>
+                    <span>Tujuan Layanan (BK)</span>
+                  </label>
+                  <span id="pra-warn-bk-tujuan" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                    <span>Wajib diisi</span>
+                  </span>
+                </div>
+                <textarea id="pra-bk-tujuan" oninput="autoSavePraInput()" rows="2" placeholder="Tuliskan tujuan layanan bimbingan konseling yang ingin dicapai..." class="w-full bg-white text-slate-800 p-2 rounded-lg border border-indigo-300 focus:ring-2 focus:ring-indigo-500 font-medium transition-colors"></textarea>
               </div>
             </div>
           </div>
@@ -843,31 +905,58 @@
                 <span>Prinsip Pembelajaran Mendalam</span>
               </h5>
               <div class="space-y-2 text-xs">
-                <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
-                  <span class="font-medium text-slate-700">1. Berkesadaran (Mindful)</span>
-                  <div class="flex items-center space-x-1" id="dl-score-mindful">
-                    <button type="button" onclick="setDlScore('mindful', 1)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">1</button>
-                    <button type="button" onclick="setDlScore('mindful', 2)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">2</button>
-                    <button type="button" onclick="setDlScore('mindful', 3)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">3</button>
-                    <button type="button" onclick="setDlScore('mindful', 4)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">4</button>
+                <div id="dl-row-mindful" class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200 transition-colors">
+                  <div class="flex items-center space-x-2">
+                    <span class="font-medium text-slate-700">1. Berkesadaran (Mindful)</span>
+                    <span id="dl-warn-mindful" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                      <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                      <span>Belum Diisi</span>
+                    </span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span id="dl-print-mindful" class="print-score-badge">Skor: -</span>
+                    <div class="flex items-center space-x-1" id="dl-score-mindful">
+                      <button type="button" onclick="setDlScore('mindful', 1)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">1</button>
+                      <button type="button" onclick="setDlScore('mindful', 2)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">2</button>
+                      <button type="button" onclick="setDlScore('mindful', 3)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">3</button>
+                      <button type="button" onclick="setDlScore('mindful', 4)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">4</button>
+                    </div>
                   </div>
                 </div>
-                <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
-                  <span class="font-medium text-slate-700">2. Bermakna (Meaningful)</span>
-                  <div class="flex items-center space-x-1" id="dl-score-meaningful">
-                    <button type="button" onclick="setDlScore('meaningful', 1)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">1</button>
-                    <button type="button" onclick="setDlScore('meaningful', 2)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">2</button>
-                    <button type="button" onclick="setDlScore('meaningful', 3)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">3</button>
-                    <button type="button" onclick="setDlScore('meaningful', 4)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">4</button>
+                <div id="dl-row-meaningful" class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200 transition-colors">
+                  <div class="flex items-center space-x-2">
+                    <span class="font-medium text-slate-700">2. Bermakna (Meaningful)</span>
+                    <span id="dl-warn-meaningful" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                      <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                      <span>Belum Diisi</span>
+                    </span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span id="dl-print-meaningful" class="print-score-badge">Skor: -</span>
+                    <div class="flex items-center space-x-1" id="dl-score-meaningful">
+                      <button type="button" onclick="setDlScore('meaningful', 1)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">1</button>
+                      <button type="button" onclick="setDlScore('meaningful', 2)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">2</button>
+                      <button type="button" onclick="setDlScore('meaningful', 3)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">3</button>
+                      <button type="button" onclick="setDlScore('meaningful', 4)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">4</button>
+                    </div>
                   </div>
                 </div>
-                <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
-                  <span class="font-medium text-slate-700">3. Menggembirakan (Joyful)</span>
-                  <div class="flex items-center space-x-1" id="dl-score-joyful">
-                    <button type="button" onclick="setDlScore('joyful', 1)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">1</button>
-                    <button type="button" onclick="setDlScore('joyful', 2)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">2</button>
-                    <button type="button" onclick="setDlScore('joyful', 3)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">3</button>
-                    <button type="button" onclick="setDlScore('joyful', 4)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">4</button>
+                <div id="dl-row-joyful" class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200 transition-colors">
+                  <div class="flex items-center space-x-2">
+                    <span class="font-medium text-slate-700">3. Menggembirakan (Joyful)</span>
+                    <span id="dl-warn-joyful" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                      <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                      <span>Belum Diisi</span>
+                    </span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span id="dl-print-joyful" class="print-score-badge">Skor: -</span>
+                    <div class="flex items-center space-x-1" id="dl-score-joyful">
+                      <button type="button" onclick="setDlScore('joyful', 1)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">1</button>
+                      <button type="button" onclick="setDlScore('joyful', 2)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">2</button>
+                      <button type="button" onclick="setDlScore('joyful', 3)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">3</button>
+                      <button type="button" onclick="setDlScore('joyful', 4)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">4</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -880,31 +969,58 @@
                 <span>Siklus Pengalaman Belajar</span>
               </h5>
               <div class="space-y-2 text-xs">
-                <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
-                  <span class="font-medium text-slate-700">1. Memahami (Understanding)</span>
-                  <div class="flex items-center space-x-1" id="dl-score-memahami">
-                    <button type="button" onclick="setDlScore('memahami', 1)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">1</button>
-                    <button type="button" onclick="setDlScore('memahami', 2)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">2</button>
-                    <button type="button" onclick="setDlScore('memahami', 3)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">3</button>
-                    <button type="button" onclick="setDlScore('memahami', 4)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">4</button>
+                <div id="dl-row-memahami" class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200 transition-colors">
+                  <div class="flex items-center space-x-2">
+                    <span class="font-medium text-slate-700">1. Memahami (Understanding)</span>
+                    <span id="dl-warn-memahami" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                      <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                      <span>Belum Diisi</span>
+                    </span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span id="dl-print-memahami" class="print-score-badge">Skor: -</span>
+                    <div class="flex items-center space-x-1" id="dl-score-memahami">
+                      <button type="button" onclick="setDlScore('memahami', 1)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">1</button>
+                      <button type="button" onclick="setDlScore('memahami', 2)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">2</button>
+                      <button type="button" onclick="setDlScore('memahami', 3)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">3</button>
+                      <button type="button" onclick="setDlScore('memahami', 4)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">4</button>
+                    </div>
                   </div>
                 </div>
-                <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
-                  <span class="font-medium text-slate-700">2. Mengaplikasi (Applying)</span>
-                  <div class="flex items-center space-x-1" id="dl-score-mengaplikasi">
-                    <button type="button" onclick="setDlScore('mengaplikasi', 1)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">1</button>
-                    <button type="button" onclick="setDlScore('mengaplikasi', 2)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">2</button>
-                    <button type="button" onclick="setDlScore('mengaplikasi', 3)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">3</button>
-                    <button type="button" onclick="setDlScore('mengaplikasi', 4)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">4</button>
+                <div id="dl-row-mengaplikasi" class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200 transition-colors">
+                  <div class="flex items-center space-x-2">
+                    <span class="font-medium text-slate-700">2. Mengaplikasi (Applying)</span>
+                    <span id="dl-warn-mengaplikasi" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                      <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                      <span>Belum Diisi</span>
+                    </span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span id="dl-print-mengaplikasi" class="print-score-badge">Skor: -</span>
+                    <div class="flex items-center space-x-1" id="dl-score-mengaplikasi">
+                      <button type="button" onclick="setDlScore('mengaplikasi', 1)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">1</button>
+                      <button type="button" onclick="setDlScore('mengaplikasi', 2)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">2</button>
+                      <button type="button" onclick="setDlScore('mengaplikasi', 3)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">3</button>
+                      <button type="button" onclick="setDlScore('mengaplikasi', 4)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">4</button>
+                    </div>
                   </div>
                 </div>
-                <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
-                  <span class="font-medium text-slate-700">3. Merefleksi (Reflecting)</span>
-                  <div class="flex items-center space-x-1" id="dl-score-merefleksi">
-                    <button type="button" onclick="setDlScore('merefleksi', 1)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">1</button>
-                    <button type="button" onclick="setDlScore('merefleksi', 2)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">2</button>
-                    <button type="button" onclick="setDlScore('merefleksi', 3)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">3</button>
-                    <button type="button" onclick="setDlScore('merefleksi', 4)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">4</button>
+                <div id="dl-row-merefleksi" class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200 transition-colors">
+                  <div class="flex items-center space-x-2">
+                    <span class="font-medium text-slate-700">3. Merefleksi (Reflecting)</span>
+                    <span id="dl-warn-merefleksi" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                      <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                      <span>Belum Diisi</span>
+                    </span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span id="dl-print-merefleksi" class="print-score-badge">Skor: -</span>
+                    <div class="flex items-center space-x-1" id="dl-score-merefleksi">
+                      <button type="button" onclick="setDlScore('merefleksi', 1)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">1</button>
+                      <button type="button" onclick="setDlScore('merefleksi', 2)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">2</button>
+                      <button type="button" onclick="setDlScore('merefleksi', 3)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">3</button>
+                      <button type="button" onclick="setDlScore('merefleksi', 4)" class="w-6 h-6 rounded text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-indigo-500 hover:text-white">4</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -929,11 +1045,17 @@
 
           <!-- Catatan Fakta Observasi Tanpa Bias -->
           <div class="pt-4 border-t border-slate-200 space-y-2">
-            <label class="block text-xs font-bold text-slate-800 flex items-center space-x-1">
-              <i class="fa-solid fa-feather text-indigo-600"></i>
-              <span>Catatan Fakta Obyektif Observasi (Bebas Bias / Berbasis Bukti Nyata)</span>
-            </label>
-            <textarea id="obs-catatan-fakta" oninput="autoSaveObsInput()" rows="4" placeholder="Contoh: Pada menit ke-15 guru mengajukan pertanyaan pemantik. Murid berpartisipasi aktif dalam dialog..." class="w-full text-xs p-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold text-slate-800 flex items-center space-x-1">
+                <i class="fa-solid fa-feather text-indigo-600"></i>
+                <span>Catatan Fakta Obyektif Observasi (Bebas Bias / Berbasis Bukti Nyata)</span>
+              </label>
+              <span id="obs-warn-catatan-fakta" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                <span>Wajib diisi</span>
+              </span>
+            </div>
+            <textarea id="obs-catatan-fakta" oninput="autoSaveObsInput()" rows="4" placeholder="Contoh: Pada menit ke-15 guru mengajukan pertanyaan pemantik. Murid berpartisipasi aktif dalam dialog..." class="w-full text-xs p-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"></textarea>
           </div>
 
           <!-- Blok Tanda Tangan 3 Pihak Observasi Kelas -->
@@ -1031,32 +1153,56 @@
           <!-- Form 4 Pilar TIRTA -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             <div class="space-y-1">
-              <label class="font-bold text-slate-700 flex items-center space-x-1">
-                <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px]">T</span>
-                <span>Tujuan Percakapan (Goal)</span>
-              </label>
-              <textarea id="coach-tujuan" oninput="autoSaveCoachingInput()" rows="3" placeholder="Apa tujuan yang ingin dicapai guru dari sesi refleksi pasca observasi ini?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+              <div class="flex items-center justify-between">
+                <label class="font-bold text-slate-700 flex items-center space-x-1">
+                  <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px]">T</span>
+                  <span>Tujuan Percakapan (Goal)</span>
+                </label>
+                <span id="coach-warn-tujuan" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                  <span>Wajib diisi</span>
+                </span>
+              </div>
+              <textarea id="coach-tujuan" oninput="autoSaveCoachingInput()" rows="3" placeholder="Apa tujuan yang ingin dicapai guru dari sesi refleksi pasca observasi ini?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 transition-colors"></textarea>
             </div>
             <div class="space-y-1">
-              <label class="font-bold text-slate-700 flex items-center space-x-1">
-                <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px]">I</span>
-                <span>Identifikasi Masalah & Potensi (Reality)</span>
-              </label>
-              <textarea id="coach-identifikasi" oninput="autoSaveCoachingInput()" rows="3" placeholder="Apa saja tantangan yang dirasakan guru saat pembelajaran di kelas?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+              <div class="flex items-center justify-between">
+                <label class="font-bold text-slate-700 flex items-center space-x-1">
+                  <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px]">I</span>
+                  <span>Identifikasi Masalah & Potensi (Reality)</span>
+                </label>
+                <span id="coach-warn-identifikasi" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                  <span>Wajib diisi</span>
+                </span>
+              </div>
+              <textarea id="coach-identifikasi" oninput="autoSaveCoachingInput()" rows="3" placeholder="Apa saja tantangan yang dirasakan guru saat pembelajaran di kelas?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 transition-colors"></textarea>
             </div>
             <div class="space-y-1">
-              <label class="font-bold text-slate-700 flex items-center space-x-1">
-                <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-[10px]">R</span>
-                <span>Rencana Aksi Pengembangan (Options)</span>
-              </label>
-              <textarea id="coach-rencana" oninput="autoSaveCoachingInput()" rows="3" placeholder="Langkah konkret apa yang akan dilakukan guru untuk meningkatkan kompetensi?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+              <div class="flex items-center justify-between">
+                <label class="font-bold text-slate-700 flex items-center space-x-1">
+                  <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-[10px]">R</span>
+                  <span>Rencana Aksi Pengembangan (Options)</span>
+                </label>
+                <span id="coach-warn-rencana" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                  <span>Wajib diisi</span>
+                </span>
+              </div>
+              <textarea id="coach-rencana" oninput="autoSaveCoachingInput()" rows="3" placeholder="Langkah konkret apa yang akan dilakukan guru untuk meningkatkan kompetensi?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 transition-colors"></textarea>
             </div>
             <div class="space-y-1">
-              <label class="font-bold text-slate-700 flex items-center space-x-1">
-                <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[10px]">TA</span>
-                <span>Tanggung Jawab & Komitmen (Will)</span>
-              </label>
-              <textarea id="coach-tanggungjawab" oninput="autoSaveCoachingInput()" rows="3" placeholder="Kapan rencana dilaksanakan dan siapa yang akan dimintai dukungan/kolaborasi?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+              <div class="flex items-center justify-between">
+                <label class="font-bold text-slate-700 flex items-center space-x-1">
+                  <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[10px]">TA</span>
+                  <span>Tanggung Jawab & Komitmen (Will)</span>
+                </label>
+                <span id="coach-warn-tanggungjawab" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                  <span>Wajib diisi</span>
+                </span>
+              </div>
+              <textarea id="coach-tanggungjawab" oninput="autoSaveCoachingInput()" rows="3" placeholder="Kapan rencana dilaksanakan dan siapa yang akan dimintai dukungan/kolaborasi?..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 transition-colors"></textarea>
             </div>
           </div>
 
@@ -5056,6 +5202,25 @@
       }
     }
 
+    function checkFieldValidation(inputEl, warnBadgeEl) {
+      if (!inputEl) return true;
+      const isFilled = inputEl.value && inputEl.value.trim().length > 0;
+      if (isFilled) {
+        inputEl.classList.remove('border-rose-400', 'bg-rose-50/30');
+        if (warnBadgeEl) {
+          warnBadgeEl.classList.add('hidden');
+          warnBadgeEl.classList.remove('inline-flex');
+        }
+      } else {
+        inputEl.classList.add('border-rose-400', 'bg-rose-50/30');
+        if (warnBadgeEl) {
+          warnBadgeEl.classList.remove('hidden');
+          warnBadgeEl.classList.add('inline-flex');
+        }
+      }
+      return isFilled;
+    }
+
     function autoSavePraInput() {
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
@@ -5072,9 +5237,14 @@
         guru.praFeedback.bkBidangLayanan = bkBidang;
         guru.praFeedback.bkFokusLayanan = bkFokus;
         guru.praFeedback.bkTujuanLayanan = bkTujuan;
+        checkFieldValidation(document.getElementById('pra-bk-bidang'), document.getElementById('pra-warn-bk-bidang'));
+        checkFieldValidation(document.getElementById('pra-bk-fokus'), document.getElementById('pra-warn-bk-fokus'));
+        checkFieldValidation(document.getElementById('pra-bk-tujuan'), document.getElementById('pra-warn-bk-tujuan'));
       } else {
         guru.materiTopik = document.getElementById('pra-input-materi')?.value || '';
         guru.tujuanPembelajaran = document.getElementById('pra-input-tujuan')?.value || '';
+        checkFieldValidation(document.getElementById('pra-input-materi'), document.getElementById('pra-warn-materi'));
+        checkFieldValidation(document.getElementById('pra-input-tujuan'), document.getElementById('pra-warn-tujuan'));
       }
       guru.tanggalTelaah = document.getElementById('pra-input-tanggal')?.value || '';
       guru.targetPerilaku = document.getElementById('pra-input-target-perilaku')?.value || '';
@@ -5095,6 +5265,7 @@
       guru.catatanFakta = document.getElementById('obs-catatan-fakta')?.value || '';
       guru.tanggalObservasi = document.getElementById('obs-input-tanggal')?.value || '';
       guru.targetPerilaku = document.getElementById('obs-input-target-perilaku')?.value || '';
+      checkFieldValidation(document.getElementById('obs-catatan-fakta'), document.getElementById('obs-warn-catatan-fakta'));
       saveDataToLocalStorage();
     }
 
@@ -5106,6 +5277,10 @@
       guru.coaching.identifikasi = document.getElementById('coach-identifikasi')?.value || '';
       guru.coaching.rencana = document.getElementById('coach-rencana')?.value || '';
       guru.coaching.tanggungJawab = document.getElementById('coach-tanggungjawab')?.value || '';
+      checkFieldValidation(document.getElementById('coach-tujuan'), document.getElementById('coach-warn-tujuan'));
+      checkFieldValidation(document.getElementById('coach-identifikasi'), document.getElementById('coach-warn-identifikasi'));
+      checkFieldValidation(document.getElementById('coach-rencana'), document.getElementById('coach-warn-rencana'));
+      checkFieldValidation(document.getElementById('coach-tanggungjawab'), document.getElementById('coach-warn-tanggungjawab'));
       saveDataToLocalStorage();
     }
 
@@ -5199,11 +5374,16 @@
         if (inBkBidang) inBkBidang.value = guru.bkBidangLayanan || (guru.praFeedback && guru.praFeedback.bkBidangLayanan) || '';
         if (inBkFokus) inBkFokus.value = guru.bkFokusLayanan || (guru.praFeedback && guru.praFeedback.bkFokusLayanan) || guru.materiTopik || '';
         if (inBkTujuan) inBkTujuan.value = guru.bkTujuanLayanan || (guru.praFeedback && guru.praFeedback.bkTujuanLayanan) || guru.tujuanPembelajaran || '';
+        checkFieldValidation(inBkBidang, document.getElementById('pra-warn-bk-bidang'));
+        checkFieldValidation(inBkFokus, document.getElementById('pra-warn-bk-fokus'));
+        checkFieldValidation(inBkTujuan, document.getElementById('pra-warn-bk-tujuan'));
       } else {
         if (fieldsMapel) fieldsMapel.classList.remove('hidden');
         if (fieldsBk) fieldsBk.classList.add('hidden');
         if (inMateri) inMateri.value = guru.materiTopik || '';
         if (inTujuan) inTujuan.value = guru.tujuanPembelajaran || '';
+        checkFieldValidation(inMateri, document.getElementById('pra-warn-materi'));
+        checkFieldValidation(inTujuan, document.getElementById('pra-warn-tujuan'));
       }
 
       const praSpvSel = document.getElementById('pra-supervisor-select');
@@ -5271,19 +5451,28 @@
         });
 
         let indRows = dim.indikator.map(ind => {
-          const score = (guru.rppScores[ind.id] !== undefined) ? Number(guru.rppScores[ind.id]) : 0;
+          const isSet = (guru.rppScores && guru.rppScores[ind.id] !== undefined);
+          const score = isSet ? Number(guru.rppScores[ind.id]) : null;
+          const isUnfilled = !isSet;
           return `
-            <div class="bg-slate-50/70 p-3 rounded-lg border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs">
-              <div class="flex-1 pr-2">
+            <div id="rpp-row-${ind.id}" class="${isUnfilled ? 'bg-rose-50/60 border-rose-300' : 'bg-slate-50/70 border-slate-200'} p-3 rounded-lg border flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs transition-colors">
+              <div class="flex-1 pr-2 flex items-center space-x-2">
                 <span class="font-bold text-slate-800">${ind.id}.</span>
                 <span class="text-slate-700 ml-1 font-medium">${ind.text}</span>
+                <span id="rpp-warn-${ind.id}" class="${isUnfilled ? 'inline-flex' : 'hidden'} text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print flex-shrink-0">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                  <span>Belum Diisi</span>
+                </span>
               </div>
-              <div class="flex items-center space-x-1 flex-shrink-0" id="rpp-group-${ind.id}">
-                ${[0, 1, 2, 3].map(s => `
-                  <button type="button" onclick="setRppScore(${ind.id}, ${s})" title="Skor ${s}" class="rpp-btn-${ind.id} px-2.5 py-1 rounded text-xs font-bold transition ${score === s ? 'bg-indigo-600 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'}">
-                    ${s}
-                  </button>
-                `).join('')}
+              <div class="flex items-center space-x-2 flex-shrink-0">
+                <span id="rpp-print-${ind.id}" class="print-score-badge">${isSet ? 'Skor: ' + score : 'Skor: -'}</span>
+                <div class="flex items-center space-x-1" id="rpp-group-${ind.id}">
+                  ${[0, 1, 2, 3].map(s => `
+                    <button type="button" onclick="setRppScore(${ind.id}, ${s})" title="Skor ${s}" class="rpp-btn-${ind.id} px-2.5 py-1 rounded text-xs font-bold transition ${isSet && score === s ? 'bg-indigo-600 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'}">
+                      ${s}
+                    </button>
+                  `).join('')}
+                </div>
               </div>
             </div>
           `;
@@ -5346,6 +5535,20 @@
         window.event.target.className = `rpp-btn-${indId} px-2.5 py-1 rounded text-xs font-bold transition bg-indigo-600 text-white shadow-sm`;
       }
 
+      // Clear warning and update print badge
+      const rppRow = document.getElementById(`rpp-row-${indId}`);
+      if (rppRow) {
+        rppRow.className = 'bg-slate-50/70 p-3 rounded-lg border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs transition-colors';
+      }
+      const rppWarn = document.getElementById(`rpp-warn-${indId}`);
+      if (rppWarn) {
+        rppWarn.className = 'hidden';
+      }
+      const rppPrint = document.getElementById(`rpp-print-${indId}`);
+      if (rppPrint) {
+        rppPrint.innerText = `Skor: ${score}`;
+      }
+
       const dim = DIMENSI_RPP_PM.find(d => d.indikator.some(i => i.id === indId));
       if (dim) {
         let sub = 0;
@@ -5386,20 +5589,30 @@
       if (list14) {
         list14.innerHTML = '';
         ASPEK_BK_TELAAH.forEach(item => {
-          const score = (guru.bkScores && guru.bkScores[item.id] !== undefined) ? guru.bkScores[item.id] : 0;
+          const isSet = (guru.bkScores && guru.bkScores[item.id] !== undefined);
+          const score = isSet ? Number(guru.bkScores[item.id]) : 0;
+          const isUnfilled = !isSet;
           const row = document.createElement('div');
-          row.className = 'bg-white p-3 rounded-xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs';
+          row.id = `bk-telaah-row-${item.id}`;
+          row.className = `${isUnfilled ? 'bg-rose-50/60 border-rose-300' : 'bg-white border-slate-200'} p-3 rounded-xl border flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs transition-colors`;
           row.innerHTML = `
-            <div class="flex-1 pr-2">
+            <div class="flex-1 pr-2 flex items-center space-x-2">
               <span class="font-bold text-slate-800 text-xs">${item.id}.</span>
               <span class="text-slate-700 ml-1 font-medium">${item.text}</span>
+              <span id="bk-telaah-warn-${item.id}" class="${isUnfilled ? 'inline-flex' : 'hidden'} text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print flex-shrink-0">
+                <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                <span>Belum Diisi</span>
+              </span>
             </div>
-            <div class="flex items-center space-x-1 flex-shrink-0" id="bk-score-group-${item.id}">
-              ${[0, 1, 2, 3, 4].map(s => `
-                <button type="button" onclick="setBkScore(${item.id}, ${s})" class="bk-score-btn-${item.id} px-2.5 py-1 rounded text-xs font-bold transition ${score === s ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
-                  ${s}
-                </button>
-              `).join('')}
+            <div class="flex items-center space-x-2 flex-shrink-0">
+              <span id="bk-telaah-print-${item.id}" class="print-score-badge">${isSet ? 'Skor: ' + score : 'Skor: -'}</span>
+              <div class="flex items-center space-x-1" id="bk-score-group-${item.id}">
+                ${[0, 1, 2, 3, 4].map(s => `
+                  <button type="button" onclick="setBkScore(${item.id}, ${s})" class="bk-score-btn-${item.id} px-2.5 py-1 rounded text-xs font-bold transition ${isSet && score === s ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                    ${s}
+                  </button>
+                `).join('')}
+              </div>
             </div>
           `;
           list14.appendChild(row);
@@ -5410,23 +5623,32 @@
       if (prinsipList) {
         prinsipList.innerHTML = '';
         PRINSIP_BK_DL.forEach(p => {
-          const score = (guru.bkDlScores && guru.bkDlScores[p.key] !== undefined) ? guru.bkDlScores[p.key] : 0;
+          const isSet = (guru.bkDlScores && guru.bkDlScores[p.key] !== undefined);
+          const score = isSet ? Number(guru.bkDlScores[p.key]) : 0;
           const note = (guru.bkDlNotes && guru.bkDlNotes[p.key]) ? guru.bkDlNotes[p.key] : '';
           const card = document.createElement('div');
-          card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 space-y-2.5 text-xs';
+          card.id = `bk-prinsip-card-${p.key}`;
+          card.className = `${!isSet ? 'bg-rose-50/60 border-rose-300' : 'bg-white border-slate-200'} p-3.5 rounded-xl border space-y-2.5 text-xs transition-colors`;
           card.innerHTML = `
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
-              <div>
+              <div class="flex items-center space-x-2">
                 <span class="font-bold text-indigo-900 text-xs uppercase tracking-wide">Prinsip: ${p.title}</span>
+                <span id="bk-prinsip-warn-${p.key}" class="${!isSet ? 'inline-flex' : 'hidden'} text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                  <span>Belum Diisi</span>
+                </span>
                 <p class="text-[11px] text-slate-600 font-medium mt-0.5"><i class="fa-regular fa-circle-question text-indigo-500 mr-1"></i>${p.pemantik}</p>
               </div>
-              <div class="flex items-center space-x-1 flex-shrink-0" id="bk-dl-group-${p.key}">
-                <span class="text-[11px] text-slate-400 mr-1">Skala (0-4):</span>
-                ${[0, 1, 2, 3, 4].map(s => `
-                  <button type="button" onclick="setBkDlScore('${p.key}', ${s})" class="bk-dl-btn-${p.key} px-2.5 py-1 rounded text-xs font-bold transition ${score === s ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
-                    ${s}
-                  </button>
-                `).join('')}
+              <div class="flex items-center space-x-2 flex-shrink-0">
+                <span id="bk-prinsip-print-${p.key}" class="print-score-badge">${isSet ? 'Skor: ' + score : 'Skor: -'}</span>
+                <div class="flex items-center space-x-1" id="bk-dl-group-${p.key}">
+                  <span class="text-[11px] text-slate-400 mr-1 no-print">Skala (0-4):</span>
+                  ${[0, 1, 2, 3, 4].map(s => `
+                    <button type="button" onclick="setBkDlScore('${p.key}', ${s})" class="bk-dl-btn-${p.key} px-2.5 py-1 rounded text-xs font-bold transition ${isSet && score === s ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                      ${s}
+                    </button>
+                  `).join('')}
+                </div>
               </div>
             </div>
             <div>
@@ -5442,23 +5664,32 @@
       if (siklusList) {
         siklusList.innerHTML = '';
         SIKLUS_BK_DL.forEach(s => {
-          const score = (guru.bkDlScores && guru.bkDlScores[s.key] !== undefined) ? guru.bkDlScores[s.key] : 0;
+          const isSet = (guru.bkDlScores && guru.bkDlScores[s.key] !== undefined);
+          const score = isSet ? Number(guru.bkDlScores[s.key]) : 0;
           const note = (guru.bkDlNotes && guru.bkDlNotes[s.key]) ? guru.bkDlNotes[s.key] : '';
           const card = document.createElement('div');
-          card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 space-y-2.5 text-xs';
+          card.id = `bk-siklus-card-${s.key}`;
+          card.className = `${!isSet ? 'bg-rose-50/60 border-rose-300' : 'bg-white border-slate-200'} p-3.5 rounded-xl border space-y-2.5 text-xs transition-colors`;
           card.innerHTML = `
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
-              <div>
+              <div class="flex items-center space-x-2">
                 <span class="font-bold text-indigo-900 text-xs uppercase tracking-wide">Siklus: ${s.title}</span>
+                <span id="bk-siklus-warn-${s.key}" class="${!isSet ? 'inline-flex' : 'hidden'} text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                  <span>Belum Diisi</span>
+                </span>
                 <p class="text-[11px] text-slate-600 font-medium mt-0.5"><i class="fa-solid fa-arrows-spin text-indigo-500 mr-1"></i>${s.pemantik}</p>
               </div>
-              <div class="flex items-center space-x-1 flex-shrink-0" id="bk-dl-group-${s.key}">
-                <span class="text-[11px] text-slate-400 mr-1">Skala (0-4):</span>
-                ${[0, 1, 2, 3, 4].map(val => `
-                  <button type="button" onclick="setBkDlScore('${s.key}', ${val})" class="bk-dl-btn-${s.key} px-2.5 py-1 rounded text-xs font-bold transition ${score === val ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
-                    ${val}
-                  </button>
-                `).join('')}
+              <div class="flex items-center space-x-2 flex-shrink-0">
+                <span id="bk-siklus-print-${s.key}" class="print-score-badge">${isSet ? 'Skor: ' + score : 'Skor: -'}</span>
+                <div class="flex items-center space-x-1" id="bk-dl-group-${s.key}">
+                  <span class="text-[11px] text-slate-400 mr-1 no-print">Skala (0-4):</span>
+                  ${[0, 1, 2, 3, 4].map(val => `
+                    <button type="button" onclick="setBkDlScore('${s.key}', ${val})" class="bk-dl-btn-${s.key} px-2.5 py-1 rounded text-xs font-bold transition ${isSet && score === val ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                      ${val}
+                    </button>
+                  `).join('')}
+                </div>
               </div>
             </div>
             <div>
@@ -5486,6 +5717,19 @@
         window.event.target.className = `bk-score-btn-${indId} px-2.5 py-1 rounded text-xs font-bold transition bg-indigo-600 text-white shadow-sm`;
       }
 
+      const row = document.getElementById(`bk-telaah-row-${indId}`);
+      if (row) {
+        row.className = 'bg-white p-3 rounded-xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs transition-colors';
+      }
+      const warn = document.getElementById(`bk-telaah-warn-${indId}`);
+      if (warn) {
+        warn.className = 'hidden';
+      }
+      const printBadge = document.getElementById(`bk-telaah-print-${indId}`);
+      if (printBadge) {
+        printBadge.innerText = `Skor: ${score}`;
+      }
+
       calculateRppScoreLive();
       updateSidebarPredikat(guru);
       saveDataToLocalStorage();
@@ -5502,6 +5746,19 @@
       });
       if (window.event && window.event.target) {
         window.event.target.className = `bk-dl-btn-${key} px-2.5 py-1 rounded text-xs font-bold transition bg-indigo-600 text-white shadow-sm`;
+      }
+
+      const card = document.getElementById(`bk-prinsip-card-${key}`) || document.getElementById(`bk-siklus-card-${key}`);
+      if (card) {
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 space-y-2.5 text-xs transition-colors';
+      }
+      const warn = document.getElementById(`bk-prinsip-warn-${key}`) || document.getElementById(`bk-siklus-warn-${key}`);
+      if (warn) {
+        warn.className = 'hidden';
+      }
+      const printBadge = document.getElementById(`bk-prinsip-print-${key}`) || document.getElementById(`bk-siklus-print-${key}`);
+      if (printBadge) {
+        printBadge.innerText = `Skor: ${score}`;
       }
 
       calculateRppScoreLive();
@@ -5557,6 +5814,7 @@
         if (obsFokusPmmText) obsFokusPmmText.innerText = targetPerilakuVal;
       }
 
+      let missingCount = 0;
       if (guru.mapel === 'BK') {
         const bkBidang = document.getElementById('pra-bk-bidang')?.value.trim() || '';
         const bkFokus = document.getElementById('pra-bk-fokus')?.value.trim() || '';
@@ -5570,9 +5828,23 @@
         guru.praFeedback.bkBidangLayanan = bkBidang;
         guru.praFeedback.bkFokusLayanan = bkFokus;
         guru.praFeedback.bkTujuanLayanan = bkTujuan;
+
+        if (!checkFieldValidation(document.getElementById('pra-bk-bidang'), document.getElementById('pra-warn-bk-bidang'))) missingCount++;
+        if (!checkFieldValidation(document.getElementById('pra-bk-fokus'), document.getElementById('pra-warn-bk-fokus'))) missingCount++;
+        if (!checkFieldValidation(document.getElementById('pra-bk-tujuan'), document.getElementById('pra-warn-bk-tujuan'))) missingCount++;
+        ASPEK_BK_TELAAH.forEach(item => {
+          if (!guru.bkScores || guru.bkScores[item.id] === undefined) missingCount++;
+        });
       } else {
         guru.materiTopik = document.getElementById('pra-input-materi')?.value || '';
         guru.tujuanPembelajaran = document.getElementById('pra-input-tujuan')?.value || '';
+        if (!checkFieldValidation(document.getElementById('pra-input-materi'), document.getElementById('pra-warn-materi'))) missingCount++;
+        if (!checkFieldValidation(document.getElementById('pra-input-tujuan'), document.getElementById('pra-warn-tujuan'))) missingCount++;
+        DIMENSI_RPP_PM.forEach(dim => {
+          dim.indikator.forEach(ind => {
+            if (!guru.rppScores || guru.rppScores[ind.id] === undefined) missingCount++;
+          });
+        });
       }
       guru.tanggalTelaah = document.getElementById('pra-input-tanggal')?.value || '';
 
@@ -5587,7 +5859,16 @@
 
       syncSelectedGuru(guru.id);
       saveDataToLocalStorage();
-      showToast('Hasil Telaah Modul Ajar/RPP berhasil disimpan!');
+
+      if (missingCount > 0) {
+        showToast(`⚠️ Terdapat ${missingCount} isian/indikator belum diisi! Mohon periksa item bertanda merah.`, true);
+        const firstUnfilled = document.querySelector('#view-pra .border-rose-300, #view-pra .border-rose-400');
+        if (firstUnfilled) {
+          firstUnfilled.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else {
+        showToast('Hasil Telaah Modul Ajar/RPP lengkap & berhasil disimpan!');
+      }
 
       // Sync ke backend server MySQL
       const res = await apiCall('save_pra', {
@@ -5604,7 +5885,7 @@
         catatanPra: guru.catatanPra || '',
         supervisorId: guru.supervisorId || 1
       });
-      if (res && res.success && isServerOnline) {
+      if (res && res.success && isServerOnline && missingCount === 0) {
         showToast(res.message || 'Data Telaah tersimpan di server MySQL!');
       }
     }
@@ -5653,7 +5934,10 @@
       }
 
       const obsCatatanFakta = document.getElementById('obs-catatan-fakta');
-      if (obsCatatanFakta) obsCatatanFakta.value = guru.catatanFakta || '';
+      if (obsCatatanFakta) {
+        obsCatatanFakta.value = guru.catatanFakta || '';
+        checkFieldValidation(obsCatatanFakta, document.getElementById('obs-warn-catatan-fakta'));
+      }
 
       calculateObsScoreLive();
       syncAllSignatures(guru);
@@ -5671,15 +5955,25 @@
 
         let indRows = aspek.indikator.map(ind => {
           const score = (guru && guru.obsScores && guru.obsScores[ind.id] !== undefined) ? guru.obsScores[ind.id] : 0;
+          const isUnfilled = !score || score === 0;
           return `
-            <div class="bg-white p-3 rounded-lg border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-2 text-xs">
-              <span class="font-medium text-slate-700 flex-1">${ind.id}. ${ind.text}</span>
-              <div class="flex items-center space-x-1.5" id="obs-ind-btn-${ind.id}">
-                ${[1, 2, 3, 4].map(s => `
-                  <button type="button" onclick="setIndikatorScore(${ind.id}, ${s})" class="ind-btn-${ind.id} px-2.5 py-1 rounded text-xs font-bold transition ${score === s ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
-                    ${s}
-                  </button>
-                `).join('')}
+            <div id="obs-ind-row-${ind.id}" class="${isUnfilled ? 'bg-rose-50/60 border-rose-300' : 'bg-white border-slate-200'} p-3 rounded-lg border flex flex-col md:flex-row md:items-center justify-between gap-2 text-xs transition-colors">
+              <div class="flex items-center space-x-2 flex-1">
+                <span class="font-medium text-slate-700">${ind.id}. ${ind.text}</span>
+                <span id="obs-warn-${ind.id}" class="${isUnfilled ? 'inline-flex' : 'hidden'} text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print flex-shrink-0">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                  <span>Belum Diisi</span>
+                </span>
+              </div>
+              <div class="flex items-center space-x-2 flex-shrink-0">
+                <span id="obs-print-${ind.id}" class="print-score-badge">${score > 0 ? 'Skor: ' + score : 'Skor: -'}</span>
+                <div class="flex items-center space-x-1.5" id="obs-ind-btn-${ind.id}">
+                  ${[1, 2, 3, 4].map(s => `
+                    <button type="button" onclick="setIndikatorScore(${ind.id}, ${s})" class="ind-btn-${ind.id} px-2.5 py-1 rounded text-xs font-bold transition ${score === s ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                      ${s}
+                    </button>
+                  `).join('')}
+                </div>
               </div>
             </div>
           `;
@@ -5751,20 +6045,28 @@
     function renderBkIndikatorItem(ind, guru, scaleLabels) {
       const score = (guru.obsScores && guru.obsScores[ind.id] !== undefined) ? guru.obsScores[ind.id] : 0;
       const note = (guru.obsNotes && guru.obsNotes[ind.id]) ? guru.obsNotes[ind.id] : '';
+      const isUnfilled = !score || score === 0;
 
       return `
-        <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2 text-xs">
+        <div id="bk-obs-row-${ind.id}" class="${isUnfilled ? 'bg-rose-50/60 border-rose-300' : 'bg-white border-slate-200'} p-3 rounded-lg border space-y-2 text-xs transition-colors">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
-            <div class="flex-1 pr-2">
+            <div class="flex-1 pr-2 flex items-center space-x-2">
               <span class="font-bold text-slate-800">${ind.id}.</span>
               <span class="text-slate-700 ml-1 font-medium">${ind.text}</span>
+              <span id="bk-warn-${ind.id}" class="${isUnfilled ? 'inline-flex' : 'hidden'} text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print flex-shrink-0">
+                <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                <span>Belum Diisi</span>
+              </span>
             </div>
-            <div class="flex items-center space-x-1.5 flex-shrink-0" id="bk-obs-btn-group-${ind.id}">
-              ${[1, 2, 3, 4].map(s => `
-                <button type="button" onclick="setBkObservasiScore(${ind.id}, ${s})" title="${scaleLabels[s]}" class="bk-obs-btn-${ind.id} px-2.5 py-1 rounded text-xs font-bold transition ${score === s ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
-                  ${s}
-                </button>
-              `).join('')}
+            <div class="flex items-center space-x-2 flex-shrink-0">
+              <span id="bk-print-${ind.id}" class="print-score-badge">${score > 0 ? 'Skor: ' + score : 'Skor: -'}</span>
+              <div class="flex items-center space-x-1.5" id="bk-obs-btn-group-${ind.id}">
+                ${[1, 2, 3, 4].map(s => `
+                  <button type="button" onclick="setBkObservasiScore(${ind.id}, ${s})" title="${scaleLabels[s]}" class="bk-obs-btn-${ind.id} px-2.5 py-1 rounded text-xs font-bold transition ${score === s ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                    ${s}
+                  </button>
+                `).join('')}
+              </div>
             </div>
           </div>
           <div class="pt-1 border-t border-slate-100">
@@ -5785,6 +6087,19 @@
       });
       if (window.event && window.event.target) {
         window.event.target.className = `bk-obs-btn-${indId} px-2.5 py-1 rounded text-xs font-bold transition bg-emerald-600 text-white shadow-sm`;
+      }
+
+      const row = document.getElementById(`bk-obs-row-${indId}`);
+      if (row) {
+        row.className = 'bg-white p-3 rounded-lg border border-slate-200 space-y-2 text-xs transition-colors';
+      }
+      const warn = document.getElementById(`bk-warn-${indId}`);
+      if (warn) {
+        warn.className = 'hidden';
+      }
+      const printBadge = document.getElementById(`bk-print-${indId}`);
+      if (printBadge) {
+        printBadge.innerText = `Skor: ${score}`;
       }
 
       calculateObsScoreLive();
@@ -5811,6 +6126,19 @@
       });
       if (window.event && window.event.target) {
         window.event.target.className = `ind-btn-${indId} px-2.5 py-1 rounded text-xs font-bold transition bg-indigo-600 text-white shadow-sm`;
+      }
+
+      const row = document.getElementById(`obs-ind-row-${indId}`);
+      if (row) {
+        row.className = 'bg-white p-3 rounded-lg border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-2 text-xs transition-colors';
+      }
+      const warn = document.getElementById(`obs-warn-${indId}`);
+      if (warn) {
+        warn.className = 'hidden';
+      }
+      const printBadge = document.getElementById(`obs-print-${indId}`);
+      if (printBadge) {
+        printBadge.innerText = `Skor: ${score}`;
       }
 
       calculateObsScoreLive();
@@ -5846,6 +6174,32 @@
 
     function updateDlScoreButtons(aspectKey, activeScore) {
       const group = document.getElementById(`dl-score-${aspectKey}`);
+      const row = document.getElementById(`dl-row-${aspectKey}`);
+      const warn = document.getElementById(`dl-warn-${aspectKey}`);
+      const printEl = document.getElementById(`dl-print-${aspectKey}`);
+
+      if (activeScore && activeScore > 0) {
+        if (row) {
+          row.className = 'flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200 transition-colors';
+        }
+        if (warn) {
+          warn.className = 'hidden';
+        }
+        if (printEl) {
+          printEl.innerText = `Skor: ${activeScore}`;
+        }
+      } else {
+        if (row) {
+          row.className = 'flex items-center justify-between bg-rose-50/60 p-2 rounded-lg border border-rose-300 transition-colors';
+        }
+        if (warn) {
+          warn.className = 'inline-flex text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print';
+        }
+        if (printEl) {
+          printEl.innerText = 'Skor: -';
+        }
+      }
+
       if (!group) return;
       group.querySelectorAll('button').forEach((btn, idx) => {
         const val = idx + 1;
@@ -5864,10 +6218,47 @@
       const obsCatatanFakta = document.getElementById('obs-catatan-fakta');
       if (obsCatatanFakta) guru.catatanFakta = obsCatatanFakta.value;
 
+      let missingCount = 0;
+      if (guru.mapel === 'BK') {
+        ASPEK_BK_OBSERVASI.forEach(grup => {
+          const list = grup.subkelompok ? grup.subkelompok.flatMap(s => s.indikator) : grup.indikator;
+          list.forEach(ind => {
+            if (!guru.obsScores || !guru.obsScores[ind.id] || guru.obsScores[ind.id] === 0) {
+              missingCount++;
+            }
+          });
+        });
+      } else {
+        ['mindful', 'meaningful', 'joyful', 'memahami', 'mengaplikasi', 'merefleksi'].forEach(k => {
+          if (!guru.deepLearning || !guru.deepLearning[k] || guru.deepLearning[k] === 0) {
+            missingCount++;
+          }
+        });
+        ASPEK_OBSERVASI.forEach(aspek => {
+          aspek.indikator.forEach(ind => {
+            if (!guru.obsScores || !guru.obsScores[ind.id] || guru.obsScores[ind.id] === 0) {
+              missingCount++;
+            }
+          });
+        });
+      }
+
+      const isCatatanFilled = checkFieldValidation(obsCatatanFakta, document.getElementById('obs-warn-catatan-fakta'));
+      if (!isCatatanFilled) missingCount++;
+
       guru.status = 'Selesai';
       syncSelectedGuru(guru.id);
       saveDataToLocalStorage();
-      showToast('Hasil Observasi Kelas berhasil disimpan!');
+
+      if (missingCount > 0) {
+        showToast(`⚠️ Terdapat ${missingCount} item belum diisi! Mohon periksa item bertanda merah.`, true);
+        const firstUnfilled = document.querySelector('#view-observasi .border-rose-300, #view-observasi .border-rose-400');
+        if (firstUnfilled) {
+          firstUnfilled.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else {
+        showToast('Hasil Observasi Kelas lengkap & berhasil disimpan!');
+      }
 
       // Sync ke MySQL Server
       const res = await apiCall('save_obs', {
@@ -5877,7 +6268,7 @@
         deepLearning: guru.deepLearning || {},
         catatanFakta: guru.catatanFakta || ''
       });
-      if (res && res.success && isServerOnline) {
+      if (res && res.success && isServerOnline && missingCount === 0) {
         showToast(res.message || 'Hasil Observasi tersimpan di server MySQL!');
       }
     }
@@ -5897,6 +6288,11 @@
       if (rEl) rEl.value = guru.coaching.rencana || '';
       if (taEl) taEl.value = guru.coaching.tanggungJawab || '';
 
+      checkFieldValidation(tEl, document.getElementById('coach-warn-tujuan'));
+      checkFieldValidation(iEl, document.getElementById('coach-warn-identifikasi'));
+      checkFieldValidation(rEl, document.getElementById('coach-warn-rencana'));
+      checkFieldValidation(taEl, document.getElementById('coach-warn-tanggungjawab'));
+
       syncAllSignatures(guru);
     }
 
@@ -5905,13 +6301,33 @@
       if (!guru) return;
       if (!guru.coaching) guru.coaching = {};
 
-      guru.coaching.tujuan = document.getElementById('coach-tujuan').value;
-      guru.coaching.identifikasi = document.getElementById('coach-identifikasi').value;
-      guru.coaching.rencana = document.getElementById('coach-rencana').value;
-      guru.coaching.tanggungJawab = document.getElementById('coach-tanggungjawab').value;
+      const tEl = document.getElementById('coach-tujuan');
+      const iEl = document.getElementById('coach-identifikasi');
+      const rEl = document.getElementById('coach-rencana');
+      const taEl = document.getElementById('coach-tanggungjawab');
+
+      guru.coaching.tujuan = tEl?.value || '';
+      guru.coaching.identifikasi = iEl?.value || '';
+      guru.coaching.rencana = rEl?.value || '';
+      guru.coaching.tanggungJawab = taEl?.value || '';
+
+      let missingCount = 0;
+      if (!checkFieldValidation(tEl, document.getElementById('coach-warn-tujuan'))) missingCount++;
+      if (!checkFieldValidation(iEl, document.getElementById('coach-warn-identifikasi'))) missingCount++;
+      if (!checkFieldValidation(rEl, document.getElementById('coach-warn-rencana'))) missingCount++;
+      if (!checkFieldValidation(taEl, document.getElementById('coach-warn-tanggungjawab'))) missingCount++;
 
       saveDataToLocalStorage();
-      showToast('Catatan Sesi Coaching TIRTA berhasil disimpan!');
+
+      if (missingCount > 0) {
+        showToast(`⚠️ Terdapat ${missingCount} isian TIRTA belum diisi! Mohon periksa tanda merah.`, true);
+        const firstUnfilled = document.querySelector('#view-coaching .border-rose-400');
+        if (firstUnfilled) {
+          firstUnfilled.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else {
+        showToast('Catatan Sesi Coaching TIRTA lengkap & berhasil disimpan!');
+      }
 
       // Sync ke MySQL Server
       const res = await apiCall('save_coaching', {
@@ -5921,7 +6337,7 @@
         rencana: guru.coaching.rencana,
         tanggungJawab: guru.coaching.tanggungJawab
       });
-      if (res && res.success && isServerOnline) {
+      if (res && res.success && isServerOnline && missingCount === 0) {
         showToast(res.message || 'Catatan Coaching tersimpan di server MySQL!');
       }
     }
@@ -6868,11 +7284,12 @@
       }
       const g = guruDatabase.find(x => x.id === selectedGuruId) || guruDatabase[0];
       const rawName = g ? g.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Guru';
-      const el = document.querySelector('#view-pra > div.bg-white');
+      const el = document.getElementById('view-pra') || document.querySelector('#view-pra > div.bg-white');
       if (!el) return;
       const filename = `Pra_Observasi_${rawName}_${g ? g.nip : ''}.pdf`;
 
       showToast('Sedang membuat file PDF Pra-Observasi...');
+      document.body.classList.add('generating-pdf');
       const opt = {
         margin: [8, 10, 10, 10],
         filename: filename,
@@ -6881,8 +7298,10 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
       html2pdf().set(opt).from(el).save().then(() => {
+        document.body.classList.remove('generating-pdf');
         showToast('File PDF Pra-Observasi berhasil diunduh!');
       }).catch(err => {
+        document.body.classList.remove('generating-pdf');
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
       });
@@ -6895,11 +7314,12 @@
       }
       const g = guruDatabase.find(x => x.id === selectedGuruId) || guruDatabase[0];
       const rawName = g ? g.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Guru';
-      const el = document.querySelector('#view-observasi > div.bg-white');
+      const el = document.getElementById('view-observasi') || document.querySelector('#view-observasi > div.bg-white');
       if (!el) return;
       const filename = `Observasi_Kelas_${rawName}_${g ? g.nip : ''}.pdf`;
 
       showToast('Sedang membuat file PDF Observasi Kelas...');
+      document.body.classList.add('generating-pdf');
       const opt = {
         margin: [8, 10, 10, 10],
         filename: filename,
@@ -6908,8 +7328,10 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
       html2pdf().set(opt).from(el).save().then(() => {
+        document.body.classList.remove('generating-pdf');
         showToast('File PDF Observasi Kelas berhasil diunduh!');
       }).catch(err => {
+        document.body.classList.remove('generating-pdf');
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
       });
@@ -6922,11 +7344,12 @@
       }
       const g = guruDatabase.find(x => x.id === selectedGuruId) || guruDatabase[0];
       const rawName = g ? g.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Guru';
-      const el = document.querySelector('#view-coaching > div.bg-white');
+      const el = document.getElementById('view-coaching') || document.querySelector('#view-coaching > div.bg-white');
       if (!el) return;
       const filename = `Coaching_TIRTA_${rawName}_${g ? g.nip : ''}.pdf`;
 
       showToast('Sedang membuat file PDF Coaching TIRTA...');
+      document.body.classList.add('generating-pdf');
       const opt = {
         margin: [8, 10, 10, 10],
         filename: filename,
@@ -6935,8 +7358,10 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
       html2pdf().set(opt).from(el).save().then(() => {
+        document.body.classList.remove('generating-pdf');
         showToast('File PDF Coaching TIRTA berhasil diunduh!');
       }).catch(err => {
+        document.body.classList.remove('generating-pdf');
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
       });
