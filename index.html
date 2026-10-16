@@ -168,10 +168,25 @@
       </button>
     </div>
 
-    <!-- Active Teacher Selection Summary Card -->
-    <div class="p-3 bg-slate-800/60 m-3 rounded-xl border border-slate-700/60">
+    <!-- User Login Profile Badge in Sidebar -->
+    <div class="mx-3 mt-3 px-3 py-2 bg-indigo-950/70 rounded-xl border border-indigo-700/50 flex items-center space-x-2.5">
+      <div class="w-8 h-8 rounded-lg bg-indigo-600/80 text-white flex items-center justify-center flex-shrink-0 text-sm shadow-sm">
+        <i id="side-user-icon" class="fa-solid fa-user-shield"></i>
+      </div>
+      <div class="min-w-0 flex-1">
+        <span class="text-[9px] uppercase font-bold text-indigo-300 tracking-wider block">Akun Login</span>
+        <p id="side-user-nama" class="font-bold text-white text-xs truncate">Superadmin Utama</p>
+        <span id="side-user-role" class="text-[10px] text-indigo-200 block truncate">Super Admin</span>
+      </div>
+    </div>
+
+    <!-- Target Guru Being Evaluated Summary Card -->
+    <div class="mx-3 mt-2 mb-3 p-3 bg-slate-800/80 rounded-xl border border-slate-700/70">
       <div class="flex items-center justify-between mb-1.5">
-        <span class="text-[10px] uppercase font-bold text-slate-400">Guru Aktif</span>
+        <span class="text-[10px] uppercase font-bold text-emerald-400 flex items-center space-x-1">
+          <i class="fa-solid fa-bullseye text-[9px]"></i>
+          <span>Guru Yang Dinilai</span>
+        </span>
         <span id="side-predikat" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-700 text-slate-300">Belum Dinilai</span>
       </div>
       <p id="side-nama" class="font-semibold text-white text-xs truncate">Pilih Guru...</p>
@@ -4765,6 +4780,28 @@
         saveUserSession(currentLoggedInUser);
         if (currentLoggedInUser.available_roles) {
           renderRoleSwitcher(currentLoggedInUser.available_roles);
+        }
+      }
+
+      // Update sidebar user login profile info
+      const sideUserNama = document.getElementById('side-user-nama');
+      const sideUserRole = document.getElementById('side-user-role');
+      const sideUserIcon = document.getElementById('side-user-icon');
+      if (sideUserNama && sideUserRole) {
+        if (role === 'superadmin') {
+          sideUserNama.innerText = (currentLoggedInUser && currentLoggedInUser.nama) ? currentLoggedInUser.nama : 'Superadmin Utama';
+          sideUserRole.innerText = 'Super Admin (Full Access)';
+          if (sideUserIcon) sideUserIcon.className = 'fa-solid fa-user-shield';
+        } else if (role === 'supervisor') {
+          const spv = appSettings.supervisors.find(s => s.id === getCurrentSupervisorId());
+          const spvName = (currentLoggedInUser && currentLoggedInUser.nama) ? currentLoggedInUser.nama : (spv ? spv.nama : 'Supervisor Penilai');
+          sideUserNama.innerText = spvName.split('(')[0].trim();
+          sideUserRole.innerText = 'Supervisor Penilai';
+          if (sideUserIcon) sideUserIcon.className = 'fa-solid fa-user-tie';
+        } else {
+          sideUserNama.innerText = (currentLoggedInUser && currentLoggedInUser.nama) ? currentLoggedInUser.nama : 'Guru';
+          sideUserRole.innerText = 'Guru (Self-Asesmen)';
+          if (sideUserIcon) sideUserIcon.className = 'fa-solid fa-chalkboard-user';
         }
       }
 
