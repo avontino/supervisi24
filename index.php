@@ -181,7 +181,7 @@
     </div>
 
     <!-- Target Guru Being Evaluated Summary Card -->
-    <div class="mx-3 mt-2 mb-3 p-3 bg-slate-800/80 rounded-xl border border-slate-700/70">
+    <div id="side-target-guru-card" class="hidden mx-3 mt-2 mb-3 p-3 bg-slate-800/80 rounded-xl border border-slate-700/70 transition-all">
       <div class="flex items-center justify-between mb-1.5">
         <span class="text-[10px] uppercase font-bold text-emerald-400 flex items-center space-x-1">
           <i class="fa-solid fa-bullseye text-[9px]"></i>
@@ -4651,6 +4651,17 @@
           }
         }
       });
+ 
+      // Tampilkan kartu 'Guru Yang Dinilai' di sidebar HANYA pada menu evaluasi/penilaian guru
+      const sideTargetCard = document.getElementById('side-target-guru-card');
+      if (sideTargetCard) {
+        const evaluationViews = ['pra', 'observasi', 'coaching', 'laporan'];
+        if (evaluationViews.includes(targetView)) {
+          sideTargetCard.classList.remove('hidden');
+        } else {
+          sideTargetCard.classList.add('hidden');
+        }
+      }
 
       const topTitle = document.getElementById('top-title');
       const activeGuru = guruDatabase.find(g => g.id === selectedGuruId);
