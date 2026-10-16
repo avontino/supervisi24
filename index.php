@@ -30,6 +30,21 @@
       display: none;
     }
 
+    .generating-pdf .print-score-badge {
+      display: inline-block !important;
+      font-weight: 700 !important;
+      font-size: 11px !important;
+      color: #0f172a !important;
+      border: 1.5px solid #0f172a !important;
+      background-color: #f8fafc !important;
+      padding: 2px 8px !important;
+      border-radius: 4px !important;
+      white-space: nowrap !important;
+    }
+    .generating-pdf button, .generating-pdf .no-print {
+      display: none !important;
+    }
+
     @media print {
       * {
         -webkit-print-color-adjust: exact !important;
@@ -62,21 +77,6 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
-    }
-    .generating-pdf .print-score-badge {
-      display: inline-block !important;
-      font-weight: 700 !important;
-      font-size: 11px !important;
-      color: #0f172a !important;
-      border: 1.5px solid #0f172a !important;
-      background-color: #f8fafc !important;
-      padding: 2px 8px !important;
-      border-radius: 4px !important;
-      white-space: nowrap !important;
-    }
-    .generating-pdf button, .generating-pdf .no-print {
-      display: none !important;
-    }
       input, select, textarea {
         border: 1px solid #94a3b8 !important;
         background: transparent !important;
