@@ -59,16 +59,42 @@
       break-inside: avoid !important;
       padding-bottom: 30px !important;
     }
+    .generating-pdf #view-pra,
     .generating-pdf #view-pra > div.bg-white,
+    .generating-pdf #view-observasi,
     .generating-pdf #view-observasi > div.bg-white,
+    .generating-pdf #view-coaching,
     .generating-pdf #view-coaching > div.bg-white,
     .generating-pdf #view-laporan > div.bg-white,
     .generating-pdf #printable-report,
-    .generating-pdf #printable-all-reports {
+    .generating-pdf #printable-all-reports,
+    .generating-pdf #printable-user-accounts {
       border: none !important;
       box-shadow: none !important;
       border-radius: 0 !important;
       padding-bottom: 35px !important;
+    }
+    .generating-pdf #obs-guru-picker-container,
+    .generating-pdf #pra-guru-picker-container,
+    .generating-pdf #coaching-guru-picker-container {
+      display: none !important;
+    }
+    .temp-print-replacement {
+      display: block !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      white-space: pre-wrap !important;
+      word-break: break-word !important;
+      overflow-wrap: break-word !important;
+      line-height: 1.45 !important;
+      color: #0f172a !important;
+      background-color: #ffffff !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 6px !important;
+      padding: 6px 10px !important;
+      margin-top: 2px !important;
+      margin-bottom: 4px !important;
+      font-size: 11px !important;
     }
 
     @media print {
@@ -87,8 +113,14 @@
         margin: 0 !important;
         padding: 0 !important;
       }
-      aside, header, #bulk-action-bar, .no-print, button, #toast, .nav-btn, .hidden {
+      aside, header, #bulk-action-bar, .no-print, button, #toast, .nav-btn, .hidden, #obs-guru-picker-container, #pra-guru-picker-container, #coaching-guru-picker-container {
         display: none !important;
+      }
+      .temp-print-replacement {
+        display: block !important;
+        border: 1px solid #94a3b8 !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
       }
       .print-score-badge {
         display: inline-block !important;
@@ -1515,7 +1547,7 @@
             <h4 class="font-bold text-xs uppercase tracking-wider text-slate-800">II. Catatan Fakta & Pembelajaran Mendalam</h4>
             <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 text-xs">
               <p class="font-semibold text-slate-700 mb-1">Catatan Fakta Observasi:</p>
-              <p id="lap-disp-fakta" class="text-slate-600 italic">Belum ada catatan observasi.</p>
+              <p id="lap-disp-fakta" class="text-slate-600 italic" style="white-space: pre-wrap; word-break: break-word;">Belum ada catatan observasi.</p>
               <div class="mt-2.5 pt-2 border-t border-slate-200 flex flex-wrap gap-2 text-[11px]" id="lap-disp-dl-badges"></div>
             </div>
           </div>
@@ -1526,11 +1558,11 @@
             <div class="grid grid-cols-2 gap-3 text-xs">
               <div class="border border-slate-200 p-2.5 rounded-lg bg-slate-50">
                 <span class="font-bold text-slate-700 block mb-0.5">Rencana Aksi Pengembangan:</span>
-                <p id="lap-disp-rencana" class="text-slate-600">Belum diisi.</p>
+                <p id="lap-disp-rencana" class="text-slate-600" style="white-space: pre-wrap; word-break: break-word;">Belum diisi.</p>
               </div>
               <div class="border border-slate-200 p-2.5 rounded-lg bg-slate-50">
                 <span class="font-bold text-slate-700 block mb-0.5">Komitmen & Tanggung Jawab:</span>
-                <p id="lap-disp-komitmen" class="text-slate-600">Belum diisi.</p>
+                <p id="lap-disp-komitmen" class="text-slate-600" style="white-space: pre-wrap; word-break: break-word;">Belum diisi.</p>
               </div>
             </div>
           </div>
@@ -7292,6 +7324,101 @@
       showToast('Database Guru berhasil diekspor ke Excel (.xlsx)!');
     }
 
+    function prepareFormInputsForPrint(container) {
+      if (!container) return [];
+      const modified = [];
+      const elements = container.querySelectorAll('textarea, input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):not([type="reset"]), select');
+      
+      elements.forEach(el => {
+        if (el.getAttribute('data-print-replaced') === 'true') return;
+        if (el.closest('.hidden')) return;
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') return;
+
+        const isTextarea = el.tagName === 'TEXTAREA';
+        const isSelect = el.tagName === 'SELECT';
+
+        let textContent = '';
+        if (isSelect) {
+          textContent = (el.options && el.selectedIndex >= 0 && el.options[el.selectedIndex]) ? el.options[el.selectedIndex].text : (el.value || '');
+        } else {
+          textContent = el.value || '';
+        }
+
+        const replacement = document.createElement('div');
+        replacement.className = 'temp-print-replacement';
+
+        const minH = isTextarea ? Math.max(48, el.clientHeight || 48) + 'px' : '28px';
+        const origRadius = style.borderRadius || '6px';
+        const origPadding = style.padding || (isTextarea ? '6px 10px' : '4px 8px');
+        const origFont = style.fontFamily || 'inherit';
+        const origWeight = style.fontWeight || 'normal';
+
+        replacement.style.cssText = `
+          display: block !important;
+          width: 100% !important;
+          min-height: ${minH} !important;
+          box-sizing: border-box !important;
+          white-space: pre-wrap !important;
+          word-break: break-word !important;
+          overflow-wrap: break-word !important;
+          font-family: ${origFont} !important;
+          font-size: 11px !important;
+          font-weight: ${origWeight} !important;
+          line-height: 1.45 !important;
+          color: #0f172a !important;
+          background-color: #ffffff !important;
+          border: 1px solid #cbd5e1 !important;
+          border-radius: ${origRadius} !important;
+          padding: ${origPadding} !important;
+          margin-top: 2px !important;
+          margin-bottom: 4px !important;
+        `;
+
+        if (textContent.trim()) {
+          replacement.textContent = textContent;
+        } else {
+          replacement.innerHTML = '<span style="color: #94a3b8; font-style: italic;">-</span>';
+        }
+
+        const origDisplay = el.style.display;
+        el.style.display = 'none';
+        el.setAttribute('data-print-replaced', 'true');
+        el.parentNode.insertBefore(replacement, el.nextSibling);
+
+        modified.push({ el, replacement, origDisplay });
+      });
+
+      return modified;
+    }
+
+    function restoreFormInputsAfterPrint(modifiedList) {
+      if (!modifiedList || !modifiedList.length) return;
+      modifiedList.forEach(item => {
+        if (item.replacement && item.replacement.parentNode) {
+          item.replacement.parentNode.removeChild(item.replacement);
+        }
+        if (item.el) {
+          item.el.style.display = item.origDisplay;
+          item.el.removeAttribute('data-print-replaced');
+        }
+      });
+    }
+
+    let activePrintReplacements = [];
+    window.addEventListener('beforeprint', () => {
+      if (!document.body.classList.contains('generating-pdf')) {
+        activePrintReplacements = prepareFormInputsForPrint(document.body);
+      }
+    });
+
+    window.addEventListener('afterprint', () => {
+      if (activePrintReplacements && activePrintReplacements.length) {
+        restoreFormInputsAfterPrint(activePrintReplacements);
+        activePrintReplacements = [];
+      }
+    });
+
     function downloadLaporanPDF() {
       if (typeof html2pdf === 'undefined') {
         showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
@@ -7319,11 +7446,15 @@
       const wasHidden = el.classList.contains('hidden');
       if (wasHidden) el.classList.remove('hidden');
 
+      const modifiedList = prepareFormInputsForPrint(el);
+
       html2pdf().set(opt).from(el).save().then(() => {
+        restoreFormInputsAfterPrint(modifiedList);
         document.body.classList.remove('generating-pdf');
         if (wasHidden) el.classList.add('hidden');
         showToast('File PDF Laporan Individu berhasil diunduh!');
       }).catch(err => {
+        restoreFormInputsAfterPrint(modifiedList);
         document.body.classList.remove('generating-pdf');
         if (wasHidden) el.classList.add('hidden');
         console.error(err);
@@ -7357,11 +7488,15 @@
       const wasHidden = el.classList.contains('hidden');
       el.classList.remove('hidden');
 
+      const modifiedList = prepareFormInputsForPrint(el);
+
       html2pdf().set(opt).from(el).save().then(() => {
+        restoreFormInputsAfterPrint(modifiedList);
         document.body.classList.remove('generating-pdf');
         if (wasHidden) el.classList.add('hidden');
         showToast('File PDF Rekapitulasi berhasil diunduh!');
       }).catch(err => {
+        restoreFormInputsAfterPrint(modifiedList);
         document.body.classList.remove('generating-pdf');
         if (wasHidden) el.classList.add('hidden');
         console.error(err);
@@ -7390,11 +7525,21 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: ['.avoid-break', '.ttd-container', '.ttd-table'] }
       };
+
+      const wasHidden = el.classList.contains('hidden');
+      if (wasHidden) el.classList.remove('hidden');
+
+      const modifiedList = prepareFormInputsForPrint(el);
+
       html2pdf().set(opt).from(el).save().then(() => {
+        restoreFormInputsAfterPrint(modifiedList);
         document.body.classList.remove('generating-pdf');
+        if (wasHidden) el.classList.add('hidden');
         showToast('File PDF Pra-Observasi berhasil diunduh!');
       }).catch(err => {
+        restoreFormInputsAfterPrint(modifiedList);
         document.body.classList.remove('generating-pdf');
+        if (wasHidden) el.classList.add('hidden');
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
       });
@@ -7407,7 +7552,7 @@
       }
       const g = guruDatabase.find(x => x.id === selectedGuruId) || guruDatabase[0];
       const rawName = g ? g.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Guru';
-      const el = document.querySelector('#view-observasi > div.bg-white') || document.getElementById('view-observasi');
+      const el = document.getElementById('view-observasi');
       if (!el) return;
       const filename = `Observasi_Kelas_${rawName}_${g ? g.nip : ''}.pdf`;
 
@@ -7421,11 +7566,21 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: ['.avoid-break', '.ttd-container', '.ttd-table'] }
       };
+
+      const wasHidden = el.classList.contains('hidden');
+      if (wasHidden) el.classList.remove('hidden');
+
+      const modifiedList = prepareFormInputsForPrint(el);
+
       html2pdf().set(opt).from(el).save().then(() => {
+        restoreFormInputsAfterPrint(modifiedList);
         document.body.classList.remove('generating-pdf');
+        if (wasHidden) el.classList.add('hidden');
         showToast('File PDF Observasi Kelas berhasil diunduh!');
       }).catch(err => {
+        restoreFormInputsAfterPrint(modifiedList);
         document.body.classList.remove('generating-pdf');
+        if (wasHidden) el.classList.add('hidden');
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
       });
@@ -7452,11 +7607,21 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: ['.avoid-break', '.ttd-container', '.ttd-table'] }
       };
+
+      const wasHidden = el.classList.contains('hidden');
+      if (wasHidden) el.classList.remove('hidden');
+
+      const modifiedList = prepareFormInputsForPrint(el);
+
       html2pdf().set(opt).from(el).save().then(() => {
+        restoreFormInputsAfterPrint(modifiedList);
         document.body.classList.remove('generating-pdf');
+        if (wasHidden) el.classList.add('hidden');
         showToast('File PDF Coaching TIRTA berhasil diunduh!');
       }).catch(err => {
+        restoreFormInputsAfterPrint(modifiedList);
         document.body.classList.remove('generating-pdf');
+        if (wasHidden) el.classList.add('hidden');
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
       });
@@ -7589,12 +7754,16 @@
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
       };
 
+      const modifiedList = prepareFormInputsForPrint(el);
+
       html2pdf().set(opt).from(el).save().then(() => {
+        restoreFormInputsAfterPrint(modifiedList);
         el.style.padding = origPadding;
         el.style.margin = origMargin;
         if (wasHidden) el.classList.add('hidden');
         showToast('Berkas PDF Data Akun Guru berhasil diunduh!');
       }).catch(err => {
+        restoreFormInputsAfterPrint(modifiedList);
         el.style.padding = origPadding;
         el.style.margin = origMargin;
         if (wasHidden) el.classList.add('hidden');
