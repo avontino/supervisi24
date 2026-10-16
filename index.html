@@ -1379,8 +1379,8 @@
                   <div style="font-size: 13pt; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #000; line-height: 1.25; margin: 1px 0 0 0;">DINAS PENDIDIKAN DAN KEBUDAYAAN</div>
                   <div id="kop-nama-sekolah" style="font-size: 16pt; font-weight: 900; text-transform: uppercase; letter-spacing: 1.2px; color: #000; line-height: 1.25; margin: 2px 0 0 0;">SMP NEGERI 24 MALANG</div>
                   <div style="font-size: 8.5pt; color: #222; font-weight: 500; line-height: 1.35; margin-top: 4px;">
-                    Jl. Simpang Sulfat Utara No. 1, Pandanwangi, Kec. Blimbing, Kota Malang 65124<br>
-                    Telp. (0341) 492724 &bull; Email: smpn24malang@gmail.com &bull; Website: smpn24malang.sch.id
+                    Jl. Simpang LA Sucipto Gang Makam, Pandanwangi, Kec. Blimbing, Kota Malang, Jawa Timur 65124<br>
+                    Telp. 0341-415415 &bull; Email: admin@smpn24-mlg.sch.id &bull; Website: smpn24-mlg.sch.id
                   </div>
                 </td>
                 <td style="width: 85px; vertical-align: middle; text-align: right; padding: 0 0 0 8px; border: none;">
@@ -1511,8 +1511,8 @@
                   <div style="font-size: 13pt; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #000; line-height: 1.25; margin: 1px 0 0 0;">DINAS PENDIDIKAN DAN KEBUDAYAAN</div>
                   <div id="kop-all-sekolah" style="font-size: 16pt; font-weight: 900; text-transform: uppercase; letter-spacing: 1.2px; color: #000; line-height: 1.25; margin: 2px 0 0 0;">SMP NEGERI 24 MALANG</div>
                   <div style="font-size: 8.5pt; color: #222; font-weight: 500; line-height: 1.35; margin-top: 4px;">
-                    Jl. Simpang Sulfat Utara No. 1, Pandanwangi, Kec. Blimbing, Kota Malang 65124<br>
-                    Telp. (0341) 492724 &bull; Email: smpn24malang@gmail.com &bull; Website: smpn24malang.sch.id
+                    Jl. Simpang LA Sucipto Gang Makam, Pandanwangi, Kec. Blimbing, Kota Malang, Jawa Timur 65124<br>
+                    Telp. 0341-415415 &bull; Email: admin@smpn24-mlg.sch.id &bull; Website: smpn24-mlg.sch.id
                   </div>
                 </td>
                 <td style="width: 85px; vertical-align: middle; text-align: right; padding: 0 0 0 8px; border: none;">
