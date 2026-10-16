@@ -1679,17 +1679,6 @@
         <button onclick="handleLogin()" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md transition">
           Masuk ke Aplikasi
         </button>
-
-        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-          <span>Uji Coba Cepat:</span>
-          <div class="space-x-1">
-            <button onclick="quickFillLogin('guru')" class="text-indigo-600 hover:underline">Akun Guru</button>
-            <span>•</span>
-            <button onclick="quickFillLogin('supervisor')" class="text-indigo-600 hover:underline">Akun SPV</button>
-            <span>•</span>
-            <button onclick="quickFillLogin('superadmin')" class="text-rose-600 hover:underline font-bold">Superadmin</button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
