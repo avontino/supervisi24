@@ -768,7 +768,15 @@
             <p id="obs-guru-meta-banner" class="text-xs text-indigo-200 mt-0.5">Mata Pelajaran • Kelas</p>
           </div>
           <div class="flex flex-wrap items-center justify-between sm:justify-start gap-3 bg-white/10 backdrop-blur-sm p-3 rounded-xl border border-white/10">
-            <div class="text-right">
+            <div id="obs-guru-picker-container" class="flex items-center space-x-2">
+              <label class="text-xs font-semibold text-indigo-100 whitespace-nowrap">Pilih Guru:</label>
+              <select id="obs-guru-select" onchange="syncSelectedGuru(this.value)" class="text-xs rounded-lg border border-white/20 py-1.5 px-2.5 font-medium bg-slate-800 text-white truncate max-w-[200px] sm:max-w-xs focus:ring-2 focus:ring-indigo-400 shadow-sm"></select>
+            </div>
+            <div id="obs-guru-badge-container" class="hidden items-center space-x-2 bg-indigo-500/30 border border-indigo-400/40 px-2.5 py-1 rounded-lg">
+              <i class="fa-solid fa-user-check text-emerald-400 text-xs flex-shrink-0"></i>
+              <span id="obs-guru-badge-text" class="text-xs font-bold text-white truncate">Guru: -</span>
+            </div>
+            <div class="text-right pl-2 border-l border-white/20">
               <p class="text-[10px] text-indigo-200 uppercase font-semibold">Skor Observasi</p>
               <h2 id="obs-live-score" class="text-2xl font-black text-white">0%</h2>
             </div>
@@ -4699,7 +4707,7 @@
 
     function populateTeacherSelects() {
       const teachers = getSupervisorTeachers();
-      ['pra-guru-select', 'coaching-guru-select', 'laporan-guru-select'].forEach(selId => {
+      ['pra-guru-select', 'obs-guru-select', 'coaching-guru-select', 'laporan-guru-select'].forEach(selId => {
         const el = document.getElementById(selId);
         if (el) {
           el.innerHTML = teachers.map(g => `<option value="${g.id}">${g.nama} (${g.mapel})</option>`).join('');
@@ -4887,6 +4895,22 @@
         }
       }
 
+      const obsPicker = document.getElementById('obs-guru-picker-container');
+      const obsBadge = document.getElementById('obs-guru-badge-container');
+      const obsBadgeText = document.getElementById('obs-guru-badge-text');
+      if (obsPicker && obsBadge) {
+        if (isGuru) {
+          obsPicker.classList.add('hidden');
+          obsBadge.classList.remove('hidden');
+          obsBadge.classList.add('flex');
+          if (obsBadgeText) obsBadgeText.innerText = `Guru: ${guruLabel}`;
+        } else {
+          obsPicker.classList.remove('hidden');
+          obsBadge.classList.add('hidden');
+          obsBadge.classList.remove('flex');
+        }
+      }
+
       const coachingPicker = document.getElementById('coaching-guru-picker-container');
       const coachingBadge = document.getElementById('coaching-guru-badge-container');
       const coachingBadgeText = document.getElementById('coaching-guru-badge-text');
@@ -4939,7 +4963,7 @@
         sidePred.className = `px-2 py-0.5 rounded text-[10px] font-bold ${metrics.badgeColor}`;
       }
 
-      ['pra-guru-select', 'coaching-guru-select', 'laporan-guru-select'].forEach(selId => {
+      ['pra-guru-select', 'obs-guru-select', 'coaching-guru-select', 'laporan-guru-select'].forEach(selId => {
         const el = document.getElementById(selId);
         if (el && el.value != guru.id) el.value = guru.id;
       });
