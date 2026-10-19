@@ -104,7 +104,23 @@ try {
             // Cek Session Logged In User
             $currentUser = $_SESSION['user'] ?? null;
 
-            // Query Guru beserta relasi pra, obs, coaching
+            // Pastikan tabel supervisi_pengembangan_diri dan kolom analisis observasi ada
+            try {
+                $pdo->exec("CREATE TABLE IF NOT EXISTS supervisi_pengembangan_diri (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    guru_id INT NOT NULL UNIQUE,
+                    items_json LONGTEXT,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    INDEX (guru_id)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+            } catch (Exception $e) {}
+
+            try {
+                $pdo->exec("ALTER TABLE supervisi_obs ADD COLUMN IF NOT EXISTS obs_kekuatan TEXT");
+                $pdo->exec("ALTER TABLE supervisi_obs ADD COLUMN IF NOT EXISTS obs_kelemahan TEXT");
+            } catch (Exception $e) {}
+
+            // Query Guru beserta relasi pra, obs, coaching, dan pengembangan diri
             $sql = "
                 SELECT 
                     g.id, g.nip, g.nama, g.mapel, g.kelas, g.password,
@@ -112,12 +128,15 @@ try {
                     p.materi_topik, p.tujuan_pembelajaran, p.tanggal_telaah,
                     p.rpp_scores, p.bk_scores, p.bk_dl_scores, p.bk_dl_notes, p.pra_feedback, p.catatan_pra,
                     o.obs_scores, o.obs_notes, o.deep_learning, o.catatan_fakta, o.tanggal_observasi,
+                    o.obs_kekuatan, o.obs_kelemahan,
                     c.tujuan as coach_tujuan, c.identifikasi as coach_identifikasi, 
-                    c.rencana as coach_rencana, c.tanggung_jawab as coach_tanggung_jawab, c.tanggal_coaching
+                    c.rencana as coach_rencana, c.tanggung_jawab as coach_tanggung_jawab, c.tanggal_coaching,
+                    pd.items_json as pd_items_json
                 FROM guru g
                 LEFT JOIN supervisi_pra p ON g.id = p.guru_id
                 LEFT JOIN supervisi_obs o ON g.id = o.guru_id
                 LEFT JOIN supervisi_coaching c ON g.id = c.guru_id
+                LEFT JOIN supervisi_pengembangan_diri pd ON g.id = pd.guru_id
                 ORDER BY g.id ASC
             ";
             $stmt = $pdo->query($sql);
@@ -152,12 +171,15 @@ try {
                         'mindful' => 0, 'meaningful' => 0, 'joyful' => 0, 'memahami' => 0, 'mengaplikasi' => 0, 'merefleksi' => 0
                     ],
                     'catatanFakta' => $r['catatan_fakta'] ?? '',
+                    'obsKekuatan' => $r['obs_kekuatan'] ?? '',
+                    'obsKelemahan' => $r['obs_kelemahan'] ?? '',
                     'coaching' => [
                         'tujuan' => $r['coach_tujuan'] ?? '',
                         'identifikasi' => $r['coach_identifikasi'] ?? '',
                         'rencana' => $r['coach_rencana'] ?? '',
                         'tanggungJawab' => $r['coach_tanggung_jawab'] ?? '',
-                    ]
+                    ],
+                    'pengembanganDiri' => json_decode($r['pd_items_json'] ?? '[]', true) ?: []
                 ];
             }
 
@@ -362,22 +384,31 @@ try {
             $obsNotes = json_encode($input['obsNotes'] ?? [], JSON_UNESCAPED_UNICODE);
             $deepLearning = json_encode($input['deepLearning'] ?? []);
             $catatanFakta = trim($input['catatanFakta'] ?? '');
+            $obsKekuatan = trim($input['obsKekuatan'] ?? '');
+            $obsKelemahan = trim($input['obsKelemahan'] ?? '');
             $tanggal = date('Y-m-d');
+
+            try {
+                $pdo->exec("ALTER TABLE supervisi_obs ADD COLUMN IF NOT EXISTS obs_kekuatan TEXT");
+                $pdo->exec("ALTER TABLE supervisi_obs ADD COLUMN IF NOT EXISTS obs_kelemahan TEXT");
+            } catch (Exception $e) {}
 
             $sql = "
                 INSERT INTO supervisi_obs 
-                    (guru_id, obs_scores, obs_notes, deep_learning, catatan_fakta, tanggal_observasi)
+                    (guru_id, obs_scores, obs_notes, deep_learning, catatan_fakta, tanggal_observasi, obs_kekuatan, obs_kelemahan)
                 VALUES 
-                    (?, ?, ?, ?, ?, ?)
+                    (?, ?, ?, ?, ?, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE
                     obs_scores = VALUES(obs_scores),
                     obs_notes = VALUES(obs_notes),
                     deep_learning = VALUES(deep_learning),
                     catatan_fakta = VALUES(catatan_fakta),
-                    tanggal_observasi = VALUES(tanggal_observasi)
+                    tanggal_observasi = VALUES(tanggal_observasi),
+                    obs_kekuatan = VALUES(obs_kekuatan),
+                    obs_kelemahan = VALUES(obs_kelemahan)
             ";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$guruId, $obsScores, $obsNotes, $deepLearning, $catatanFakta, $tanggal]);
+            $stmt->execute([$guruId, $obsScores, $obsNotes, $deepLearning, $catatanFakta, $tanggal, $obsKekuatan, $obsKelemahan]);
 
             // Update status menjadi Selesai
             $pdo->prepare("UPDATE guru SET status = 'Selesai' WHERE id = ?")->execute([$guruId]);
@@ -418,6 +449,42 @@ try {
             $stmt->execute([$guruId, $tujuan, $identifikasi, $rencana, $tanggungJawab, $tanggal]);
 
             echo json_encode(['success' => true, 'message' => 'Catatan Percakapan Coaching TIRTA tersimpan di server!']);
+            break;
+
+        // ------------------------------------------------------------
+        // 7b. SIMPAN PENGEMBANGAN DIRI GURU
+        // ------------------------------------------------------------
+        case 'save_pengembangan_diri':
+            $input = getJsonInput();
+            $guruId = (int)($input['guruId'] ?? $input['id'] ?? 0);
+            if (!$guruId) {
+                echo json_encode(['success' => false, 'error' => 'ID Guru wajib disertakan.']);
+                exit;
+            }
+
+            try {
+                $pdo->exec("CREATE TABLE IF NOT EXISTS supervisi_pengembangan_diri (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    guru_id INT NOT NULL UNIQUE,
+                    items_json LONGTEXT,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    INDEX (guru_id)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+            } catch (Exception $e) {}
+
+            $items = is_array($input['items'] ?? null) ? $input['items'] : [];
+            $itemsJson = json_encode($items, JSON_UNESCAPED_UNICODE);
+
+            $stmt = $pdo->prepare("
+                INSERT INTO supervisi_pengembangan_diri (guru_id, items_json)
+                VALUES (?, ?)
+                ON DUPLICATE KEY UPDATE
+                    items_json = VALUES(items_json),
+                    updated_at = CURRENT_TIMESTAMP
+            ");
+            $stmt->execute([$guruId, $itemsJson]);
+
+            echo json_encode(['success' => true, 'message' => 'Portofolio Pengembangan Diri berhasil disimpan ke server!']);
             break;
 
         // ------------------------------------------------------------

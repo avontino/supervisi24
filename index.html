@@ -65,6 +65,8 @@
     .generating-pdf #view-observasi > div.bg-white,
     .generating-pdf #view-coaching,
     .generating-pdf #view-coaching > div.bg-white,
+    .generating-pdf #view-pengembangan-diri,
+    .generating-pdf #view-pengembangan-diri > div.bg-white,
     .generating-pdf #view-laporan > div.bg-white,
     .generating-pdf #printable-report,
     .generating-pdf #printable-all-reports,
@@ -76,7 +78,9 @@
     }
     .generating-pdf #obs-guru-picker-container,
     .generating-pdf #pra-guru-picker-container,
-    .generating-pdf #coaching-guru-picker-container {
+    .generating-pdf #coaching-guru-picker-container,
+    .generating-pdf #pd-guru-picker-container,
+    .generating-pdf #laporan-guru-picker-container {
       display: none !important;
     }
     .temp-print-replacement {
@@ -113,7 +117,7 @@
         margin: 0 !important;
         padding: 0 !important;
       }
-      aside, header, #bulk-action-bar, .no-print, button, #toast, .nav-btn, .hidden, #obs-guru-picker-container, #pra-guru-picker-container, #coaching-guru-picker-container {
+      aside, header, #bulk-action-bar, .no-print, button, #toast, .nav-btn, .hidden, #obs-guru-picker-container, #pra-guru-picker-container, #coaching-guru-picker-container, #pd-guru-picker-container, #laporan-guru-picker-container {
         display: none !important;
       }
       .temp-print-replacement {
@@ -312,6 +316,10 @@
         <i class="fa-solid fa-comments w-4 flex-shrink-0 text-center"></i>
         <span class="text-left leading-snug">Coaching Model TIRTA</span>
       </button>
+      <button onclick="navigateTo('pengembangan-diri')" id="nav-pengembangan-diri" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
+        <i class="fa-solid fa-graduation-cap w-4 flex-shrink-0 text-center text-teal-400"></i>
+        <span class="text-left leading-snug">Pengembangan Diri</span>
+      </button>
       <button onclick="navigateTo('laporan')" id="nav-laporan" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
         <i class="fa-solid fa-print w-4 flex-shrink-0 text-center"></i>
         <span class="text-left leading-snug">Laporan & Ekspor</span>
@@ -461,6 +469,59 @@
             <div class="h-56 relative">
               <canvas id="chartAspek"></canvas>
             </div>
+          </div>
+
+          <!-- Chart Pengembangan Diri (PKB) -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm lg:col-span-2">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <h4 class="font-bold text-slate-800 text-xs flex items-center space-x-1.5">
+                  <i class="fa-solid fa-graduation-cap text-teal-600"></i>
+                  <span>Distribusi Aspek Pengembangan Diri Guru (PKB)</span>
+                </h4>
+                <p class="text-[10px] text-slate-500 mt-0.5">Pemetaan pemenuhan kompetensi guru dalam semester aktif (1 - 4 kegiatan)</p>
+              </div>
+              <span class="text-[10px] font-bold text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded">Semester Aktif</span>
+            </div>
+            <div class="h-56 relative">
+              <canvas id="chartPengembanganDiri"></canvas>
+            </div>
+          </div>
+
+          <!-- Ringkasan Portofolio Pengembangan Diri -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <h4 class="font-bold text-slate-800 text-xs mb-3 flex items-center justify-between">
+                <span>Ringkasan Pengembangan Diri</span>
+                <i class="fa-solid fa-award text-teal-500"></i>
+              </h4>
+              <div class="space-y-3">
+                <div class="p-3 bg-teal-50/70 border border-teal-100 rounded-xl flex items-center justify-between">
+                  <div>
+                    <span class="text-[10px] font-bold text-teal-800 uppercase block">Total Kegiatan Terinput</span>
+                    <h3 id="kpi-pd-total" class="text-xl font-black text-teal-900 mt-0.5">0</h3>
+                  </div>
+                  <div class="w-9 h-9 rounded-lg bg-teal-600 text-white flex items-center justify-center text-sm shadow-xs">
+                    <i class="fa-solid fa-list-check"></i>
+                  </div>
+                </div>
+
+                <div class="p-3 bg-indigo-50/70 border border-indigo-100 rounded-xl flex items-center justify-between">
+                  <div>
+                    <span class="text-[10px] font-bold text-indigo-800 uppercase block">Guru Sudah Mengisi</span>
+                    <h3 id="kpi-pd-guru-count" class="text-xl font-black text-indigo-900 mt-0.5">0 Guru</h3>
+                  </div>
+                  <div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-sm shadow-xs">
+                    <i class="fa-solid fa-user-graduate"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="navigateTo('pengembangan-diri')" class="mt-4 w-full py-2 px-3 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold flex items-center justify-center space-x-1.5 shadow-sm transition">
+              <span>Buka Menu Pengembangan Diri</span>
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
           </div>
         </div>
 
@@ -1133,6 +1194,24 @@
             <textarea id="obs-catatan-fakta" oninput="autoSaveObsInput()" rows="4" placeholder="Contoh: Pada menit ke-15 guru mengajukan pertanyaan pemantik. Murid berpartisipasi aktif dalam dialog..." class="w-full text-xs p-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"></textarea>
           </div>
 
+          <!-- Analisis Singkat Observasi: Kekuatan & Area Perbaikan -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-1">
+            <div class="space-y-1">
+              <label class="block font-bold text-emerald-800 flex items-center space-x-1">
+                <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                <span>Kekuatan Praktik Pembelajaran (Praktik Baik)</span>
+              </label>
+              <textarea id="obs-input-kekuatan" oninput="autoSaveObsInput()" rows="3" placeholder="Tuliskan aspek pembelajaran yang terlaksana dengan sangat baik, apresiatif, atau menginspirasi..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 transition-colors"></textarea>
+            </div>
+            <div class="space-y-1">
+              <label class="block font-bold text-amber-800 flex items-center space-x-1">
+                <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+                <span>Kekurangan / Area Perbaikan Pembelajaran</span>
+              </label>
+              <textarea id="obs-input-kelemahan" oninput="autoSaveObsInput()" rows="3" placeholder="Tuliskan aspek pembelajaran yang mendesak untuk disempurnakan atau ditingkatkan guru..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 transition-colors"></textarea>
+            </div>
+          </div>
+
           <!-- Blok Tanda Tangan 3 Pihak Observasi Kelas -->
           <div class="mt-8 pt-6 border-t border-slate-200 pb-8 avoid-break ttd-container">
             <table class="ttd-table" style="width: 100%; border-collapse: collapse; border: none; margin: 0 auto; table-layout: fixed;">
@@ -1351,6 +1430,76 @@
         </div>
       </section>
 
+      <!-- SECTION: PENGEMBANGAN DIRI GURU (1 - 4 KEGIATAN PER SEMESTER) -->
+      <section id="view-pengembangan-diri" class="hidden space-y-5">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-200">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-100 text-teal-800 uppercase tracking-wide">Pengembangan Keprofesian Berkelanjutan (PKB)</span>
+                <span id="pd-counter-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">0 / 4 Kegiatan</span>
+              </div>
+              <h3 class="font-bold text-slate-800 text-sm mt-1">Portofolio Pengembangan Diri Guru</h3>
+              <p class="text-xs text-slate-500 mt-0.5">Pencatatan 1 s.d. 4 kegiatan pengembangan kompetensi dalam satu semester beserta implementasi dan dampaknya pada murid.</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 w-full md:w-auto">
+              <button onclick="downloadPengembanganDiriPDF()" class="w-full sm:w-auto justify-center px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold flex items-center space-x-1.5 border border-rose-200 transition no-print flex-shrink-0" title="Unduh berkas PDF Pengembangan Diri">
+                <i class="fa-solid fa-file-pdf text-rose-600"></i>
+                <span>Unduh PDF</span>
+              </button>
+
+              <button onclick="window.print()" class="w-full sm:w-auto justify-center px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1.5 border border-slate-200 transition no-print flex-shrink-0">
+                <i class="fa-solid fa-print text-indigo-600"></i>
+                <span>Cetak</span>
+              </button>
+
+              <div id="pd-guru-picker-container" class="w-full sm:w-auto flex items-center space-x-2 min-w-0">
+                <label class="text-xs font-semibold text-slate-700 whitespace-nowrap flex-shrink-0">Pilih Guru:</label>
+                <select id="pd-guru-select" onchange="syncSelectedGuru(this.value)" class="w-full sm:w-auto text-xs rounded-lg border border-slate-300 py-1.5 px-3 font-medium focus:ring-2 focus:ring-indigo-500 bg-white truncate min-w-0 max-w-full sm:max-w-xs shadow-sm"></select>
+              </div>
+              <div id="pd-guru-badge-container" class="hidden items-center space-x-2 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-lg min-w-0">
+                <i class="fa-solid fa-user-check text-indigo-600 text-xs flex-shrink-0"></i>
+                <span id="pd-guru-badge-text" class="text-xs font-bold text-indigo-900 truncate">Guru: -</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Petunjuk / Panduan Singkat -->
+          <div class="bg-teal-50/70 p-4 rounded-xl border border-teal-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="flex items-center space-x-3">
+              <div class="w-9 h-9 rounded-lg bg-teal-600 text-white flex items-center justify-center text-sm font-bold shadow-sm flex-shrink-0">
+                <i class="fa-solid fa-lightbulb"></i>
+              </div>
+              <div class="text-xs">
+                <h5 class="font-bold text-teal-950">Panduan Pengisian Pengembangan Diri</h5>
+                <p class="text-[11px] text-teal-700 mt-0.5">Dokumentasikan 1 sampai 4 kegiatan pengembangan kompetensi (diklat, webinar, lokakarya, MGMP, dll.) yang berdampak langsung pada pembelajaran peserta didik.</p>
+              </div>
+            </div>
+            <button id="pd-btn-add" type="button" onclick="addPengembanganDiriItem()" class="w-full sm:w-auto px-3.5 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold flex items-center justify-center space-x-1.5 shadow-sm transition no-print flex-shrink-0">
+              <i class="fa-solid fa-plus"></i>
+              <span>Tambah Kegiatan</span>
+            </button>
+          </div>
+
+          <!-- List Kegiatan Pengembangan Diri (1-4) -->
+          <div id="pd-items-container" class="space-y-4">
+            <!-- Dynamic Cards generated by renderPengembanganDiri() -->
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 no-print">
+            <div class="text-xs text-slate-500">
+              <span>* Data tersimpan otomatis secara berkala. Pastikan link bukti dapat diakses secara publik / terverifikasi.</span>
+            </div>
+            <button type="button" onclick="savePengembanganDiri()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Simpan Portofolio Pengembangan Diri</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
       <section id="view-laporan" class="hidden space-y-5">
         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 no-print">
           <div id="laporan-guru-picker-container" class="w-full md:w-auto flex items-center space-x-2.5 min-w-0">
@@ -1542,9 +1691,59 @@
             </table>
           </div>
 
+          <!-- II. Analisis Singkat Hasil Supervisi (Pra-Observasi & Observasi Kelas) -->
+          <div class="space-y-3 avoid-break">
+            <h4 class="font-bold text-xs uppercase tracking-wider text-slate-800">II. Analisis Singkat Hasil Supervisi</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <!-- A. Telaah Modul Ajar / Pra-Observasi -->
+              <div class="border border-slate-200 p-3.5 rounded-xl bg-slate-50 space-y-2.5">
+                <div class="flex items-center space-x-2 font-bold text-slate-800 pb-1.5 border-b border-slate-200">
+                  <i class="fa-solid fa-file-circle-check text-indigo-600"></i>
+                  <span>A. Telaah Modul Ajar (Pra-Observasi)</span>
+                </div>
+                <div>
+                  <span class="font-bold text-emerald-700 block text-[11px] mb-0.5 flex items-center space-x-1">
+                    <i class="fa-solid fa-circle-check text-[10px]"></i>
+                    <span>Kekuatan Telaah:</span>
+                  </span>
+                  <p id="lap-analisis-pra-kekuatan" class="text-slate-700 leading-relaxed pl-3 border-l-2 border-emerald-400" style="white-space: pre-wrap; word-break: break-word;">-</p>
+                </div>
+                <div>
+                  <span class="font-bold text-amber-700 block text-[11px] mb-0.5 flex items-center space-x-1">
+                    <i class="fa-solid fa-triangle-exclamation text-[10px]"></i>
+                    <span>Kekurangan / Area Perbaikan:</span>
+                  </span>
+                  <p id="lap-analisis-pra-kelemahan" class="text-slate-700 leading-relaxed pl-3 border-l-2 border-amber-400" style="white-space: pre-wrap; word-break: break-word;">-</p>
+                </div>
+              </div>
+
+              <!-- B. Praktik Pembelajaran / Observasi Kelas -->
+              <div class="border border-slate-200 p-3.5 rounded-xl bg-slate-50 space-y-2.5">
+                <div class="flex items-center space-x-2 font-bold text-slate-800 pb-1.5 border-b border-slate-200">
+                  <i class="fa-solid fa-chalkboard-user text-indigo-600"></i>
+                  <span>B. Praktik Pembelajaran (Observasi Kelas)</span>
+                </div>
+                <div>
+                  <span class="font-bold text-emerald-700 block text-[11px] mb-0.5 flex items-center space-x-1">
+                    <i class="fa-solid fa-circle-check text-[10px]"></i>
+                    <span>Kekuatan Praktik Pembelajaran:</span>
+                  </span>
+                  <p id="lap-analisis-obs-kekuatan" class="text-slate-700 leading-relaxed pl-3 border-l-2 border-emerald-400" style="white-space: pre-wrap; word-break: break-word;">-</p>
+                </div>
+                <div>
+                  <span class="font-bold text-amber-700 block text-[11px] mb-0.5 flex items-center space-x-1">
+                    <i class="fa-solid fa-triangle-exclamation text-[10px]"></i>
+                    <span>Kekurangan / Area Perbaikan:</span>
+                  </span>
+                  <p id="lap-analisis-obs-kelemahan" class="text-slate-700 leading-relaxed pl-3 border-l-2 border-amber-400" style="white-space: pre-wrap; word-break: break-word;">-</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Catatan Fakta & Deep Learning -->
           <div class="space-y-3 avoid-break">
-            <h4 class="font-bold text-xs uppercase tracking-wider text-slate-800">II. Catatan Fakta & Pembelajaran Mendalam</h4>
+            <h4 class="font-bold text-xs uppercase tracking-wider text-slate-800">III. Catatan Fakta & Pembelajaran Mendalam</h4>
             <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 text-xs">
               <p class="font-semibold text-slate-700 mb-1">Catatan Fakta Observasi:</p>
               <p id="lap-disp-fakta" class="text-slate-600 italic" style="white-space: pre-wrap; word-break: break-word;">Belum ada catatan observasi.</p>
@@ -1554,7 +1753,7 @@
 
           <!-- Rencana Aksi Coaching TIRTA -->
           <div class="space-y-3 avoid-break">
-            <h4 class="font-bold text-xs uppercase tracking-wider text-slate-800">III. Kesepakatan Tindak Lanjut (Coaching TIRTA)</h4>
+            <h4 class="font-bold text-xs uppercase tracking-wider text-slate-800">IV. Kesepakatan Tindak Lanjut (Coaching TIRTA)</h4>
             <div class="grid grid-cols-2 gap-3 text-xs">
               <div class="border border-slate-200 p-2.5 rounded-lg bg-slate-50">
                 <span class="font-bold text-slate-700 block mb-0.5">Rencana Aksi Pengembangan:</span>
@@ -1564,6 +1763,17 @@
                 <span class="font-bold text-slate-700 block mb-0.5">Komitmen & Tanggung Jawab:</span>
                 <p id="lap-disp-komitmen" class="text-slate-600" style="white-space: pre-wrap; word-break: break-word;">Belum diisi.</p>
               </div>
+            </div>
+          </div>
+
+          <!-- V. Rekapitulasi Kegiatan Pengembangan Diri (1 Semester) -->
+          <div class="space-y-3 avoid-break">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-xs uppercase tracking-wider text-slate-800">V. Rekapitulasi Kegiatan Pengembangan Diri (1 Semester)</h4>
+              <span id="lap-pd-badge-count" class="text-[10px] font-bold text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded">0 / 4 Kegiatan</span>
+            </div>
+            <div id="lap-pd-container">
+              <!-- Dynamically populated table or empty state -->
             </div>
           </div>
 
@@ -4780,6 +4990,7 @@
     const guruPageSize = 10;
     let chartPredikatInstance = null;
     let chartAspekInstance = null;
+    let chartPengembanganInstance = null;
     let importedTempTeachers = [];
     let guruIdToDelete = null;
     let selectedGuruIds = new Set();
@@ -4876,7 +5087,7 @@
 
     function navigateTo(targetView) {
       toggleMobileSidebar(false);
-      const views = ['dashboard', 'guru', 'pra', 'observasi', 'coaching', 'laporan', 'pengaturan', 'users'];
+      const views = ['dashboard', 'guru', 'pra', 'observasi', 'coaching', 'pengembangan-diri', 'laporan', 'pengaturan', 'users'];
 
       if (currentRole === 'guru' && (targetView === 'guru' || targetView === 'pengaturan' || targetView === 'users')) {
         targetView = 'dashboard';
@@ -4906,7 +5117,7 @@
       // Tampilkan kartu 'Guru Yang Dinilai' di sidebar HANYA untuk Supervisor & Superadmin pada menu evaluasi guru
       const sideTargetCard = document.getElementById('side-target-guru-card');
       if (sideTargetCard) {
-        const evaluationViews = ['pra', 'observasi', 'coaching', 'laporan'];
+        const evaluationViews = ['pra', 'observasi', 'coaching', 'pengembangan-diri', 'laporan'];
         if (currentRole !== 'guru' && evaluationViews.includes(targetView)) {
           sideTargetCard.classList.remove('hidden');
         } else {
@@ -4926,6 +5137,7 @@
           pra: isBk ? 'Pra Observasi-Telaah Modul Ajar (BK)' : 'Pra Observasi-Telaah Modul Ajar (PM)',
           observasi: isBk ? 'Observasi Kelas (BK & Deep Learning)' : 'Observasi Kelas (28 Indikator & Deep Learning)',
           coaching: 'Pasca-Observasi (Coaching Model TIRTA)',
+          'pengembangan-diri': 'Portofolio Pengembangan Diri (1-4 Kegiatan/Semester)',
           laporan: 'Rekapitulasi Laporan Supervisi',
           pengaturan: 'Pengaturan Sistem & Supervisor',
           users: 'Manajemen Pengguna (Super Admin)'
@@ -4936,6 +5148,7 @@
           pra: isBk ? 'Pra (BK)' : 'Pra (PM)',
           observasi: 'Observasi Kelas',
           coaching: 'Coaching TIRTA',
+          'pengembangan-diri': 'Pengembangan Diri',
           laporan: 'Laporan Supervisi',
           pengaturan: 'Pengaturan',
           users: 'Manajemen User'
@@ -4957,6 +5170,8 @@
         loadObservasiData();
       } else if (targetView === 'coaching') {
         loadCoachingData();
+      } else if (targetView === 'pengembangan-diri') {
+        renderPengembanganDiri();
       } else if (targetView === 'laporan') {
         updateReportView();
         renderRekapTable();
@@ -5037,7 +5252,7 @@
       // Urutkan nama guru secara alfabetis (A-Z) agar memudahkan pencarian cepat
       const sortedTeachers = [...teachers].sort((a, b) => a.nama.localeCompare(b.nama, 'id', { sensitivity: 'base' }));
 
-      ['pra-guru-select', 'obs-guru-select', 'coaching-guru-select', 'laporan-guru-select'].forEach(selId => {
+      ['pra-guru-select', 'obs-guru-select', 'coaching-guru-select', 'pd-guru-select', 'laporan-guru-select'].forEach(selId => {
         const el = document.getElementById(selId);
         if (el) {
           el.innerHTML = sortedTeachers.map(g => `<option value="${g.id}">${g.nama} (${g.mapel})</option>`).join('');
@@ -5295,11 +5510,27 @@
         }
       }
 
+      const pdPicker = document.getElementById('pd-guru-picker-container');
+      const pdBadge = document.getElementById('pd-guru-badge-container');
+      const pdBadgeText = document.getElementById('pd-guru-badge-text');
+      if (pdPicker && pdBadge) {
+        if (isGuru) {
+          pdPicker.classList.add('hidden');
+          pdBadge.classList.remove('hidden');
+          pdBadge.classList.add('flex');
+          if (pdBadgeText) pdBadgeText.innerText = `Guru: ${guruLabel}`;
+        } else {
+          pdPicker.classList.remove('hidden');
+          pdBadge.classList.add('hidden');
+          pdBadge.classList.remove('flex');
+        }
+      }
+
       const sideTargetCard = document.getElementById('side-target-guru-card');
       if (sideTargetCard) {
         const curActive = document.querySelector('section:not(.hidden)');
         const activeViewId = curActive ? curActive.id.replace('view-', '') : '';
-        const evaluationViews = ['pra', 'observasi', 'coaching', 'laporan'];
+        const evaluationViews = ['pra', 'observasi', 'coaching', 'pengembangan-diri', 'laporan'];
         if (!isGuru && evaluationViews.includes(activeViewId)) {
           sideTargetCard.classList.remove('hidden');
         } else {
@@ -5381,6 +5612,8 @@
       guru.catatanFakta = document.getElementById('obs-catatan-fakta')?.value || '';
       guru.tanggalObservasi = document.getElementById('obs-input-tanggal')?.value || '';
       guru.targetPerilaku = document.getElementById('obs-input-target-perilaku')?.value || '';
+      guru.obsKekuatan = document.getElementById('obs-input-kekuatan')?.value || '';
+      guru.obsKelemahan = document.getElementById('obs-input-kelemahan')?.value || '';
       checkFieldValidation(document.getElementById('obs-catatan-fakta'), document.getElementById('obs-warn-catatan-fakta'));
       saveDataToLocalStorage();
     }
@@ -5417,7 +5650,7 @@
 
       updateSidebarPredikat(guru);
 
-      ['pra-guru-select', 'obs-guru-select', 'coaching-guru-select', 'laporan-guru-select'].forEach(selId => {
+      ['pra-guru-select', 'obs-guru-select', 'coaching-guru-select', 'pd-guru-select', 'laporan-guru-select'].forEach(selId => {
         const el = document.getElementById(selId);
         if (el && el.value != guru.id) el.value = guru.id;
       });
@@ -5432,6 +5665,11 @@
       if (obsTargetBadge) obsTargetBadge.innerText = `Fokus: ${targetPerilakuVal}`;
       const obsFokusPmmText = document.getElementById('obs-fokus-pmm-text');
       if (obsFokusPmmText) obsFokusPmmText.innerText = targetPerilakuVal;
+
+      const pdNamaBanner = document.getElementById('pd-guru-nama-banner');
+      const pdMetaBanner = document.getElementById('pd-guru-meta-banner');
+      if (pdNamaBanner) pdNamaBanner.innerText = guru.nama;
+      if (pdMetaBanner) pdMetaBanner.innerText = `${guru.mapel} • ${guru.kelas} • NIP: ${guru.nip}`;
 
       const navPra = document.getElementById('nav-text-pra');
       const navObs = document.getElementById('nav-text-obs');
@@ -5452,6 +5690,7 @@
           if (curSection.id === 'view-pra') loadPraObservasiData();
           else if (curSection.id === 'view-observasi') loadObservasiData();
           else if (curSection.id === 'view-coaching') loadCoachingData();
+          else if (curSection.id === 'view-pengembangan-diri') renderPengembanganDiri();
           else if (curSection.id === 'view-laporan') updateReportView();
         }
       }
@@ -6055,6 +6294,11 @@
         checkFieldValidation(obsCatatanFakta, document.getElementById('obs-warn-catatan-fakta'));
       }
 
+      const obsKekuatanEl = document.getElementById('obs-input-kekuatan');
+      if (obsKekuatanEl) obsKekuatanEl.value = guru.obsKekuatan || '';
+      const obsKelemahanEl = document.getElementById('obs-input-kelemahan');
+      if (obsKelemahanEl) obsKelemahanEl.value = guru.obsKelemahan || '';
+
       calculateObsScoreLive();
       syncAllSignatures(guru);
     }
@@ -6334,6 +6578,11 @@
       const obsCatatanFakta = document.getElementById('obs-catatan-fakta');
       if (obsCatatanFakta) guru.catatanFakta = obsCatatanFakta.value;
 
+      const obsKekuatanEl = document.getElementById('obs-input-kekuatan');
+      if (obsKekuatanEl) guru.obsKekuatan = obsKekuatanEl.value;
+      const obsKelemahanEl = document.getElementById('obs-input-kelemahan');
+      if (obsKelemahanEl) guru.obsKelemahan = obsKelemahanEl.value;
+
       let missingCount = 0;
       if (guru.mapel === 'BK') {
         ASPEK_BK_OBSERVASI.forEach(grup => {
@@ -6382,7 +6631,9 @@
         obsScores: guru.obsScores || {},
         obsNotes: guru.obsNotes || {},
         deepLearning: guru.deepLearning || {},
-        catatanFakta: guru.catatanFakta || ''
+        catatanFakta: guru.catatanFakta || '',
+        obsKekuatan: guru.obsKekuatan || '',
+        obsKelemahan: guru.obsKelemahan || ''
       });
       if (res && res.success && isServerOnline && missingCount === 0) {
         showToast(res.message || 'Hasil Observasi tersimpan di server MySQL!');
@@ -6659,6 +6910,23 @@
 
       document.getElementById('lap-disp-rencana').innerText = (guru.coaching && guru.coaching.rencana) ? guru.coaching.rencana : 'Belum diisi.';
       document.getElementById('lap-disp-komitmen').innerText = (guru.coaching && guru.coaching.tanggungJawab) ? guru.coaching.tanggungJawab : 'Belum diisi.';
+      // II. Analisis Singkat Hasil Supervisi
+      const praKekuatan = (guru.praFeedback && guru.praFeedback.kekuatan) ? guru.praFeedback.kekuatan : 'Kekuatan pada perencanaan modul/RPP belum didokumentasikan secara khusus.';
+      const praKelemahan = (guru.praFeedback && guru.praFeedback.prioritas) ? guru.praFeedback.prioritas : 'Area yang perlu ditingkatkan pada modul/RPP belum didokumentasikan.';
+      const obsKekuatan = guru.obsKekuatan || guru.catatanFakta || 'Kekuatan pelaksanaan pembelajaran di kelas belum didokumentasikan secara khusus.';
+      const obsKelemahan = guru.obsKelemahan || (guru.coaching && guru.coaching.identifikasi) || 'Area pengembangan pelaksanaan kelas belum didokumentasikan secara khusus.';
+
+      const elPraKekuatan = document.getElementById('lap-analisis-pra-kekuatan');
+      if (elPraKekuatan) elPraKekuatan.innerText = praKekuatan;
+      const elPraKelemahan = document.getElementById('lap-analisis-pra-kelemahan');
+      if (elPraKelemahan) elPraKelemahan.innerText = praKelemahan;
+      const elObsKekuatan = document.getElementById('lap-analisis-obs-kekuatan');
+      if (elObsKekuatan) elObsKekuatan.innerText = obsKekuatan;
+      const elObsKelemahan = document.getElementById('lap-analisis-obs-kelemahan');
+      if (elObsKelemahan) elObsKelemahan.innerText = obsKelemahan;
+
+      // V. Rekapitulasi Kegiatan Pengembangan Diri (1 Semester)
+      renderReportPengembanganDiri(guru);
 
       document.getElementById('lap-ttd-guru').innerText = guru.nama;
       document.getElementById('lap-ttd-nip-guru').innerText = `NIP. ${guru.nip}`;
@@ -7123,6 +7391,72 @@
               tooltip: {
                 callbacks: {
                   label: function(context) { return ` Capaian Rata-rata: ${context.parsed.y}%`; }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // Chart & KPI Pengembangan Diri (PKB Guru)
+      let pdPedagogik = 0, pdProfesional = 0, pdDigital = 0, pdKepribadian = 0, pdSosial = 0, pdLainnya = 0;
+      let totalPdItems = 0;
+      let guruWithPdCount = 0;
+
+      list.forEach(g => {
+        const pdList = (Array.isArray(g.pengembanganDiri) ? g.pengembanganDiri : []);
+        if (pdList.length > 0) {
+          guruWithPdCount++;
+          pdList.forEach(item => {
+            totalPdItems++;
+            const asp = (item.aspek || '').toLowerCase();
+            if (asp.includes('pedagogik')) pdPedagogik++;
+            else if (asp.includes('profesional')) pdProfesional++;
+            else if (asp.includes('digital') || asp.includes('teknologi')) pdDigital++;
+            else if (asp.includes('kepribadian')) pdKepribadian++;
+            else if (asp.includes('sosial')) pdSosial++;
+            else pdLainnya++;
+          });
+        }
+      });
+
+      const kpiPdTotal = document.getElementById('kpi-pd-total');
+      if (kpiPdTotal) kpiPdTotal.innerText = totalPdItems;
+      const kpiPdGuru = document.getElementById('kpi-pd-guru-count');
+      if (kpiPdGuru) kpiPdGuru.innerText = `${guruWithPdCount} Guru`;
+
+      const ctxPd = document.getElementById('chartPengembanganDiri');
+      if (ctxPd) {
+        if (chartPengembanganInstance) chartPengembanganInstance.destroy();
+        chartPengembanganInstance = new Chart(ctxPd, {
+          type: 'bar',
+          data: {
+            labels: ['Pedagogik', 'Profesional', 'Digital/TIK', 'Kepribadian', 'Sosial', 'Lainnya'],
+            datasets: [{
+              label: 'Jumlah Kegiatan',
+              data: [pdPedagogik, pdProfesional, pdDigital, pdKepribadian, pdSosial, pdLainnya],
+              backgroundColor: ['#0d9488', '#0284c7', '#6366f1', '#8b5cf6', '#ec4899', '#64748b'],
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  precision: 0,
+                  font: { size: 10 }
+                }
+              },
+              x: { ticks: { font: { size: 10 } } }
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(context) { return ` ${context.parsed.y} Kegiatan`; }
                 }
               }
             }
@@ -7625,6 +7959,408 @@
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
       });
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function renderPengembanganDiri() {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
+      if (!guru) return;
+
+      if (!Array.isArray(guru.pengembanganDiri)) {
+        guru.pengembanganDiri = [];
+      }
+
+      const counterBadge = document.getElementById('pd-counter-badge');
+      if (counterBadge) {
+        counterBadge.innerText = `${guru.pengembanganDiri.length} / 4 Kegiatan`;
+        if (guru.pengembanganDiri.length >= 4) {
+          counterBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200';
+        } else {
+          counterBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200';
+        }
+      }
+
+      const btnAdd = document.getElementById('pd-btn-add');
+      if (btnAdd) {
+        if (guru.pengembanganDiri.length >= 4) {
+          btnAdd.disabled = true;
+          btnAdd.classList.add('opacity-50', 'cursor-not-allowed');
+          btnAdd.setAttribute('title', 'Maksimal 4 kegiatan pengembangan diri per semester.');
+        } else {
+          btnAdd.disabled = false;
+          btnAdd.classList.remove('opacity-50', 'cursor-not-allowed');
+          btnAdd.removeAttribute('title');
+        }
+      }
+
+      const container = document.getElementById('pd-items-container');
+      if (!container) return;
+
+      if (guru.pengembanganDiri.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center bg-slate-50 border border-dashed border-slate-300 rounded-xl space-y-3">
+            <div class="w-12 h-12 mx-auto rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-xl">
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-700 text-sm">Belum Ada Catatan Pengembangan Diri</h4>
+              <p class="text-xs text-slate-500 mt-1 max-w-md mx-auto">Guru dapat mencatat 1 sampai 4 kegiatan pengembangan diri per semester (misal: Pelatihan Mandiri PMM, Webinar, Workshop, MGMP/Kombel, dll.).</p>
+            </div>
+            <button type="button" onclick="addPengembanganDiriItem()" class="px-4 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold inline-flex items-center space-x-1.5 shadow-sm transition">
+              <i class="fa-solid fa-plus"></i>
+              <span>Tambah Kegiatan Pertama</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      const aspekOptions = [
+        'Pedagogik',
+        'Profesional',
+        'Digital / Literasi Teknologi',
+        'Kepribadian',
+        'Sosial',
+        'Kompetensi Lainnya'
+      ];
+
+      const bentukOptions = [
+        'Pelatihan Mandiri PMM',
+        'Bimtek / Workshop Tatap Muka',
+        'Webinar Online / Daring',
+        'Komunitas Belajar (Kombel) / MGMP',
+        'Studi Tiru / Observasi Rekan Sejawat',
+        'Penulisan Karya Ilmiah / Best Practice',
+        'Kegiatan Lainnya'
+      ];
+
+      const buktiCheckboxList = [
+        'Sertifikat',
+        'Foto Kegiatan / Dokumentasi',
+        'Modul Ajar / Aksi Nyata',
+        'Laporan / Resume'
+      ];
+
+      let html = '';
+      guru.pengembanganDiri.forEach((item, idx) => {
+        const itemNum = idx + 1;
+        const currentBukti = Array.isArray(item.bukti) ? item.bukti : [];
+
+        html += `
+          <div class="bg-slate-50/70 p-4 sm:p-5 rounded-xl border border-slate-200 shadow-xs space-y-4 transition">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+              <div class="flex items-center space-x-2">
+                <span class="w-6 h-6 rounded-full bg-teal-600 text-white text-xs font-bold flex items-center justify-center shadow-xs">${itemNum}</span>
+                <h4 class="font-bold text-slate-800 text-xs sm:text-sm">Kegiatan Pengembangan Diri #${itemNum}</h4>
+              </div>
+              <button type="button" onclick="deletePengembanganDiriItem(${idx})" class="px-2.5 py-1 rounded-lg text-rose-600 hover:bg-rose-50 text-xs font-medium border border-rose-200 transition flex items-center space-x-1 no-print" title="Hapus kegiatan ini">
+                <i class="fa-solid fa-trash text-[11px]"></i>
+                <span class="hidden sm:inline">Hapus</span>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 text-xs">
+              <!-- Aspek -->
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">1. Aspek Kompetensi <span class="text-rose-500">*</span></label>
+                <select onchange="updatePdField(${idx}, 'aspek', this.value)" class="w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+                  ${aspekOptions.map(opt => `<option value="${opt}" ${item.aspek === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                </select>
+              </div>
+
+              <!-- Bentuk Kegiatan -->
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">2. Bentuk Kegiatan <span class="text-rose-500">*</span></label>
+                <select onchange="updatePdField(${idx}, 'bentuk', this.value)" class="w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+                  ${bentukOptions.map(opt => `<option value="${opt}" ${item.bentuk === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                </select>
+              </div>
+
+              <!-- Durasi / Waktu -->
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">3. Waktu / Durasi / JP</label>
+                <input type="text" oninput="updatePdField(${idx}, 'durasi', this.value)" value="${escapeHtml(item.durasi || '')}" placeholder="Contoh: 32 JP atau 3 Hari" class="w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+              </div>
+
+              <!-- Judul / Topik -->
+              <div class="md:col-span-2">
+                <label class="block font-semibold text-slate-700 mb-1">4. Judul / Topik Kegiatan <span class="text-rose-500">*</span></label>
+                <input type="text" oninput="updatePdField(${idx}, 'judul', this.value)" value="${escapeHtml(item.judul || '')}" placeholder="Contoh: Pemanfaatan Platform Merdeka Mengajar untuk Asesmen Pembelajaran" class="w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+              </div>
+
+              <!-- Penyelenggara -->
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">5. Penyelenggara Kegiatan</label>
+                <input type="text" oninput="updatePdField(${idx}, 'penyelenggara', this.value)" value="${escapeHtml(item.penyelenggara || '')}" placeholder="Contoh: Kemendikbudristek / MGMP / Sekolah" class="w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+              </div>
+
+              <!-- Kebutuhan Pengembangan -->
+              <div class="md:col-span-2 lg:col-span-3">
+                <label class="block font-semibold text-slate-700 mb-1">6. Kebutuhan Pengembangan (Alasan / Latar Belakang)</label>
+                <textarea rows="2" oninput="updatePdField(${idx}, 'kebutuhan', this.value)" placeholder="Mengapa kegiatan ini diambil berdasarkan evaluasi diri atau supervisi sebelumnya..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.kebutuhan || '')}</textarea>
+              </div>
+
+              <!-- Bukti Kegiatan (Checkboxes) -->
+              <div class="md:col-span-2">
+                <label class="block font-semibold text-slate-700 mb-1">7. Bukti Fisik / Dokumen Kegiatan</label>
+                <div class="flex flex-wrap gap-3 pt-1">
+                  ${buktiCheckboxList.map(bk => `
+                    <label class="inline-flex items-center space-x-1.5 text-xs text-slate-700 cursor-pointer">
+                      <input type="checkbox" onchange="updatePdCheckbox(${idx}, '${bk}', this.checked)" ${currentBukti.includes(bk) ? 'checked' : ''} class="rounded text-teal-600 focus:ring-teal-500">
+                      <span>${bk}</span>
+                    </label>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- Link Bukti Dokumen -->
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">8. Tautan / Link Bukti Dokumen</label>
+                <input type="url" oninput="updatePdField(${idx}, 'linkBukti', this.value)" value="${escapeHtml(item.linkBukti || '')}" placeholder="https://drive.google.com/..." class="w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+              </div>
+
+              <!-- Rencana Implementasi di Kelas -->
+              <div class="md:col-span-1 lg:col-span-1">
+                <label class="block font-semibold text-slate-700 mb-1">9. Rencana Implementasi di Kelas</label>
+                <textarea rows="3" oninput="updatePdField(${idx}, 'implementasi', this.value)" placeholder="Bagaimana hasil pelatihan diterapkan secara konkret dalam proses belajar mengajar..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.implementasi || '')}</textarea>
+              </div>
+
+              <!-- Dampak Terhadap Murid -->
+              <div class="md:col-span-1 lg:col-span-1">
+                <label class="block font-semibold text-slate-700 mb-1">10. Dampak Nyata Terhadap Murid</label>
+                <textarea rows="3" oninput="updatePdField(${idx}, 'dampak', this.value)" placeholder="Perubahan keaktifan, pemahaman, atau respon murid setelah diterapkannya materi..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.dampak || '')}</textarea>
+              </div>
+
+              <!-- Refleksi & Tantangan -->
+              <div class="md:col-span-1 lg:col-span-1">
+                <label class="block font-semibold text-slate-700 mb-1">11. Refleksi & Kendala</label>
+                <textarea rows="3" oninput="updatePdField(${idx}, 'refleksi', this.value)" placeholder="Tantangan saat menerapkan dan refleksi terhadap kendala yang dihadapi..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.refleksi || '')}</textarea>
+              </div>
+
+              <!-- Tindak Lanjut -->
+              <div class="md:col-span-2 lg:col-span-3">
+                <label class="block font-semibold text-slate-700 mb-1">12. Rencana Tindak Lanjut Berikutnya</label>
+                <textarea rows="2" oninput="updatePdField(${idx}, 'tindakLanjut', this.value)" placeholder="Langkah perbaikan berkelanjutan atau desiminasi ke rekan sejawat..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.tindakLanjut || '')}</textarea>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function addPengembanganDiriItem() {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
+      if (!guru) return;
+      if (!Array.isArray(guru.pengembanganDiri)) guru.pengembanganDiri = [];
+
+      if (guru.pengembanganDiri.length >= 4) {
+        showToast('Maksimal 4 kegiatan pengembangan diri per semester!', true);
+        return;
+      }
+
+      guru.pengembanganDiri.push({
+        aspek: 'Pedagogik',
+        kebutuhan: '',
+        bentuk: 'Pelatihan Mandiri PMM',
+        judul: '',
+        penyelenggara: 'Kemendikbudristek / PMM',
+        durasi: '32 JP',
+        bukti: ['Sertifikat'],
+        linkBukti: '',
+        implementasi: '',
+        dampak: '',
+        refleksi: '',
+        tindakLanjut: ''
+      });
+
+      saveDataToLocalStorage();
+      renderPengembanganDiri();
+      showToast(`Kegiatan #${guru.pengembanganDiri.length} ditambahkan!`);
+    }
+
+    function deletePengembanganDiriItem(idx) {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
+      if (!guru || !Array.isArray(guru.pengembanganDiri)) return;
+
+      if (confirm(`Hapus kegiatan pengembangan diri #${idx + 1}?`)) {
+        guru.pengembanganDiri.splice(idx, 1);
+        saveDataToLocalStorage();
+        renderPengembanganDiri();
+        showToast('Kegiatan berhasil dihapus.');
+      }
+    }
+
+    function updatePdField(idx, field, value) {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
+      if (!guru || !Array.isArray(guru.pengembanganDiri)) return;
+      if (!guru.pengembanganDiri[idx]) return;
+
+      guru.pengembanganDiri[idx][field] = value;
+      saveDataToLocalStorage();
+    }
+
+    function updatePdCheckbox(idx, buktiName, isChecked) {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
+      if (!guru || !Array.isArray(guru.pengembanganDiri)) return;
+      if (!guru.pengembanganDiri[idx]) return;
+
+      if (!Array.isArray(guru.pengembanganDiri[idx].bukti)) {
+        guru.pengembanganDiri[idx].bukti = [];
+      }
+
+      const list = guru.pengembanganDiri[idx].bukti;
+      if (isChecked && !list.includes(buktiName)) {
+        list.push(buktiName);
+      } else if (!isChecked && list.includes(buktiName)) {
+        const foundIdx = list.indexOf(buktiName);
+        if (foundIdx > -1) list.splice(foundIdx, 1);
+      }
+
+      saveDataToLocalStorage();
+    }
+
+    async function savePengembanganDiri() {
+      const guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
+      if (!guru) return;
+
+      saveDataToLocalStorage();
+      showToast('Menyimpan Portofolio Pengembangan Diri...');
+
+      const res = await apiCall('save_pengembangan_diri', {
+        guruId: guru.id,
+        items: guru.pengembanganDiri || []
+      });
+
+      if (res && res.success) {
+        showToast(res.message || 'Portofolio Pengembangan Diri berhasil disimpan ke server!');
+      } else if (isServerOnline) {
+        showToast('Data tersimpan lokal, namun server merespon: ' + (res.error || 'Galat'), true);
+      } else {
+        showToast('Portofolio Pengembangan Diri tersimpan secara lokal!');
+      }
+    }
+
+    function downloadPengembanganDiriPDF() {
+      if (typeof html2pdf === 'undefined') {
+        showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
+        return;
+      }
+      const g = guruDatabase.find(x => x.id === selectedGuruId) || guruDatabase[0];
+      const rawName = g ? g.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Guru';
+      const el = document.querySelector('#view-pengembangan-diri > div.bg-white') || document.getElementById('view-pengembangan-diri');
+      if (!el) return;
+      const filename = `Pengembangan_Diri_${rawName}_${g ? g.nip : ''}.pdf`;
+
+      showToast('Sedang membuat file PDF Pengembangan Diri...');
+      document.body.classList.add('generating-pdf');
+      const opt = {
+        margin: [10, 10, 15, 10],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: ['.avoid-break', '.ttd-container', '.ttd-table'] }
+      };
+
+      const wasHidden = el.classList.contains('hidden');
+      if (wasHidden) el.classList.remove('hidden');
+
+      const modifiedList = prepareFormInputsForPrint(el);
+
+      html2pdf().set(opt).from(el).save().then(() => {
+        restoreFormInputsAfterPrint(modifiedList);
+        document.body.classList.remove('generating-pdf');
+        if (wasHidden) el.classList.add('hidden');
+        showToast('File PDF Pengembangan Diri berhasil diunduh!');
+      }).catch(err => {
+        restoreFormInputsAfterPrint(modifiedList);
+        document.body.classList.remove('generating-pdf');
+        if (wasHidden) el.classList.add('hidden');
+        console.error(err);
+        showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
+      });
+    }
+
+    function renderReportPengembanganDiri(guru) {
+      const container = document.getElementById('lap-pd-container');
+      const badge = document.getElementById('lap-pd-badge-count');
+      if (!container) return;
+
+      const items = (guru && Array.isArray(guru.pengembanganDiri)) ? guru.pengembanganDiri : [];
+      if (badge) badge.innerText = `${items.length} / 4 Kegiatan`;
+
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div style="padding: 12px 14px; background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; text-align: center; color: #64748b; font-size: 8.5pt;">
+            <em>Belum ada catatan kegiatan pengembangan diri yang didokumentasikan untuk semester ini.</em>
+          </div>
+        `;
+        return;
+      }
+
+      let rows = items.map((item, idx) => {
+        const buktiStr = Array.isArray(item.bukti) && item.bukti.length > 0 ? item.bukti.join(', ') : '-';
+        const linkStr = item.linkBukti ? `<a href="${escapeHtml(item.linkBukti)}" target="_blank" style="color: #0284c7; text-decoration: underline; word-break: break-all; display: block; margin-top: 2px;">Buka Tautan</a>` : '';
+        return `
+          <tr>
+            <td style="text-align: center; font-weight: 600; vertical-align: top; padding: 6px 4px; border: 1px solid #cbd5e1;">${idx + 1}</td>
+            <td style="vertical-align: top; padding: 6px; border: 1px solid #cbd5e1;">
+              <strong style="color: #0f172a; display: block;">${escapeHtml(item.aspek || '-')}</strong>
+              <span style="color: #64748b; font-size: 7.5pt; display: block; margin-top: 2px;">Kebutuhan: ${escapeHtml(item.kebutuhan || '-')}</span>
+            </td>
+            <td style="vertical-align: top; padding: 6px; border: 1px solid #cbd5e1;">
+              <span style="display: inline-block; padding: 1px 5px; background-color: #f0fdf4; color: #166534; font-size: 7.5pt; font-weight: 600; border-radius: 3px; border: 1px solid #bbf7d0; margin-bottom: 2px;">${escapeHtml(item.bentuk || '-')}</span>
+              <div style="font-weight: 600; color: #1e293b;">${escapeHtml(item.judul || '-')}</div>
+            </td>
+            <td style="vertical-align: top; padding: 6px; border: 1px solid #cbd5e1;">
+              <div style="color: #334155;">${escapeHtml(item.penyelenggara || '-')}</div>
+              <div style="color: #64748b; font-size: 7.5pt; margin-top: 2px;">Durasi: ${escapeHtml(item.durasi || '-')}</div>
+            </td>
+            <td style="vertical-align: top; padding: 6px; border: 1px solid #cbd5e1; font-size: 7.5pt;">
+              <div style="color: #334155;">${escapeHtml(buktiStr)}</div>
+              ${linkStr}
+            </td>
+            <td style="vertical-align: top; padding: 6px; border: 1px solid #cbd5e1; font-size: 8pt;">
+              <div style="margin-bottom: 3px;"><strong style="color: #334155;">Implementasi:</strong> ${escapeHtml(item.implementasi || '-')}</div>
+              <div><strong style="color: #334155;">Dampak:</strong> ${escapeHtml(item.dampak || '-')}</div>
+            </td>
+            <td style="vertical-align: top; padding: 6px; border: 1px solid #cbd5e1; font-size: 8pt;">
+              <div style="margin-bottom: 3px;"><strong style="color: #334155;">Refleksi:</strong> ${escapeHtml(item.refleksi || '-')}</div>
+              <div><strong style="color: #334155;">Tindak Lanjut:</strong> ${escapeHtml(item.tindakLanjut || '-')}</div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <table style="width: 100%; border-collapse: collapse; font-size: 8pt; border: 1px solid #cbd5e1;">
+          <thead>
+            <tr style="background-color: #f8fafc; color: #334155; text-align: left;">
+              <th style="width: 3%; text-align: center; padding: 6px 4px; border: 1px solid #cbd5e1;">No</th>
+              <th style="width: 16%; padding: 6px; border: 1px solid #cbd5e1;">Aspek & Kebutuhan</th>
+              <th style="width: 22%; padding: 6px; border: 1px solid #cbd5e1;">Bentuk & Topik Kegiatan</th>
+              <th style="width: 14%; padding: 6px; border: 1px solid #cbd5e1;">Penyelenggara & Waktu</th>
+              <th style="width: 13%; padding: 6px; border: 1px solid #cbd5e1;">Bukti & Tautan</th>
+              <th style="width: 16%; padding: 6px; border: 1px solid #cbd5e1;">Implementasi & Dampak</th>
+              <th style="width: 16%; padding: 6px; border: 1px solid #cbd5e1;">Refleksi & Rencana</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      `;
     }
 
     function populateUserAccountsTable(customList) {
