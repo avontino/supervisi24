@@ -21,6 +21,14 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     body { font-family: 'Inter', sans-serif; }
 
+    .field-invalid, textarea.field-invalid, input.field-invalid {
+      border: 1.5px solid #f43f5e !important;
+      border-color: #f43f5e !important;
+      background-color: #fff1f2 !important;
+      box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.25) !important;
+      outline: none !important;
+    }
+
     @page {
       size: A4 portrait;
       margin: 12mm 15mm 15mm 15mm;
@@ -3115,7 +3123,7 @@
     // ============================================================
     // SISTEM AUTO-SYNC DATA & AUTO-UPDATE VERSION DETECTOR
     // ============================================================
-    const CURRENT_APP_BUILD_VERSION = '2026.10.20.1200';
+    const CURRENT_APP_BUILD_VERSION = '2026.10.20.1330';
     let latestServerAppVersion = CURRENT_APP_BUILD_VERSION;
     let lastDataSyncTimestamp = Date.now();
     const SYNC_THROTTLE_MS = 15000; // 15 detik batas throttling antar request navigasi
@@ -5862,13 +5870,15 @@
       if (!inputEl) return true;
       const isFilled = inputEl.value && inputEl.value.trim().length > 0;
       if (isFilled) {
-        inputEl.classList.remove('border-rose-400', 'bg-rose-50/30');
+        inputEl.classList.remove('field-invalid', 'border-rose-400', 'bg-rose-50/30');
+        inputEl.classList.add('border-slate-300');
         if (warnBadgeEl) {
           warnBadgeEl.classList.add('hidden');
           warnBadgeEl.classList.remove('inline-flex');
         }
       } else {
-        inputEl.classList.add('border-rose-400', 'bg-rose-50/30');
+        inputEl.classList.remove('border-slate-300');
+        inputEl.classList.add('field-invalid', 'border-rose-400', 'bg-rose-50/30');
         if (warnBadgeEl) {
           warnBadgeEl.classList.remove('hidden');
           warnBadgeEl.classList.add('inline-flex');
@@ -6950,7 +6960,7 @@
 
       if (missingCount > 0) {
         showToast(`⚠️ Terdapat ${missingCount} item belum diisi! Mohon periksa item bertanda merah.`, true);
-        const firstUnfilled = document.querySelector('#view-observasi .border-rose-300, #view-observasi .border-rose-400');
+        const firstUnfilled = document.querySelector('#view-observasi .field-invalid, #view-observasi .border-rose-300, #view-observasi .border-rose-400');
         if (firstUnfilled) {
           firstUnfilled.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
