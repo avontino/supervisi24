@@ -406,6 +406,82 @@
           </button>
         </div>
 
+        <!-- KARTU STATUS & CHECKLIST KETUNTASAN SUPERVISI GURU (Solusi A - Arahan Kepala Sekolah) -->
+        <div id="dash-teacher-status-card" class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden no-print">
+          <div class="p-4 sm:p-5 border-b border-slate-100 bg-gradient-to-r from-slate-50 via-white to-indigo-50/30">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+              <div class="flex items-start sm:items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-lg shadow-xs flex-shrink-0">
+                  <i class="fa-solid fa-clipboard-check"></i>
+                </div>
+                <div>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <h4 class="font-bold text-slate-800 text-sm" id="dash-status-card-title">Status Kelengkapan Supervisi Guru</h4>
+                    <span id="dash-status-card-pill" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border bg-amber-100 text-amber-800 border-amber-300">Belum Selesai</span>
+                    <span id="dash-guidance-pill" class="hidden px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                      <i class="fa-solid fa-triangle-exclamation mr-1"></i>Perlu Pembinaan
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-0.5" id="dash-status-card-subtitle">Pantauan ketuntasan 4 tahapan supervisi akademik semester aktif.</p>
+                </div>
+              </div>
+
+              <!-- Selector Guru untuk Supervisor/Superadmin -->
+              <div id="dash-status-guru-selector-box" class="hidden flex items-center space-x-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 text-xs shadow-2xs">
+                <span class="text-slate-500 font-medium">Pantau Guru:</span>
+                <select id="dash-status-guru-select" onchange="syncSelectedGuru(parseInt(this.value)); renderTeacherStatusCard();" class="font-semibold text-slate-800 bg-transparent border-0 focus:ring-0 p-0 cursor-pointer"></select>
+              </div>
+            </div>
+
+            <!-- Progress Bar Strip -->
+            <div class="mt-4 pt-3 border-t border-slate-200/60">
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-semibold text-slate-700 flex items-center space-x-1.5">
+                  <i class="fa-solid fa-list-check text-indigo-600"></i>
+                  <span>Progress Ketuntasan Instrumen:</span>
+                  <strong id="dash-progress-count" class="text-indigo-700">0 dari 4 Tahap Tuntas</strong>
+                </span>
+                <span id="dash-progress-percent" class="font-bold text-indigo-700">0%</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                <div id="dash-progress-bar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alert / Pesan Notifikasi Konsultasi Supervisor -->
+          <div id="dash-status-alert-box" class="p-4 sm:p-5 bg-amber-50/70 border-b border-amber-100 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div class="flex items-start space-x-3">
+              <div id="dash-status-alert-icon" class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div class="space-y-0.5 text-xs">
+                <div class="flex flex-wrap items-center gap-1.5 font-bold text-slate-800">
+                  <span id="dash-supervisor-label">Supervisor Penilai:</span>
+                  <span id="dash-supervisor-name" class="text-indigo-700 underline underline-offset-2">-</span>
+                  <span id="dash-supervisor-nip" class="text-[10px] text-slate-500 font-normal">NIP. -</span>
+                </div>
+                <p id="dash-status-alert-desc" class="text-slate-600 leading-relaxed">
+                  Supervisi akademik Anda belum lengkap. Silakan periksa tahapan di bawah ini dan segera koordinasikan dengan Supervisor penilai.
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2 flex-shrink-0 self-start md:self-center">
+              <button type="button" id="btn-wa-consult" onclick="triggerWhatsAppConsult()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center space-x-1.5 shadow-sm transition">
+                <i class="fa-brands fa-whatsapp text-sm"></i>
+                <span id="btn-wa-consult-text">Konsultasi via WA</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Tahapan Checklist Grid -->
+          <div class="p-4 sm:p-5 bg-white">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5" id="dash-stages-grid">
+              <!-- Rendered dynamically via renderTeacherStatusCard() -->
+            </div>
+          </div>
+        </div>
+
         <!-- KPI Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
@@ -1206,17 +1282,29 @@
           <!-- Analisis Singkat Observasi: Kekuatan & Area Perbaikan -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-1">
             <div class="space-y-1">
-              <label class="block font-bold text-emerald-800 flex items-center space-x-1">
-                <i class="fa-solid fa-circle-check text-emerald-600"></i>
-                <span>Kekuatan Praktik Pembelajaran (Praktik Baik)</span>
-              </label>
+              <div class="flex items-center justify-between">
+                <label class="block font-bold text-emerald-800 flex items-center space-x-1">
+                  <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                  <span>Kekuatan Praktik Pembelajaran (Praktik Baik)</span>
+                </label>
+                <span id="obs-warn-kekuatan" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                  <span>Wajib diisi</span>
+                </span>
+              </div>
               <textarea id="obs-input-kekuatan" oninput="autoSaveObsInput()" rows="3" placeholder="Tuliskan aspek pembelajaran yang terlaksana dengan sangat baik, apresiatif, atau menginspirasi..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 transition-colors"></textarea>
             </div>
             <div class="space-y-1">
-              <label class="block font-bold text-amber-800 flex items-center space-x-1">
-                <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
-                <span>Kekurangan / Area Perbaikan Pembelajaran</span>
-              </label>
+              <div class="flex items-center justify-between">
+                <label class="block font-bold text-amber-800 flex items-center space-x-1">
+                  <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+                  <span>Kekurangan / Area Perbaikan Pembelajaran</span>
+                </label>
+                <span id="obs-warn-kelemahan" class="hidden text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded items-center space-x-1 no-print">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                  <span>Wajib diisi</span>
+                </span>
+              </div>
               <textarea id="obs-input-kelemahan" oninput="autoSaveObsInput()" rows="3" placeholder="Tuliskan aspek pembelajaran yang mendesak untuk disempurnakan atau ditingkatkan guru..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 transition-colors"></textarea>
             </div>
           </div>
@@ -5505,6 +5593,7 @@
 
       populateTeacherSelects();
       updateTeacherPickerVisibility();
+      if (typeof renderTeacherStatusCard === 'function') renderTeacherStatusCard();
       const btnCetakRekap = document.getElementById('btn-cetak-rekap-keseluruhan');
       if (btnCetakRekap) {
         if (role === 'guru') btnCetakRekap.classList.add('hidden');
@@ -5695,6 +5784,8 @@
       guru.obsKekuatan = document.getElementById('obs-input-kekuatan')?.value || '';
       guru.obsKelemahan = document.getElementById('obs-input-kelemahan')?.value || '';
       checkFieldValidation(document.getElementById('obs-catatan-fakta'), document.getElementById('obs-warn-catatan-fakta'));
+      checkFieldValidation(document.getElementById('obs-input-kekuatan'), document.getElementById('obs-warn-kekuatan'));
+      checkFieldValidation(document.getElementById('obs-input-kelemahan'), document.getElementById('obs-warn-kelemahan'));
       saveDataToLocalStorage();
     }
 
@@ -6380,9 +6471,15 @@
       }
 
       const obsKekuatanEl = document.getElementById('obs-input-kekuatan');
-      if (obsKekuatanEl) obsKekuatanEl.value = guru.obsKekuatan || '';
+      if (obsKekuatanEl) {
+        obsKekuatanEl.value = guru.obsKekuatan || '';
+        checkFieldValidation(obsKekuatanEl, document.getElementById('obs-warn-kekuatan'));
+      }
       const obsKelemahanEl = document.getElementById('obs-input-kelemahan');
-      if (obsKelemahanEl) obsKelemahanEl.value = guru.obsKelemahan || '';
+      if (obsKelemahanEl) {
+        obsKelemahanEl.value = guru.obsKelemahan || '';
+        checkFieldValidation(obsKelemahanEl, document.getElementById('obs-warn-kelemahan'));
+      }
 
       calculateObsScoreLive();
       syncAllSignatures(guru);
@@ -6696,6 +6793,10 @@
 
       const isCatatanFilled = checkFieldValidation(obsCatatanFakta, document.getElementById('obs-warn-catatan-fakta'));
       if (!isCatatanFilled) missingCount++;
+      const isKekuatanFilled = checkFieldValidation(obsKekuatanEl, document.getElementById('obs-warn-kekuatan'));
+      if (!isKekuatanFilled) missingCount++;
+      const isKelemahanFilled = checkFieldValidation(obsKelemahanEl, document.getElementById('obs-warn-kelemahan'));
+      if (!isKelemahanFilled) missingCount++;
 
       if (guru.status !== 'Selesai') {
         guru.status = 'Tindak Lanjut';
@@ -7369,7 +7470,433 @@
       if (kpiBelum) kpiBelum.innerText = belum;
     }
 
+    function getGuruSupervisiStagesProgress(guru) {
+      if (!guru) return {
+        isAllComplete: false,
+        completedCount: 0,
+        totalCount: 4,
+        percent: 0,
+        stages: [],
+        overallStatus: 'Belum Selesai',
+        overallBadgeClass: 'bg-rose-100 text-rose-800 border-rose-300',
+        overallIcon: 'fa-triangle-exclamation',
+        overallDesc: 'Data guru belum tersedia.',
+        needGuidance: false
+      };
+
+      const isBk = guru.isBk || (guru.mapel && (guru.mapel.toLowerCase().includes('bimbingan konseling') || guru.mapel.toLowerCase() === 'bk'));
+
+      // 1. Pra-Observasi
+      let praComplete = false;
+      let praPartial = false;
+      let praSummary = '';
+      if (isBk) {
+        const hasBkFields = Boolean(guru.bkBidangLayanan || guru.bkFokusLayanan || guru.bkTujuanLayanan || guru.materiTopik || guru.tujuanPembelajaran);
+        const bkScoreCount = guru.bkScores ? Object.values(guru.bkScores).filter(v => Number(v) > 0).length : 0;
+        const totalBkItems = (typeof ASPEK_BK_TELAAH !== 'undefined') ? ASPEK_BK_TELAAH.length : 12;
+        praComplete = Boolean(hasBkFields && bkScoreCount >= totalBkItems);
+        praPartial = Boolean(hasBkFields || bkScoreCount > 0);
+        praSummary = praComplete ? 'Telaah RPL BK Lengkap' : (praPartial ? `${bkScoreCount}/${totalBkItems} butir terisi` : 'Belum diisi');
+      } else {
+        const hasFields = Boolean((guru.materiTopik && guru.materiTopik.trim().length > 0) && (guru.tujuanPembelajaran && guru.tujuanPembelajaran.trim().length > 0));
+        let totalRppItems = 0;
+        if (typeof DIMENSI_RPP_PM !== 'undefined') {
+          DIMENSI_RPP_PM.forEach(d => { totalRppItems += (d.indikator ? d.indikator.length : 0); });
+        } else {
+          totalRppItems = 13;
+        }
+        const rppScoreCount = guru.rppScores ? Object.values(guru.rppScores).filter(v => Number(v) > 0).length : 0;
+        praComplete = Boolean(hasFields && rppScoreCount >= totalRppItems);
+        praPartial = Boolean(hasFields || rppScoreCount > 0);
+        praSummary = praComplete ? 'Telaah Modul Lengkap' : (praPartial ? `${rppScoreCount}/${totalRppItems} butir terisi` : 'Belum diisi');
+      }
+
+      // 2. Observasi Kelas
+      let obsComplete = false;
+      let obsPartial = false;
+      let obsSummary = '';
+      const hasFakta = Boolean(guru.catatanFakta && guru.catatanFakta.trim().length > 0);
+      const hasKekuatan = Boolean(guru.obsKekuatan && guru.obsKekuatan.trim().length > 0);
+      const hasKelemahan = Boolean(guru.obsKelemahan && guru.obsKelemahan.trim().length > 0);
+      const hasAllNotes = hasFakta && hasKekuatan && hasKelemahan;
+
+      if (isBk) {
+        const obsScoreCount = guru.bkObsScores ? Object.values(guru.bkObsScores).filter(v => Number(v) > 0).length : 0;
+        const totalObsItems = 27;
+        obsComplete = Boolean(hasAllNotes && obsScoreCount >= totalObsItems);
+        obsPartial = Boolean(hasFakta || hasKekuatan || hasKelemahan || obsScoreCount > 0);
+        obsSummary = obsComplete ? '27 Indikator & Catatan Lengkap' : (obsPartial ? `${obsScoreCount}/${totalObsItems} indikator` : 'Belum diisi');
+      } else {
+        let totalObsItems = 0;
+        if (typeof ASPEK_OBSERVASI !== 'undefined') {
+          ASPEK_OBSERVASI.forEach(a => { totalObsItems += (a.indikator ? a.indikator.length : 0); });
+        } else {
+          totalObsItems = 28;
+        }
+        const obsScoreCount = guru.obsScores ? Object.values(guru.obsScores).filter(v => Number(v) > 0).length : 0;
+        obsComplete = Boolean(hasAllNotes && obsScoreCount >= totalObsItems);
+        obsPartial = Boolean(hasFakta || hasKekuatan || hasKelemahan || obsScoreCount > 0);
+        obsSummary = obsComplete ? '28 Indikator & Catatan Lengkap' : (obsPartial ? `${obsScoreCount}/${totalObsItems} indikator` : 'Belum diisi');
+      }
+
+      // 3. Pasca-Observasi (Coaching Model TIRTA)
+      const c = guru.coaching || {};
+      const hasT = Boolean(c.tujuan && c.tujuan.trim().length > 0);
+      const hasI = Boolean(c.identifikasi && c.identifikasi.trim().length > 0);
+      const hasR = Boolean(c.rencana && c.rencana.trim().length > 0);
+      const hasTa = Boolean(c.tanggungJawab && c.tanggungJawab.trim().length > 0);
+      const coachItemsFilled = [hasT, hasI, hasR, hasTa].filter(Boolean).length;
+      const coachComplete = (coachItemsFilled === 4);
+      const coachPartial = (coachItemsFilled > 0);
+      const coachSummary = coachComplete ? '4 Aspek TIRTA Lengkap' : (coachPartial ? `${coachItemsFilled}/4 aspek terisi` : 'Belum diisi');
+
+      // 4. Pengembangan Diri
+      const pdList = Array.isArray(guru.pengembanganDiri) ? guru.pengembanganDiri : [];
+      const pdComplete = (pdList.length > 0);
+      const pdSummary = pdComplete ? `${pdList.length} Rencana Terinput` : 'Belum diisi';
+
+      const stages = [
+        {
+          id: 'pra',
+          title: 'Pra-Observasi',
+          sub: isBk ? 'Telaah RPL Bimbingan Konseling' : 'Telaah Modul Ajar / RPP',
+          icon: 'fa-file-lines',
+          view: 'pra',
+          isComplete: praComplete,
+          isPartial: praPartial,
+          summary: praSummary
+        },
+        {
+          id: 'observasi',
+          title: 'Observasi Kelas',
+          sub: isBk ? '27 Indikator & Catatan Fakta' : '28 Indikator & Catatan Fakta',
+          icon: 'fa-chalkboard-user',
+          view: 'observasi',
+          isComplete: obsComplete,
+          isPartial: obsPartial,
+          summary: obsSummary
+        },
+        {
+          id: 'coaching',
+          title: 'Pasca-Observasi',
+          sub: 'Catatan Coaching Model TIRTA',
+          icon: 'fa-comments',
+          view: 'coaching',
+          isComplete: coachComplete,
+          isPartial: coachPartial,
+          summary: coachSummary
+        },
+        {
+          id: 'pengembangan-diri',
+          title: 'Pengembangan Diri',
+          sub: 'Rencana Peningkatan Kinerja (PKB)',
+          icon: 'fa-graduation-cap',
+          view: 'pengembangan-diri',
+          isComplete: pdComplete,
+          isPartial: pdList.length > 0,
+          summary: pdSummary
+        }
+      ];
+
+      const completedCount = stages.filter(s => s.isComplete).length;
+      const isAllComplete = (completedCount === 4);
+      const percent = Math.round((completedCount / 4) * 100);
+
+      // Overall status
+      let overallStatus = 'Belum Selesai';
+      let overallBadgeClass = 'bg-rose-100 text-rose-800 border-rose-300';
+      let overallIcon = 'fa-triangle-exclamation';
+      let overallDesc = '';
+      let needGuidance = false;
+
+      const metrics = (typeof getGuruEvaluationMetrics === 'function') ? getGuruEvaluationMetrics(guru) : { predikat: '-', isCukupOrKurang: false };
+      if (metrics.predikat.includes('Perlu Pembinaan') || metrics.predikat.includes('Cukup')) {
+        needGuidance = true;
+      }
+
+      if (guru.status === 'Selesai') {
+        overallStatus = 'Sudah Selesai (Disahkan)';
+        overallBadgeClass = 'bg-emerald-100 text-emerald-800 border-emerald-300';
+        overallIcon = 'fa-circle-check';
+        overallDesc = 'Rangkaian supervisi akademik telah tuntas lengkap dan resmi disahkan oleh Supervisor.';
+      } else if (!isAllComplete) {
+        if (completedCount === 0 && !praPartial && !obsPartial && !coachPartial && pdList.length === 0) {
+          overallStatus = 'Belum Disupervisi';
+          overallBadgeClass = 'bg-slate-100 text-slate-700 border-slate-300';
+          overallIcon = 'fa-clock';
+          overallDesc = 'Rangkaian supervisi belum dimulai. Silakan mulai melengkapi dokumen perencanaan Modul Ajar (Pra-Observasi).';
+        } else {
+          const incompleteStages = stages.filter(s => !s.isComplete).map(s => s.title).join(', ');
+          overallStatus = 'Belum Selesai (Belum Lengkap)';
+          overallBadgeClass = 'bg-amber-100 text-amber-800 border-amber-300';
+          overallIcon = 'fa-hourglass-half';
+          overallDesc = `Terdapat tahapan supervisi yang belum tuntas (${incompleteStages}). Silakan lengkapi atau konsultasikan dengan Supervisor Anda.`;
+        }
+      } else {
+        overallStatus = 'Dalam Tindak Lanjut';
+        overallBadgeClass = 'bg-blue-100 text-blue-800 border-blue-300';
+        overallIcon = 'fa-arrows-spin';
+        overallDesc = 'Semua instrumen supervisi telah lengkap terisi (100%). Menunggu pengesahan akhir oleh Supervisor.';
+      }
+
+      return {
+        isAllComplete,
+        completedCount,
+        totalCount: 4,
+        percent,
+        stages,
+        overallStatus,
+        overallBadgeClass,
+        overallIcon,
+        overallDesc,
+        needGuidance,
+        metrics
+      };
+    }
+
+    function renderTeacherStatusCard() {
+      const card = document.getElementById('dash-teacher-status-card');
+      if (!card) return;
+
+      const isGuru = (currentRole === 'guru');
+      let guru = null;
+
+      if (isGuru) {
+        if (currentLoggedInUser && currentLoggedInUser.id) {
+          guru = guruDatabase.find(g => g.id === currentLoggedInUser.id);
+        }
+        if (!guru) {
+          guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
+        }
+      } else {
+        guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
+      }
+
+      if (!guru) {
+        card.classList.add('hidden');
+        return;
+      }
+      card.classList.remove('hidden');
+
+      const titleEl = document.getElementById('dash-status-card-title');
+      const subEl = document.getElementById('dash-status-card-subtitle');
+      const pillEl = document.getElementById('dash-status-card-pill');
+      const guidancePillEl = document.getElementById('dash-guidance-pill');
+      const selectorBox = document.getElementById('dash-status-guru-selector-box');
+      const guruSelect = document.getElementById('dash-status-guru-select');
+
+      if (titleEl) {
+        titleEl.innerText = isGuru ? 'Status Kelengkapan Supervisi Saya' : `Pantauan Ketuntasan: ${guru.nama}`;
+      }
+      if (subEl) {
+        subEl.innerText = isGuru 
+          ? 'Pantauan mandiri ketuntasan 4 tahapan supervisi akademik & arahan pembinaan.'
+          : `Mata Pelajaran: ${guru.mapel} • Kelas: ${guru.kelas} • NIP: ${guru.nip}`;
+      }
+
+      if (selectorBox && guruSelect) {
+        if (isGuru) {
+          selectorBox.classList.add('hidden');
+        } else {
+          selectorBox.classList.remove('hidden');
+          const list = getSupervisorTeachers();
+          guruSelect.innerHTML = list.map(g => `<option value="${g.id}" ${g.id === guru.id ? 'selected' : ''}>${g.nama} (${g.mapel})</option>`).join('');
+        }
+      }
+
+      const progress = getGuruSupervisiStagesProgress(guru);
+
+      if (pillEl) {
+        pillEl.className = `px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${progress.overallBadgeClass}`;
+        pillEl.innerHTML = `<i class="fa-solid ${progress.overallIcon} mr-1"></i>${progress.overallStatus}`;
+      }
+
+      if (guidancePillEl) {
+        if (progress.needGuidance) {
+          guidancePillEl.classList.remove('hidden');
+          guidancePillEl.classList.add('inline-flex');
+        } else {
+          guidancePillEl.classList.add('hidden');
+          guidancePillEl.classList.remove('inline-flex');
+        }
+      }
+
+      const progCountEl = document.getElementById('dash-progress-count');
+      const progPctEl = document.getElementById('dash-progress-percent');
+      const progBarEl = document.getElementById('dash-progress-bar');
+      if (progCountEl) progCountEl.innerText = `${progress.completedCount} dari ${progress.totalCount} Tahap Tuntas`;
+      if (progPctEl) progPctEl.innerText = `${progress.percent}%`;
+      if (progBarEl) {
+        progBarEl.style.width = `${progress.percent}%`;
+        if (progress.isAllComplete) {
+          progBarEl.className = 'bg-emerald-600 h-2.5 rounded-full transition-all duration-500';
+        } else if (progress.completedCount > 0) {
+          progBarEl.className = 'bg-amber-500 h-2.5 rounded-full transition-all duration-500';
+        } else {
+          progBarEl.className = 'bg-slate-400 h-2.5 rounded-full transition-all duration-500';
+        }
+      }
+
+      const alertBox = document.getElementById('dash-status-alert-box');
+      const alertIcon = document.getElementById('dash-status-alert-icon');
+      const alertDesc = document.getElementById('dash-status-alert-desc');
+      const spvLabel = document.getElementById('dash-supervisor-label');
+      const spvNameEl = document.getElementById('dash-supervisor-name');
+      const spvNipEl = document.getElementById('dash-supervisor-nip');
+      const btnWaText = document.getElementById('btn-wa-consult-text');
+
+      const spv = appSettings.supervisors.find(s => s.id === guru.supervisorId);
+      const spvCleanName = spv ? spv.nama.split('(')[0].trim() : 'Supervisor Belum Ditentukan';
+      const spvNip = spv ? `NIP. ${spv.nip}` : '';
+
+      if (spvLabel) spvLabel.innerText = isGuru ? 'Supervisor Penilai:' : 'Supervisor Bertugas:';
+      if (spvNameEl) spvNameEl.innerText = spvCleanName;
+      if (spvNipEl) spvNipEl.innerText = spvNip;
+      if (btnWaText) btnWaText.innerText = isGuru ? 'Konsultasi via WA' : 'Hubungi via WA';
+
+      if (alertDesc) {
+        if (guru.status === 'Selesai') {
+          alertDesc.innerHTML = `<span class="text-emerald-800 font-semibold">Supervisi akademik tuntas dan resmi disahkan!</span> Seluruh instrumen evaluasi telah lengkap. Anda dapat mengunduh atau mencetak Lembar Laporan resmi di menu Laporan.`;
+        } else if (progress.isAllComplete) {
+          alertDesc.innerHTML = `<span class="text-blue-800 font-semibold">Seluruh 4 tahapan supervisi telah lengkap terisi (100%).</span> ${isGuru ? 'Saat ini berkas menunggu pengesahan tuntas dari Supervisor (' + spvCleanName + '). Silakan konfirmasi jika diperlukan.' : 'Semua instrumen telah lengkap. Anda dapat melakukan pengesahan di menu Pasca-Observasi atau Laporan.'}`;
+        } else {
+          const incompleteTitles = progress.stages.filter(s => !s.isComplete).map(s => s.title).join(', ');
+          alertDesc.innerHTML = `<span class="text-amber-800 font-semibold">Terdapat tahapan belum lengkap:</span> <strong class="text-slate-800">${incompleteTitles}</strong>. ${isGuru ? 'Mohon segera lengkapi atau berkonsultasi dengan Supervisor Anda (' + spvCleanName + ') agar supervisi dapat dituntaskan dan disahkan.' : 'Mohon koordinasikan dengan guru untuk melengkapi instrumen di atas.'}`;
+        }
+      }
+
+      if (alertBox && alertIcon) {
+        if (guru.status === 'Selesai') {
+          alertBox.className = 'p-4 sm:p-5 bg-emerald-50/70 border-b border-emerald-100 flex flex-col md:flex-row md:items-center justify-between gap-3';
+          alertIcon.className = 'w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-sm flex-shrink-0 mt-0.5';
+          alertIcon.innerHTML = '<i class="fa-solid fa-check-double"></i>';
+        } else if (progress.isAllComplete) {
+          alertBox.className = 'p-4 sm:p-5 bg-blue-50/70 border-b border-blue-100 flex flex-col md:flex-row md:items-center justify-between gap-3';
+          alertIcon.className = 'w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0 mt-0.5';
+          alertIcon.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i>';
+        } else {
+          alertBox.className = 'p-4 sm:p-5 bg-amber-50/70 border-b border-amber-100 flex flex-col md:flex-row md:items-center justify-between gap-3';
+          alertIcon.className = 'w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center text-sm flex-shrink-0 mt-0.5';
+          alertIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+        }
+      }
+
+      const stagesGrid = document.getElementById('dash-stages-grid');
+      if (stagesGrid) {
+        stagesGrid.innerHTML = progress.stages.map((st, idx) => {
+          let cardBorder = 'border-slate-200';
+          let cardBg = 'bg-slate-50/40';
+          let badgeHtml = '';
+          let summaryColor = 'text-slate-500';
+          let btnBg = 'bg-slate-100 hover:bg-slate-200 text-slate-700';
+
+          if (st.isComplete) {
+            cardBorder = 'border-emerald-200';
+            cardBg = 'bg-emerald-50/30';
+            badgeHtml = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300"><i class="fa-solid fa-check mr-0.5"></i>Lengkap</span>';
+            summaryColor = 'text-emerald-700';
+            btnBg = 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200';
+          } else if (st.isPartial) {
+            cardBorder = 'border-amber-200';
+            cardBg = 'bg-amber-50/30';
+            badgeHtml = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-300"><i class="fa-solid fa-hourglass-half mr-0.5"></i>Sebagian</span>';
+            summaryColor = 'text-amber-700';
+            btnBg = 'bg-amber-500 hover:bg-amber-600 text-white';
+          } else {
+            cardBorder = 'border-rose-200';
+            cardBg = 'bg-rose-50/20';
+            badgeHtml = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-100 text-rose-800 border border-rose-300"><i class="fa-solid fa-xmark mr-0.5"></i>Belum Diisi</span>';
+            summaryColor = 'text-rose-600';
+            btnBg = 'bg-rose-600 hover:bg-rose-700 text-white';
+          }
+
+          const iconColors = ['bg-indigo-100 text-indigo-700', 'bg-blue-100 text-blue-700', 'bg-violet-100 text-violet-700', 'bg-teal-100 text-teal-700'];
+
+          return `
+            <div class="p-3.5 rounded-xl border ${cardBorder} ${cardBg} flex flex-col justify-between space-y-2.5 transition hover:shadow-xs">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <div class="w-7 h-7 rounded-lg ${iconColors[idx % 4]} flex items-center justify-center text-xs font-bold">
+                    <i class="fa-solid ${st.icon}"></i>
+                  </div>
+                  ${badgeHtml}
+                </div>
+                <h5 class="font-bold text-slate-800 text-xs">${st.title}</h5>
+                <p class="text-[10px] text-slate-500 mt-0.5 truncate" title="${st.sub}">${st.sub}</p>
+                <p class="text-[10px] font-semibold ${summaryColor} mt-1.5 flex items-center space-x-1">
+                  <i class="fa-solid ${st.isComplete ? 'fa-circle-check text-emerald-500' : (st.isPartial ? 'fa-clock text-amber-500' : 'fa-circle-exclamation text-rose-500')} text-[9px]"></i>
+                  <span>${st.summary}</span>
+                </p>
+              </div>
+              <button type="button" onclick="navigateTo('${st.view}')" class="w-full py-1.5 px-2.5 rounded-lg ${btnBg} text-[10px] font-bold flex items-center justify-center space-x-1 transition shadow-2xs">
+                <span>Buka Tahap Ini</span>
+                <i class="fa-solid fa-arrow-right text-[9px]"></i>
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function openWhatsAppConsult(guruId) {
+      const guru = guruDatabase.find(g => g.id === guruId) || guruDatabase[0];
+      if (!guru) return;
+      const isGuru = (currentRole === 'guru');
+      const spv = appSettings.supervisors.find(s => s.id === guru.supervisorId);
+      const spvName = spv ? spv.nama.split('(')[0].trim() : 'Supervisor';
+      const progress = getGuruSupervisiStagesProgress(guru);
+
+      let targetPhone = '';
+      let targetName = '';
+      let msg = '';
+
+      if (isGuru) {
+        targetName = spvName;
+        targetPhone = spv?.no_wa || spv?.hp || '';
+        const pendingStages = progress.stages.filter(s => !s.isComplete).map(s => s.title).join(', ');
+        msg = `Halo Bapak/Ibu ${spvName}, saya ${guru.nama} (Guru ${guru.mapel} SMPN 24 Malang). Terkait supervisi akademik saya dengan status saat ini [${progress.overallStatus}], saya ingin berkonsultasi mengenai kelengkapan tahapan ${pendingStages || 'supervisi'}. Mohon arahan dan bimbingan Bapak/Ibu. Terima kasih.`;
+      } else {
+        targetName = guru.nama;
+        targetPhone = guru.no_wa || guru.hp || '';
+        const pendingStages = progress.stages.filter(s => !s.isComplete).map(s => s.title).join(', ');
+        msg = `Halo Bapak/Ibu ${guru.nama}, saya ${spvName} (Supervisor Penilai SMPN 24 Malang). Terkait kelengkapan supervisi akademik semester ini dengan status [${progress.overallStatus}], mohon dapat berkoordinasi untuk melengkapi tahapan ${pendingStages || 'supervisi'}. Terima kasih.`;
+      }
+
+      if (!targetPhone) {
+        const inputPhone = prompt(`Masukkan nomor WhatsApp tujuan (${targetName})\n(Contoh: 08123456789 atau 628123456789):`);
+        if (!inputPhone || !inputPhone.trim()) {
+          try {
+            navigator.clipboard.writeText(msg);
+            showToast('Teks pesan konsultasi disalin ke clipboard! Silakan paste langsung di WhatsApp.');
+          } catch(e) {}
+          return;
+        }
+        targetPhone = inputPhone.trim();
+      }
+
+      let cleanPhone = targetPhone.replace(/\D/g, '');
+      if (cleanPhone.startsWith('0')) {
+        cleanPhone = '62' + cleanPhone.slice(1);
+      }
+      const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(msg)}`;
+      window.open(waUrl, '_blank');
+    }
+
+    function triggerWhatsAppConsult() {
+      const isGuru = (currentRole === 'guru');
+      let guru = null;
+      if (isGuru && currentLoggedInUser && currentLoggedInUser.id) {
+        guru = guruDatabase.find(g => g.id === currentLoggedInUser.id);
+      }
+      if (!guru) {
+        guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
+      }
+      if (!guru) return;
+      openWhatsAppConsult(guru.id);
+    }
+
     function renderDashboardTable() {
+      renderTeacherStatusCard();
       const tbody = document.getElementById('dashboard-guru-tbody');
       if (!tbody) return;
       tbody.innerHTML = '';
@@ -8533,16 +9060,13 @@
           bannerPill.innerText = 'Telah Disupervisi (Disahkan)';
           bannerDesc.innerText = 'Supervisi akademik telah tuntas dan telah disahkan oleh Supervisor. Laporan siap dicetak dan diarsipkan.';
         } else {
-          const hasEntries = checkGuruHasEntries(guru);
-          const statusLabel = hasEntries ? 'Dalam Tindak Lanjut' : 'Belum Disupervisi';
-          banner.className = 'no-print p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 bg-amber-50/90 border-amber-200 transition';
-          bannerIcon.className = 'w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-xs flex-shrink-0 bg-amber-500 text-white';
-          bannerIcon.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i>';
-          bannerPill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300';
-          bannerPill.innerText = statusLabel;
-          bannerDesc.innerText = hasEntries
-            ? 'Guru telah melakukan pengisian namun belum disahkan tuntas oleh Supervisor. Klik tombol di kanan jika rangkaian supervisi telah lengkap.'
-            : 'Guru belum memiliki isian supervisi pada semester ini.';
+          const progress = getGuruSupervisiStagesProgress(guru);
+          banner.className = `no-print p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 ${progress.isAllComplete ? 'bg-blue-50/90 border-blue-200' : 'bg-amber-50/90 border-amber-200'} transition`;
+          bannerIcon.className = `w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-xs flex-shrink-0 ${progress.isAllComplete ? 'bg-blue-600' : 'bg-amber-500'} text-white`;
+          bannerIcon.innerHTML = `<i class="fa-solid ${progress.overallIcon}"></i>`;
+          bannerPill.className = `px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${progress.overallBadgeClass}`;
+          bannerPill.innerText = progress.overallStatus;
+          bannerDesc.innerText = progress.overallDesc;
         }
       }
     }
@@ -8559,6 +9083,12 @@
       if (currentStatus === 'Selesai') {
         newStatus = 'Tindak Lanjut';
         confirmMsg = `Batalkan pengesahan untuk ${guru.nama}?\n\nStatus akan dikembalikan ke 'Dalam Tindak Lanjut'.`;
+      } else {
+        const progress = getGuruSupervisiStagesProgress(guru);
+        if (!progress.isAllComplete) {
+          const incompleteList = progress.stages.filter(s => !s.isComplete).map(s => `• ${s.title}: ${s.sub} (${s.summary})`).join('\n');
+          confirmMsg = `⚠️ PERHATIAN DARI SISTEM:\nSupervisi untuk ${guru.nama} BELUM TUNTAS 100%:\n\n${incompleteList}\n\nSesuai instruksi, bila ada halaman yang belum tuntas maka status belum selesai.\n\nApakah Anda yakin tetap ingin mengesahkan supervisi ini sekarang?`;
+        }
       }
 
       if (!confirm(confirmMsg)) return;
