@@ -491,27 +491,36 @@
           <!-- Ringkasan Portofolio Pengembangan Diri -->
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
             <div>
-              <h4 class="font-bold text-slate-800 text-xs mb-3 flex items-center justify-between">
-                <span>Ringkasan Pengembangan Diri</span>
-                <i class="fa-solid fa-award text-teal-500"></i>
-              </h4>
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold text-slate-800 text-xs flex items-center space-x-1.5">
+                  <i class="fa-solid fa-award text-teal-500"></i>
+                  <span>Ringkasan Pengembangan Diri</span>
+                </h4>
+                <button type="button" onclick="openModalGuruPd()" class="text-[10px] font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 px-2 py-0.5 rounded transition flex items-center space-x-1 shadow-xs" title="Lihat daftar guru pengisi portofolio">
+                  <span>Lihat Rincian</span>
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </button>
+              </div>
               <div class="space-y-3">
-                <div class="p-3 bg-teal-50/70 border border-teal-100 rounded-xl flex items-center justify-between">
+                <div onclick="openModalGuruPd()" class="p-3 bg-teal-50/70 hover:bg-teal-100/70 border border-teal-100 rounded-xl flex items-center justify-between cursor-pointer transition group" title="Klik untuk melihat rincian guru pengisi portofolio">
                   <div>
                     <span class="text-[10px] font-bold text-teal-800 uppercase block">Total Kegiatan Terinput</span>
                     <h3 id="kpi-pd-total" class="text-xl font-black text-teal-900 mt-0.5">0</h3>
                   </div>
-                  <div class="w-9 h-9 rounded-lg bg-teal-600 text-white flex items-center justify-center text-sm shadow-xs">
+                  <div class="w-9 h-9 rounded-lg bg-teal-600 group-hover:bg-teal-700 text-white flex items-center justify-center text-sm shadow-xs transition">
                     <i class="fa-solid fa-list-check"></i>
                   </div>
                 </div>
 
-                <div class="p-3 bg-indigo-50/70 border border-indigo-100 rounded-xl flex items-center justify-between">
+                <div onclick="openModalGuruPd()" class="p-3 bg-indigo-50/70 hover:bg-indigo-100/70 border border-indigo-100 rounded-xl flex items-center justify-between cursor-pointer transition group" title="Klik untuk melihat rincian guru pengisi portofolio">
                   <div>
-                    <span class="text-[10px] font-bold text-indigo-800 uppercase block">Guru Sudah Mengisi</span>
+                    <div class="flex items-center space-x-1.5">
+                      <span class="text-[10px] font-bold text-indigo-800 uppercase block">Guru Sudah Mengisi</span>
+                      <span class="text-[9px] font-bold text-indigo-600 bg-indigo-100/80 px-1.5 py-0.2 rounded">Klik Rincian</span>
+                    </div>
                     <h3 id="kpi-pd-guru-count" class="text-xl font-black text-indigo-900 mt-0.5">0 Guru</h3>
                   </div>
-                  <div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-sm shadow-xs">
+                  <div class="w-9 h-9 rounded-lg bg-indigo-600 group-hover:bg-indigo-700 text-white flex items-center justify-center text-sm shadow-xs transition">
                     <i class="fa-solid fa-user-graduate"></i>
                   </div>
                 </div>
@@ -1422,10 +1431,13 @@
                 <span>Kosongkan Isian</span>
               </button>
             </div>
-            <button type="button" onclick="saveCoaching()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
-              <i class="fa-solid fa-floppy-disk"></i>
-              <span>Simpan Catatan Coaching TIRTA</span>
-            </button>
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <div id="coach-approve-btn-container" class="inline-flex"></div>
+              <button type="button" onclick="saveCoaching()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Simpan Catatan Coaching TIRTA</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -1512,6 +1524,8 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-2">
+            <!-- Tombol Approval Supervisi (Khusus Supervisor & Superadmin) -->
+            <div id="lap-approve-btn-container" class="inline-flex"></div>
             <button onclick="downloadLaporanPDF()" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition" title="Unduh langsung file PDF Laporan Guru Terpilih">
               <i class="fa-solid fa-file-pdf"></i>
               <span>Unduh PDF Individu</span>
@@ -1639,6 +1653,25 @@
             <div class="text-center" style="margin-bottom: 16px;">
               <h1 class="text-sm font-black uppercase tracking-wider text-slate-900" style="font-size: 12pt; margin: 0;">LAPORAN EVALUASI &amp; SUPERVISI AKADEMIK GURU</h1>
               <p class="text-[11px] text-slate-600 font-medium" id="kop-periode" style="margin-top: 2px;">Tahun Ajaran 2026/2027 &bull; Semester Ganjil</p>
+            </div>
+          </div>
+
+          <!-- Banner Status Approval Pengesahan Supervisi (no-print) -->
+          <div id="lap-approval-status-banner" class="no-print p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 transition">
+            <div class="flex items-center space-x-3">
+              <div id="lap-approval-status-icon" class="w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-xs flex-shrink-0 bg-amber-500 text-white">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+              </div>
+              <div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Status Supervisi Akademik Guru</span>
+                  <span id="lap-approval-status-pill" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Dalam Tindak Lanjut</span>
+                </div>
+                <p id="lap-approval-status-desc" class="text-xs text-slate-600 mt-0.5">Siklus supervisi sedang berjalan. Klik tombol untuk mengesahkan supervisi telah lengkap.</p>
+              </div>
+            </div>
+            <div id="lap-approval-banner-action" class="flex-shrink-0">
+              <!-- Dynamic action button -->
             </div>
           </div>
 
@@ -2482,6 +2515,53 @@
         <button onclick="closeCoachingBankModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="p-4 overflow-y-auto space-y-4 text-xs" id="coaching-bank-list"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: DAFTAR GURU PENGISI PORTOFOLIO PENGEMBANGAN DIRI -->
+  <div id="modal-guru-pd" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-2xl w-[96vw] sm:w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div class="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50 flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center text-lg font-bold shadow-xs">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Guru Pengisi Portofolio Pengembangan Diri</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Daftar guru yang telah mencatat kegiatan pengembangan keprofesian (PKB) semester ini</p>
+          </div>
+        </div>
+        <button onclick="closeModalGuruPd()" class="w-8 h-8 rounded-lg hover:bg-slate-200 text-slate-400 hover:text-slate-700 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-4 sm:p-5 overflow-y-auto flex-1 space-y-3">
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold uppercase text-[10px]">
+                <tr>
+                  <th class="py-2.5 px-3 text-center w-10">No</th>
+                  <th class="py-2.5 px-3">Nama Guru & NIP</th>
+                  <th class="py-2.5 px-3">Mata Pelajaran</th>
+                  <th class="py-2.5 px-3 text-center">Banyaknya Isian</th>
+                  <th class="py-2.5 px-3">Aspek Kompetensi</th>
+                  <th class="py-2.5 px-3 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="modal-guru-pd-tbody" class="divide-y divide-slate-200">
+                <!-- Dynamic rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="p-3 sm:p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between text-xs text-slate-600 flex-shrink-0">
+        <span id="modal-guru-pd-summary" class="font-medium text-teal-800">Total: 0 guru mengisi</span>
+        <button onclick="closeModalGuruPd()" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold transition">
+          Tutup
+        </button>
+      </div>
     </div>
   </div>
 
@@ -5787,6 +5867,7 @@
       }
 
       syncAllSignatures(guru);
+      renderApprovalButtons(guru);
     }
 
     function renderPraRpp30Indikator(guru) {
@@ -6213,6 +6294,10 @@
       if (guru.status === 'Belum') guru.status = 'Tindak Lanjut';
 
       syncSelectedGuru(guru.id);
+      if (guru.status !== 'Selesai') {
+        guru.status = 'Tindak Lanjut';
+      }
+      syncSelectedGuru(guru.id);
       saveDataToLocalStorage();
 
       if (missingCount > 0) {
@@ -6301,6 +6386,7 @@
 
       calculateObsScoreLive();
       syncAllSignatures(guru);
+      renderApprovalButtons(guru);
     }
 
     function render28Indikator() {
@@ -6611,7 +6697,13 @@
       const isCatatanFilled = checkFieldValidation(obsCatatanFakta, document.getElementById('obs-warn-catatan-fakta'));
       if (!isCatatanFilled) missingCount++;
 
-      guru.status = 'Selesai';
+      if (guru.status !== 'Selesai') {
+        guru.status = 'Tindak Lanjut';
+      }
+      syncSelectedGuru(guru.id);
+      if (guru.status !== 'Selesai') {
+        guru.status = 'Tindak Lanjut';
+      }
       syncSelectedGuru(guru.id);
       saveDataToLocalStorage();
 
@@ -6661,6 +6753,7 @@
       checkFieldValidation(taEl, document.getElementById('coach-warn-tanggungjawab'));
 
       syncAllSignatures(guru);
+      renderApprovalButtons(guru);
     }
 
     async function saveCoaching() {
@@ -6684,6 +6777,10 @@
       if (!checkFieldValidation(rEl, document.getElementById('coach-warn-rencana'))) missingCount++;
       if (!checkFieldValidation(taEl, document.getElementById('coach-warn-tanggungjawab'))) missingCount++;
 
+      if (guru.status !== 'Selesai') {
+        guru.status = 'Tindak Lanjut';
+      }
+      syncSelectedGuru(guru.id);
       saveDataToLocalStorage();
 
       if (missingCount > 0) {
@@ -6927,6 +7024,9 @@
 
       // V. Rekapitulasi Kegiatan Pengembangan Diri (1 Semester)
       renderReportPengembanganDiri(guru);
+
+      // Render Tombol & Banner Pengesahan Supervisi
+      renderApprovalButtons(guru);
 
       document.getElementById('lap-ttd-guru').innerText = guru.nama;
       document.getElementById('lap-ttd-nip-guru').innerText = `NIP. ${guru.nip}`;
@@ -7959,9 +8059,7 @@
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
       });
-    }
-
-    function escapeHtml(str) {
+    }    function escapeHtml(str) {
       if (str === null || str === undefined) return '';
       return String(str)
         .replace(/&/g, '&amp;')
@@ -7969,6 +8067,49 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+    }
+
+    function getCharCounterClass(val) {
+      const len = (val || '').length;
+      if (len === 500) return 'text-rose-600 font-bold';
+      if (len >= 480) return 'text-amber-600 font-bold';
+      if (len >= 100 && len <= 250) return 'text-emerald-600 font-semibold';
+      if (len > 250) return 'text-indigo-600 font-medium';
+      return 'text-slate-400 font-normal';
+    }
+
+    function getCharHintClass(val) {
+      const len = (val || '').length;
+      if (len === 500) return 'text-rose-600 font-semibold';
+      if (len >= 480) return 'text-amber-600 font-semibold';
+      if (len >= 100 && len <= 250) return 'text-emerald-700 font-semibold';
+      if (len > 250) return 'text-indigo-600 font-medium';
+      if (len > 0) return 'text-amber-600 font-medium';
+      return 'text-slate-400 font-normal';
+    }
+
+    function getCharHintText(val) {
+      const len = (val || '').length;
+      if (len === 0) return 'Saran: 100 – 250 karakter (Maks. 500)';
+      if (len < 100) return 'Terlalu singkat (saran minimal 100 – 250 karakter agar padat & bermakna)';
+      if (len <= 250) return '✓ Panjang isian sangat ideal & efisien';
+      if (len < 480) return 'Isian lengkap (maksimal 500 karakter)';
+      if (len < 500) return 'Mendekati batas maksimal 500 karakter';
+      return 'Batas maksimal 500 karakter tercapai';
+    }
+
+    function updateCharCounter(charElId, hintElId, val) {
+      const charEl = document.getElementById(charElId);
+      const hintEl = document.getElementById(hintElId);
+      const len = (val || '').length;
+      if (charEl) {
+        charEl.innerText = `${len} / 500`;
+        charEl.className = getCharCounterClass(val);
+      }
+      if (hintEl) {
+        hintEl.innerText = getCharHintText(val);
+        hintEl.className = getCharHintClass(val);
+      }
     }
 
     function renderPengembanganDiri() {
@@ -8105,8 +8246,15 @@
 
               <!-- Kebutuhan Pengembangan -->
               <div class="md:col-span-2 lg:col-span-3">
-                <label class="block font-semibold text-slate-700 mb-1">6. Kebutuhan Pengembangan (Alasan / Latar Belakang)</label>
-                <textarea rows="2" oninput="updatePdField(${idx}, 'kebutuhan', this.value)" placeholder="Mengapa kegiatan ini diambil berdasarkan evaluasi diri atau supervisi sebelumnya..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.kebutuhan || '')}</textarea>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block font-semibold text-slate-700">6. Kebutuhan Pengembangan (Alasan / Latar Belakang)</label>
+                  <span class="text-[10px] text-slate-400">Saran: 100 – 250 karakter</span>
+                </div>
+                <textarea rows="2" maxlength="500" oninput="updatePdField(${idx}, 'kebutuhan', this.value); updateCharCounter('pd-char-kebutuhan-${idx}', 'pd-hint-kebutuhan-${idx}', this.value)" placeholder="Mengapa kegiatan ini diambil berdasarkan evaluasi diri atau supervisi sebelumnya..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.kebutuhan || '')}</textarea>
+                <div class="flex items-center justify-between text-[10px] mt-1 px-1">
+                  <span id="pd-hint-kebutuhan-${idx}" class="${getCharHintClass(item.kebutuhan)}">${getCharHintText(item.kebutuhan)}</span>
+                  <span id="pd-char-kebutuhan-${idx}" class="${getCharCounterClass(item.kebutuhan)}">${(item.kebutuhan || '').length} / 500</span>
+                </div>
               </div>
 
               <!-- Bukti Kegiatan (Checkboxes) -->
@@ -8130,26 +8278,60 @@
 
               <!-- Rencana Implementasi di Kelas -->
               <div class="md:col-span-1 lg:col-span-1">
-                <label class="block font-semibold text-slate-700 mb-1">9. Rencana Implementasi di Kelas</label>
-                <textarea rows="3" oninput="updatePdField(${idx}, 'implementasi', this.value)" placeholder="Bagaimana hasil pelatihan diterapkan secara konkret dalam proses belajar mengajar..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.implementasi || '')}</textarea>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block font-semibold text-slate-700">9. Rencana Implementasi</label>
+                  <span class="text-[10px] text-slate-400">100–250 kr.</span>
+                </div>
+                <textarea rows="3" maxlength="500" oninput="updatePdField(${idx}, 'implementasi', this.value); updateCharCounter('pd-char-implementasi-${idx}', 'pd-hint-implementasi-${idx}', this.value)" placeholder="Bagaimana hasil pelatihan diterapkan secara konkret dalam proses belajar mengajar..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.implementasi || '')}</textarea>
+                <div class="flex flex-col gap-0.5 text-[10px] mt-1 px-1">
+                  <div class="flex justify-between items-center">
+                    <span id="pd-char-implementasi-${idx}" class="${getCharCounterClass(item.implementasi)}">${(item.implementasi || '').length} / 500</span>
+                  </div>
+                  <span id="pd-hint-implementasi-${idx}" class="${getCharHintClass(item.implementasi)} truncate">${getCharHintText(item.implementasi)}</span>
+                </div>
               </div>
 
               <!-- Dampak Terhadap Murid -->
               <div class="md:col-span-1 lg:col-span-1">
-                <label class="block font-semibold text-slate-700 mb-1">10. Dampak Nyata Terhadap Murid</label>
-                <textarea rows="3" oninput="updatePdField(${idx}, 'dampak', this.value)" placeholder="Perubahan keaktifan, pemahaman, atau respon murid setelah diterapkannya materi..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.dampak || '')}</textarea>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block font-semibold text-slate-700">10. Dampak Nyata Murid</label>
+                  <span class="text-[10px] text-slate-400">100–250 kr.</span>
+                </div>
+                <textarea rows="3" maxlength="500" oninput="updatePdField(${idx}, 'dampak', this.value); updateCharCounter('pd-char-dampak-${idx}', 'pd-hint-dampak-${idx}', this.value)" placeholder="Perubahan keaktifan, pemahaman, atau respon murid setelah diterapkannya materi..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.dampak || '')}</textarea>
+                <div class="flex flex-col gap-0.5 text-[10px] mt-1 px-1">
+                  <div class="flex justify-between items-center">
+                    <span id="pd-char-dampak-${idx}" class="${getCharCounterClass(item.dampak)}">${(item.dampak || '').length} / 500</span>
+                  </div>
+                  <span id="pd-hint-dampak-${idx}" class="${getCharHintClass(item.dampak)} truncate">${getCharHintText(item.dampak)}</span>
+                </div>
               </div>
 
               <!-- Refleksi & Tantangan -->
               <div class="md:col-span-1 lg:col-span-1">
-                <label class="block font-semibold text-slate-700 mb-1">11. Refleksi & Kendala</label>
-                <textarea rows="3" oninput="updatePdField(${idx}, 'refleksi', this.value)" placeholder="Tantangan saat menerapkan dan refleksi terhadap kendala yang dihadapi..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.refleksi || '')}</textarea>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block font-semibold text-slate-700">11. Refleksi & Kendala</label>
+                  <span class="text-[10px] text-slate-400">100–250 kr.</span>
+                </div>
+                <textarea rows="3" maxlength="500" oninput="updatePdField(${idx}, 'refleksi', this.value); updateCharCounter('pd-char-refleksi-${idx}', 'pd-hint-refleksi-${idx}', this.value)" placeholder="Tantangan saat menerapkan dan refleksi terhadap kendala yang dihadapi..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.refleksi || '')}</textarea>
+                <div class="flex flex-col gap-0.5 text-[10px] mt-1 px-1">
+                  <div class="flex justify-between items-center">
+                    <span id="pd-char-refleksi-${idx}" class="${getCharCounterClass(item.refleksi)}">${(item.refleksi || '').length} / 500</span>
+                  </div>
+                  <span id="pd-hint-refleksi-${idx}" class="${getCharHintClass(item.refleksi)} truncate">${getCharHintText(item.refleksi)}</span>
+                </div>
               </div>
 
               <!-- Tindak Lanjut -->
               <div class="md:col-span-2 lg:col-span-3">
-                <label class="block font-semibold text-slate-700 mb-1">12. Rencana Tindak Lanjut Berikutnya</label>
-                <textarea rows="2" oninput="updatePdField(${idx}, 'tindakLanjut', this.value)" placeholder="Langkah perbaikan berkelanjutan atau desiminasi ke rekan sejawat..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.tindakLanjut || '')}</textarea>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block font-semibold text-slate-700">12. Rencana Tindak Lanjut Berikutnya</label>
+                  <span class="text-[10px] text-slate-400">Saran: 100 – 250 karakter</span>
+                </div>
+                <textarea rows="2" maxlength="500" oninput="updatePdField(${idx}, 'tindakLanjut', this.value); updateCharCounter('pd-char-tindakLanjut-${idx}', 'pd-hint-tindakLanjut-${idx}', this.value)" placeholder="Langkah perbaikan berkelanjutan atau desiminasi ke rekan sejawat..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.tindakLanjut || '')}</textarea>
+                <div class="flex items-center justify-between text-[10px] mt-1 px-1">
+                  <span id="pd-hint-tindakLanjut-${idx}" class="${getCharHintClass(item.tindakLanjut)}">${getCharHintText(item.tindakLanjut)}</span>
+                  <span id="pd-char-tindakLanjut-${idx}" class="${getCharCounterClass(item.tindakLanjut)}">${(item.tindakLanjut || '').length} / 500</span>
+                </div>
               </div>
             </div>
           </div>
@@ -8290,6 +8472,185 @@
         console.error(err);
         showToast('Gagal membuat PDF otomatis. Gunakan tombol Cetak -> Simpan PDF.', 'error');
       });
+    }
+
+    function checkGuruHasEntries(guru) {
+      if (!guru) return false;
+      const hasRppScores = guru.rppScores && Object.values(guru.rppScores).some(v => Number(v) > 0);
+      const hasBkScores = (guru.bkScores && Object.values(guru.bkScores).some(v => Number(v) > 0)) || (guru.bkDlScores && Object.values(guru.bkDlScores).some(v => Number(v) > 0));
+      const hasPraText = Boolean((guru.materiTopik && guru.materiTopik.trim().length > 0) || (guru.tujuanPembelajaran && guru.tujuanPembelajaran.trim().length > 0));
+      const hasObsScores = guru.obsScores && Object.values(guru.obsScores).some(v => Number(v) > 0);
+      const hasObsDl = guru.deepLearning && Object.values(guru.deepLearning).some(v => Number(v) > 0);
+      const hasObsFakta = Boolean(guru.catatanFakta && guru.catatanFakta.trim().length > 0);
+      const hasCoach = Boolean(guru.coaching && ((guru.coaching.tujuan && guru.coaching.tujuan.trim().length > 0) || (guru.coaching.rencana && guru.coaching.rencana.trim().length > 0)));
+      const hasPd = Boolean(Array.isArray(guru.pengembanganDiri) && guru.pengembanganDiri.length > 0);
+
+      return hasRppScores || hasBkScores || hasPraText || hasObsScores || hasObsDl || hasObsFakta || hasCoach || hasPd;
+    }
+
+    function renderApprovalButtons(guru) {
+      if (!guru) return;
+      const isSupervisorOrAdmin = (currentRole === 'supervisor' || currentRole === 'superadmin');
+      const isApproved = (guru.status === 'Selesai');
+
+      const topBtnContainer = document.getElementById('lap-approve-btn-container');
+      const coachBtnContainer = document.getElementById('coach-approve-btn-container');
+      const banner = document.getElementById('lap-approval-status-banner');
+      const bannerIcon = document.getElementById('lap-approval-status-icon');
+      const bannerPill = document.getElementById('lap-approval-status-pill');
+      const bannerDesc = document.getElementById('lap-approval-status-desc');
+      const bannerAction = document.getElementById('lap-approval-banner-action');
+
+      let btnHtml = '';
+      if (isSupervisorOrAdmin) {
+        if (isApproved) {
+          btnHtml = `
+            <button type="button" onclick="toggleApproveSupervisi(${guru.id})" class="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 text-xs font-bold flex items-center space-x-1.5 shadow-xs transition" title="Batalkan pengesahan untuk revisi">
+              <i class="fa-solid fa-rotate-left text-amber-600"></i>
+              <span>Batalkan Pengesahan</span>
+            </button>
+          `;
+        } else {
+          btnHtml = `
+            <button type="button" onclick="toggleApproveSupervisi(${guru.id})" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center space-x-1.5 shadow-sm transition" title="Sahkan bahwa rangkaian supervisi guru ini telah lengkap">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Sahkan: Supervisi Telah Lengkap</span>
+            </button>
+          `;
+        }
+      }
+
+      if (topBtnContainer) topBtnContainer.innerHTML = isSupervisorOrAdmin ? btnHtml : '';
+      if (coachBtnContainer) coachBtnContainer.innerHTML = isSupervisorOrAdmin ? btnHtml : '';
+      if (bannerAction) bannerAction.innerHTML = isSupervisorOrAdmin ? btnHtml : '';
+
+      if (banner && bannerIcon && bannerPill && bannerDesc) {
+        if (isApproved) {
+          banner.className = 'no-print p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 bg-emerald-50/90 border-emerald-200 transition';
+          bannerIcon.className = 'w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-xs flex-shrink-0 bg-emerald-600 text-white';
+          bannerIcon.innerHTML = '<i class="fa-solid fa-check-double"></i>';
+          bannerPill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+          bannerPill.innerText = 'Telah Disupervisi (Disahkan)';
+          bannerDesc.innerText = 'Supervisi akademik telah tuntas dan telah disahkan oleh Supervisor. Laporan siap dicetak dan diarsipkan.';
+        } else {
+          const hasEntries = checkGuruHasEntries(guru);
+          const statusLabel = hasEntries ? 'Dalam Tindak Lanjut' : 'Belum Disupervisi';
+          banner.className = 'no-print p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 bg-amber-50/90 border-amber-200 transition';
+          bannerIcon.className = 'w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-xs flex-shrink-0 bg-amber-500 text-white';
+          bannerIcon.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i>';
+          bannerPill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300';
+          bannerPill.innerText = statusLabel;
+          bannerDesc.innerText = hasEntries
+            ? 'Guru telah melakukan pengisian namun belum disahkan tuntas oleh Supervisor. Klik tombol di kanan jika rangkaian supervisi telah lengkap.'
+            : 'Guru belum memiliki isian supervisi pada semester ini.';
+        }
+      }
+    }
+
+    async function toggleApproveSupervisi(targetId) {
+      const guruId = targetId || selectedGuruId;
+      const guru = guruDatabase.find(g => g.id === guruId);
+      if (!guru) return;
+
+      const currentStatus = guru.status || 'Belum';
+      let newStatus = 'Selesai';
+      let confirmMsg = `Sahkan hasil supervisi akademik untuk ${guru.nama}?\n\nStatus akan resmi berubah menjadi 'Telah Disupervisi' (Selesai).`;
+
+      if (currentStatus === 'Selesai') {
+        newStatus = 'Tindak Lanjut';
+        confirmMsg = `Batalkan pengesahan untuk ${guru.nama}?\n\nStatus akan dikembalikan ke 'Dalam Tindak Lanjut'.`;
+      }
+
+      if (!confirm(confirmMsg)) return;
+
+      guru.status = newStatus;
+      saveDataToLocalStorage();
+
+      try {
+        const res = await apiCall('approve_supervisi', { guruId: guru.id, status: newStatus });
+        if (res && res.success) {
+          showToast(res.message || `Status supervisi berhasil diubah menjadi: ${newStatus}`);
+        } else {
+          showToast(`Status supervisi diperbarui menjadi: ${newStatus}`);
+        }
+      } catch (e) {
+        showToast(`Status supervisi diperbarui menjadi: ${newStatus}`);
+      }
+
+      updateDashboardKPI();
+      renderDashboardTable();
+      renderGuruTable();
+      if (typeof renderRekapTable === 'function') renderRekapTable();
+      updateReportView();
+      syncAllSignatures(guru);
+      renderApprovalButtons(guru);
+    }
+
+    function openModalGuruPd() {
+      const modal = document.getElementById('modal-guru-pd');
+      const tbody = document.getElementById('modal-guru-pd-tbody');
+      const summaryEl = document.getElementById('modal-guru-pd-summary');
+      if (!modal || !tbody) return;
+
+      const list = getSupervisorTeachers();
+      const filledTeachers = list.filter(g => Array.isArray(g.pengembanganDiri) && g.pengembanganDiri.length > 0);
+
+      if (filledTeachers.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-8 text-center text-slate-400">
+              <i class="fa-solid fa-inbox text-3xl mb-2 text-slate-300 block"></i>
+              Belum ada guru yang mengisi portofolio pengembangan diri pada semester ini.
+            </td>
+          </tr>
+        `;
+        if (summaryEl) summaryEl.innerText = 'Total: 0 guru mengisi';
+      } else {
+        tbody.innerHTML = filledTeachers.map((g, idx) => {
+          const count = g.pengembanganDiri.length;
+          const aspekSet = new Set(g.pengembanganDiri.map(it => it.aspek || '').filter(Boolean));
+          const aspekBadges = Array.from(aspekSet).map(asp => {
+            let badgeColor = 'bg-teal-50 text-teal-700 border-teal-200';
+            if (asp.includes('Pedagogik')) badgeColor = 'bg-teal-50 text-teal-700 border-teal-200';
+            else if (asp.includes('Profesional')) badgeColor = 'bg-blue-50 text-blue-700 border-blue-200';
+            else if (asp.includes('Digital')) badgeColor = 'bg-indigo-50 text-indigo-700 border-indigo-200';
+            else if (asp.includes('Kepribadian')) badgeColor = 'bg-purple-50 text-purple-700 border-purple-200';
+            else if (asp.includes('Sosial')) badgeColor = 'bg-pink-50 text-pink-700 border-pink-200';
+            return `<span class="inline-block px-1.5 py-0.5 rounded text-[9px] font-semibold border ${badgeColor} mr-1 mb-0.5">${escapeHtml(asp.split('/')[0].trim())}</span>`;
+          }).join('');
+
+          return `
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="py-2.5 px-3 text-center text-slate-500 font-medium">${idx + 1}</td>
+              <td class="py-2.5 px-3">
+                <span class="font-bold text-slate-800 block">${escapeHtml(g.nama)}</span>
+                <span class="text-[10px] text-slate-400">NIP. ${g.nip}</span>
+              </td>
+              <td class="py-2.5 px-3 text-slate-700">${escapeHtml(g.mapel)} <span class="text-slate-400 text-[10px]">(${escapeHtml(g.kelas)})</span></td>
+              <td class="py-2.5 px-3 text-center">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-100 text-teal-800">
+                  ${count} / 4 Kegiatan
+                </span>
+              </td>
+              <td class="py-2.5 px-3">${aspekBadges || '-'}</td>
+              <td class="py-2.5 px-3 text-right">
+                <button onclick="pilihDanNavigasi(${g.id}, 'pengembangan-diri'); closeModalGuruPd();" class="px-2.5 py-1 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold text-xs transition inline-flex items-center space-x-1">
+                  <span>Buka</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+        if (summaryEl) summaryEl.innerText = `Total: ${filledTeachers.length} guru telah mengisi portofolio`;
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeModalGuruPd() {
+      const modal = document.getElementById('modal-guru-pd');
+      if (modal) modal.classList.add('hidden');
     }
 
     function renderReportPengembanganDiri(guru) {

@@ -410,8 +410,8 @@ try {
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$guruId, $obsScores, $obsNotes, $deepLearning, $catatanFakta, $tanggal, $obsKekuatan, $obsKelemahan]);
 
-            // Update status menjadi Selesai
-            $pdo->prepare("UPDATE guru SET status = 'Selesai' WHERE id = ?")->execute([$guruId]);
+            // Update status menjadi Tindak Lanjut jika belum Selesai
+            $pdo->prepare("UPDATE guru SET status = 'Tindak Lanjut' WHERE id = ? AND status != 'Selesai'")->execute([$guruId]);
 
             echo json_encode(['success' => true, 'message' => 'Hasil Observasi Kelas berhasil disimpan ke server!']);
             break;
@@ -449,6 +449,25 @@ try {
             $stmt->execute([$guruId, $tujuan, $identifikasi, $rencana, $tanggungJawab, $tanggal]);
 
             echo json_encode(['success' => true, 'message' => 'Catatan Percakapan Coaching TIRTA tersimpan di server!']);
+            break;
+
+        // ------------------------------------------------------------
+        // 7a. APPROVE / PENGESAHAN SUPERVISI
+        // ------------------------------------------------------------
+        case 'approve_supervisi':
+            $input = getJsonInput();
+            $guruId = (int)($input['guruId'] ?? $input['id'] ?? 0);
+            $status = trim($input['status'] ?? 'Selesai');
+            if (!in_array($status, ['Selesai', 'Tindak Lanjut', 'Belum'])) {
+                $status = 'Selesai';
+            }
+            if (!$guruId) {
+                echo json_encode(['success' => false, 'error' => 'ID Guru wajib disertakan.']);
+                exit;
+            }
+            $stmt = $pdo->prepare("UPDATE guru SET status = ? WHERE id = ?");
+            $stmt->execute([$status, $guruId]);
+            echo json_encode(['success' => true, 'message' => "Status supervisi guru berhasil diubah menjadi {$status}!"]);
             break;
 
         // ------------------------------------------------------------
