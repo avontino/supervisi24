@@ -185,6 +185,7 @@ try {
 
             echo json_encode([
                 'success' => true,
+                'appVersion' => '2026.10.20.1200',
                 'currentUser' => $currentUser,
                 'appSettings' => $settings,
                 'guruDatabase' => $guruList
@@ -792,9 +793,18 @@ try {
             break;
 
 
+        case 'check_version':
+            echo json_encode([
+                'success' => true,
+                'appVersion' => '2026.10.20.1200',
+                'timestamp' => date('c')
+            ]);
+            break;
+
         default:
             echo json_encode([
                 'success' => true,
+                'appVersion' => '2026.10.20.1200',
                 'status' => 'online',
                 'service' => 'API Supervisi Akademik SMPN 24 Malang',
                 'timestamp' => date('c')

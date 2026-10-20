@@ -344,6 +344,29 @@
   </aside>
 
   <main class="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-hidden">
+    <!-- BANNER NOTIFIKASI PEMBARUAN VERSI SISTEM (AUTO-UPDATE DETECTOR) -->
+    <div id="app-update-banner" class="hidden no-print sticky top-0 z-50 bg-gradient-to-r from-indigo-700 via-indigo-600 to-indigo-800 text-white px-3 sm:px-5 py-2 shadow-md border-b border-indigo-400/30">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping flex-shrink-0"></span>
+          <span class="font-bold flex items-center space-x-1.5">
+            <i class="fa-solid fa-rocket text-amber-300"></i>
+            <span>Pembaruan Aplikasi Tersedia!</span>
+          </span>
+          <span class="text-indigo-100 text-[11px] hidden sm:inline">Hosting telah diperbarui dengan fitur & perbaikan terbaru.</span>
+        </div>
+        <div class="flex items-center space-x-2 flex-shrink-0">
+          <button type="button" onclick="applyAppUpdate()" class="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold text-[11px] flex items-center space-x-1 shadow-sm transition">
+            <i class="fa-solid fa-rotate-right"></i>
+            <span>Perbarui Sekarang</span>
+          </button>
+          <button type="button" onclick="dismissAppUpdateBanner()" class="text-indigo-200 hover:text-white px-1.5 py-1 rounded text-xs" title="Tutup pemberitahuan">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <header class="h-14 sm:h-16 bg-white border-b border-slate-200 px-2 sm:px-5 md:px-6 flex items-center justify-between flex-shrink-0 z-20 no-print">
       <div class="flex items-center space-x-1.5 sm:space-x-3 min-w-0">
         <!-- Hamburger Button Mobile -->
@@ -362,6 +385,12 @@
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span id="server-status-text">MySQL Online</span>
         </div>
+
+        <!-- Tombol Sinkron Data Manual -->
+        <button type="button" onclick="triggerManualSyncData()" id="btn-manual-sync" class="hidden sm:inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition" title="Sinkronkan data terbaru dari server MySQL">
+          <i id="btn-sync-icon" class="fa-solid fa-arrows-rotate text-indigo-600"></i>
+          <span>Sinkron</span>
+        </button>
       </div>
 
       <div class="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
@@ -3083,6 +3112,116 @@
       }
     }
 
+    // ============================================================
+    // SISTEM AUTO-SYNC DATA & AUTO-UPDATE VERSION DETECTOR
+    // ============================================================
+    const CURRENT_APP_BUILD_VERSION = '2026.10.20.1200';
+    let latestServerAppVersion = CURRENT_APP_BUILD_VERSION;
+    let lastDataSyncTimestamp = Date.now();
+    const SYNC_THROTTLE_MS = 15000; // 15 detik batas throttling antar request navigasi
+
+    function checkAppVersion(serverVersion) {
+      if (!serverVersion) return;
+      latestServerAppVersion = serverVersion;
+      const banner = document.getElementById('app-update-banner');
+      if (!banner) return;
+
+      if (String(serverVersion).trim() !== String(CURRENT_APP_BUILD_VERSION).trim()) {
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    function applyAppUpdate() {
+      showToast('Memuat pembaruan sistem terbaru...');
+      setTimeout(() => {
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.location.href = cleanUrl + '?v=' + encodeURIComponent(latestServerAppVersion) + '&t=' + Date.now();
+      }, 300);
+    }
+
+    function dismissAppUpdateBanner() {
+      const banner = document.getElementById('app-update-banner');
+      if (banner) banner.classList.add('hidden');
+    }
+
+    async function syncLatestDataFromServer(isManual = false) {
+      const syncIcon = document.getElementById('btn-sync-icon');
+      if (syncIcon) syncIcon.classList.add('fa-spin');
+
+      try {
+        const res = await apiCall('get_data');
+        if (res && res.success) {
+          if (res.appVersion) checkAppVersion(res.appVersion);
+          if (res.appSettings) appSettings = res.appSettings;
+          if (res.settings) appSettings = res.settings;
+
+          if (res.guruDatabase && Array.isArray(res.guruDatabase) && res.guruDatabase.length > 0) {
+            // Perbarui database lokal dengan data terkini dari server MySQL
+            guruDatabase = res.guruDatabase;
+            saveDataToLocalStorage();
+          }
+
+          // Segera perbarui tampilan halaman aktif
+          const curSection = document.querySelector('section[id^="view-"]:not(.hidden)') || document.querySelector('section:not(.hidden)');
+          if (curSection) {
+            if (curSection.id === 'view-dashboard') {
+              updateDashboardKPI();
+              renderDashboardTable();
+              renderCharts();
+              if (typeof renderTeacherStatusCard === 'function') renderTeacherStatusCard();
+            } else if (curSection.id === 'view-laporan') {
+              if (typeof updateReportView === 'function') updateReportView();
+              if (typeof renderRekapTable === 'function') renderRekapTable();
+            } else if (curSection.id === 'view-guru') {
+              if (typeof renderGuruTable === 'function') renderGuruTable();
+            }
+          }
+
+          lastDataSyncTimestamp = Date.now();
+          if (isManual) {
+            showToast('Data dan status supervisi terbaru berhasil disinkronkan dari server MySQL!');
+          }
+        } else {
+          if (isManual) showToast('Gagal terhubung ke server untuk sinkronisasi data.', true);
+        }
+      } catch (err) {
+        console.warn('[Sync] Gagal sync data:', err);
+        if (isManual) showToast('Gagal melakukan sinkronisasi data.', true);
+      } finally {
+        if (syncIcon) {
+          setTimeout(() => syncIcon.classList.remove('fa-spin'), 600);
+        }
+      }
+    }
+
+    function triggerManualSyncData() {
+      syncLatestDataFromServer(true);
+    }
+
+    function autoSyncOnNavigation(targetView) {
+      const now = Date.now();
+      if (now - lastDataSyncTimestamp < SYNC_THROTTLE_MS) return;
+      lastDataSyncTimestamp = now;
+      syncLatestDataFromServer(false);
+    }
+
+    // Auto-sync saat tab browser kembali dibuka / mendapat fokus (misal setelah buka WA / aplikasi lain)
+    window.addEventListener('focus', () => {
+      const now = Date.now();
+      if (now - lastDataSyncTimestamp > 30000) {
+        syncLatestDataFromServer(false);
+      }
+    });
+
+    // Pengecekan versi periodik tiap 2 menit di latar belakang
+    setInterval(() => {
+      apiCall('check_version').then(res => {
+        if (res && res.appVersion) checkAppVersion(res.appVersion);
+      }).catch(() => {});
+    }, 120000);
+
     function renderRoleSwitcher(roles) {
       const container = document.getElementById('role-switch-container');
       if (!container) return;
@@ -5255,6 +5394,7 @@
 
     function navigateTo(targetView) {
       toggleMobileSidebar(false);
+      if (typeof autoSyncOnNavigation === 'function') autoSyncOnNavigation(targetView);
       const views = ['dashboard', 'guru', 'pra', 'observasi', 'coaching', 'pengembangan-diri', 'laporan', 'pengaturan', 'users'];
 
       if (currentRole === 'guru' && (targetView === 'guru' || targetView === 'pengaturan' || targetView === 'users')) {
@@ -10542,6 +10682,9 @@
       try {
         const res = await apiCall('get_data');
         if (res && res.success) {
+          if (res.appVersion && typeof checkAppVersion === 'function') {
+            checkAppVersion(res.appVersion);
+          }
           if (res.appSettings) appSettings = res.appSettings;
           if (res.guruDatabase && res.guruDatabase.length > 0) {
             guruDatabase = res.guruDatabase;
