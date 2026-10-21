@@ -3123,7 +3123,7 @@
     // ============================================================
     // SISTEM AUTO-SYNC DATA & AUTO-UPDATE VERSION DETECTOR
     // ============================================================
-    const CURRENT_APP_BUILD_VERSION = '2026.10.21.0900';
+    const CURRENT_APP_BUILD_VERSION = '2026.10.21.0915';
     let latestServerAppVersion = CURRENT_APP_BUILD_VERSION;
     let lastDataSyncTimestamp = Date.now();
     const SYNC_THROTTLE_MS = 15000; // 15 detik batas throttling antar request navigasi
@@ -8945,9 +8945,9 @@
               </div>
 
               <!-- Bukti Kegiatan (Checkboxes) -->
-              <div class="md:col-span-2">
+              <div>
                 <label class="block font-semibold text-slate-700 mb-1">7. Bukti Fisik / Dokumen Kegiatan</label>
-                <div class="flex flex-wrap gap-3 pt-1">
+                <div class="flex flex-wrap gap-2.5 pt-1">
                   ${buktiCheckboxList.map(bk => `
                     <label class="inline-flex items-center space-x-1.5 text-xs text-slate-700 cursor-pointer">
                       <input type="checkbox" value="${bk}" onchange="updatePdCheckbox(${idx}, '${bk}', this.checked)" ${currentBukti.includes(bk) ? 'checked' : ''} class="pd-input-bukti rounded text-teal-600 focus:ring-teal-500">
@@ -8957,16 +8957,22 @@
                 </div>
               </div>
 
+              <!-- Tanggal Sertifikat / Laporan -->
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">8. Tanggal Sertifikat / Laporan</label>
+                <input type="date" oninput="updatePdField(${idx}, 'tanggalSertifikat', this.value)" value="${escapeHtml(item.tanggalSertifikat || '')}" class="pd-input-tanggal w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+              </div>
+
               <!-- Link Bukti Dokumen -->
               <div>
-                <label class="block font-semibold text-slate-700 mb-1">8. Tautan / Link Bukti Dokumen</label>
+                <label class="block font-semibold text-slate-700 mb-1">9. Tautan / Link Bukti Dokumen</label>
                 <input type="url" oninput="updatePdField(${idx}, 'linkBukti', this.value)" value="${escapeHtml(item.linkBukti || '')}" placeholder="https://drive.google.com/..." class="pd-input-link w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
               </div>
 
               <!-- Rencana Implementasi di Kelas -->
               <div class="md:col-span-1 lg:col-span-1">
                 <div class="flex items-center justify-between mb-1">
-                  <label class="block font-semibold text-slate-700">9. Rencana Implementasi</label>
+                  <label class="block font-semibold text-slate-700">10. Rencana Implementasi</label>
                   <span class="text-[10px] text-slate-400">100–250 kr.</span>
                 </div>
                 <textarea rows="3" maxlength="500" oninput="updatePdField(${idx}, 'implementasi', this.value); updateCharCounter('pd-char-implementasi-${idx}', 'pd-hint-implementasi-${idx}', this.value)" placeholder="Bagaimana hasil pelatihan diterapkan secara konkret dalam proses belajar mengajar..." class="pd-input-implementasi w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.implementasi || '')}</textarea>
@@ -8981,7 +8987,7 @@
               <!-- Dampak Terhadap Murid -->
               <div class="md:col-span-1 lg:col-span-1">
                 <div class="flex items-center justify-between mb-1">
-                  <label class="block font-semibold text-slate-700">10. Dampak Nyata Murid</label>
+                  <label class="block font-semibold text-slate-700">11. Dampak Nyata Murid</label>
                   <span class="text-[10px] text-slate-400">100–250 kr.</span>
                 </div>
                 <textarea rows="3" maxlength="500" oninput="updatePdField(${idx}, 'dampak', this.value); updateCharCounter('pd-char-dampak-${idx}', 'pd-hint-dampak-${idx}', this.value)" placeholder="Perubahan keaktifan, pemahaman, atau respon murid setelah diterapkannya materi..." class="pd-input-dampak w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.dampak || '')}</textarea>
@@ -8996,7 +9002,7 @@
               <!-- Refleksi & Tantangan -->
               <div class="md:col-span-1 lg:col-span-1">
                 <div class="flex items-center justify-between mb-1">
-                  <label class="block font-semibold text-slate-700">11. Refleksi & Kendala</label>
+                  <label class="block font-semibold text-slate-700">12. Refleksi & Kendala</label>
                   <span class="text-[10px] text-slate-400">100–250 kr.</span>
                 </div>
                 <textarea rows="3" maxlength="500" oninput="updatePdField(${idx}, 'refleksi', this.value); updateCharCounter('pd-char-refleksi-${idx}', 'pd-hint-refleksi-${idx}', this.value)" placeholder="Tantangan saat menerapkan dan refleksi terhadap kendala yang dihadapi..." class="pd-input-refleksi w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.refleksi || '')}</textarea>
@@ -9011,7 +9017,7 @@
               <!-- Tindak Lanjut -->
               <div class="md:col-span-2 lg:col-span-3">
                 <div class="flex items-center justify-between mb-1">
-                  <label class="block font-semibold text-slate-700">12. Rencana Tindak Lanjut Berikutnya</label>
+                  <label class="block font-semibold text-slate-700">13. Rencana Tindak Lanjut Berikutnya</label>
                   <span class="text-[10px] text-slate-400">Saran: 100 – 250 karakter</span>
                 </div>
                 <textarea rows="2" maxlength="500" oninput="updatePdField(${idx}, 'tindakLanjut', this.value); updateCharCounter('pd-char-tindakLanjut-${idx}', 'pd-hint-tindakLanjut-${idx}', this.value)" placeholder="Langkah perbaikan berkelanjutan atau desiminasi ke rekan sejawat..." class="pd-input-tindak-lanjut w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.tindakLanjut || '')}</textarea>
@@ -9046,6 +9052,7 @@
         penyelenggara: 'Kemendikbudristek / PMM',
         durasi: '32 JP',
         bukti: ['Sertifikat'],
+        tanggalSertifikat: new Date().toISOString().slice(0, 10),
         linkBukti: '',
         implementasi: '',
         dampak: '',
@@ -9088,6 +9095,7 @@
         const judulEl = card.querySelector('.pd-input-judul');
         const penyEl = card.querySelector('.pd-input-penyelenggara');
         const kebEl = card.querySelector('.pd-input-kebutuhan');
+        const tglEl = card.querySelector('.pd-input-tanggal');
         const linkEl = card.querySelector('.pd-input-link');
         const implEl = card.querySelector('.pd-input-implementasi');
         const dmpkEl = card.querySelector('.pd-input-dampak');
@@ -9100,6 +9108,7 @@
         if (judulEl) it.judul = judulEl.value;
         if (penyEl) it.penyelenggara = penyEl.value;
         if (kebEl) it.kebutuhan = kebEl.value;
+        if (tglEl) it.tanggalSertifikat = tglEl.value;
         if (linkEl) it.linkBukti = linkEl.value;
         if (implEl) it.implementasi = implEl.value;
         if (dmpkEl) it.dampak = dmpkEl.value;
@@ -9418,6 +9427,24 @@
       if (modal) modal.classList.add('hidden');
     }
 
+    function formatTanggalId(dateStr) {
+      if (!dateStr) return '';
+      try {
+        const parts = String(dateStr).split('-');
+        if (parts.length === 3) {
+          const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+          if (!isNaN(d.getTime())) {
+            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+          }
+        }
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return dateStr;
+        return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+      } catch(e) {
+        return dateStr;
+      }
+    }
+
     function renderReportPengembanganDiri(guru) {
       const container = document.getElementById('lap-pd-container');
       const badge = document.getElementById('lap-pd-badge-count');
@@ -9437,6 +9464,7 @@
 
       let rows = items.map((item, idx) => {
         const buktiStr = Array.isArray(item.bukti) && item.bukti.length > 0 ? item.bukti.join(', ') : '-';
+        const tglStr = item.tanggalSertifikat ? `<div style="color: #047857; font-size: 7.5pt; font-weight: 600; margin-top: 2px;"><i class="fa-regular fa-calendar-check" style="margin-right: 3px;"></i>${escapeHtml(formatTanggalId(item.tanggalSertifikat) || item.tanggalSertifikat)}</div>` : '';
         const linkStr = item.linkBukti ? `<a href="${escapeHtml(item.linkBukti)}" target="_blank" style="color: #0284c7; text-decoration: underline; word-break: break-all; display: block; margin-top: 2px;">Buka Tautan</a>` : '';
         return `
           <tr>
@@ -9454,7 +9482,8 @@
               <div style="color: #64748b; font-size: 7.5pt; margin-top: 2px;">Durasi: ${escapeHtml(item.durasi || '-')}</div>
             </td>
             <td style="vertical-align: top; padding: 6px; border: 1px solid #cbd5e1; font-size: 7.5pt;">
-              <div style="color: #334155;">${escapeHtml(buktiStr)}</div>
+              <div style="color: #334155; font-weight: 500;">${escapeHtml(buktiStr)}</div>
+              ${tglStr}
               ${linkStr}
             </td>
             <td style="vertical-align: top; padding: 6px; border: 1px solid #cbd5e1; font-size: 8pt;">
