@@ -1629,7 +1629,7 @@
             <div class="text-xs text-slate-500">
               <span>* Data tersimpan otomatis secara berkala. Pastikan link bukti dapat diakses secara publik / terverifikasi.</span>
             </div>
-            <button type="button" onclick="savePengembanganDiri()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
+            <button id="pd-btn-save" type="button" onclick="savePengembanganDiri()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
               <i class="fa-solid fa-floppy-disk"></i>
               <span>Simpan Portofolio Pengembangan Diri</span>
             </button>
@@ -3123,7 +3123,7 @@
     // ============================================================
     // SISTEM AUTO-SYNC DATA & AUTO-UPDATE VERSION DETECTOR
     // ============================================================
-    const CURRENT_APP_BUILD_VERSION = '2026.10.20.1330';
+    const CURRENT_APP_BUILD_VERSION = '2026.10.21.0900';
     let latestServerAppVersion = CURRENT_APP_BUILD_VERSION;
     let lastDataSyncTimestamp = Date.now();
     const SYNC_THROTTLE_MS = 15000; // 15 detik batas throttling antar request navigasi
@@ -3166,7 +3166,16 @@
           if (res.settings) appSettings = res.settings;
 
           if (res.guruDatabase && Array.isArray(res.guruDatabase) && res.guruDatabase.length > 0) {
-            // Perbarui database lokal dengan data terkini dari server MySQL
+            // Lindungi data pengembangan diri lokal agar TIDAK terhapus jika server mengirim data kosong
+            res.guruDatabase.forEach(srvG => {
+              const localG = guruDatabase.find(lg => Number(lg.id) === Number(srvG.id));
+              if (localG) {
+                if ((!Array.isArray(srvG.pengembanganDiri) || srvG.pengembanganDiri.length === 0) &&
+                    (Array.isArray(localG.pengembanganDiri) && localG.pengembanganDiri.length > 0)) {
+                  srvG.pengembanganDiri = localG.pengembanganDiri;
+                }
+              }
+            });
             guruDatabase = res.guruDatabase;
             saveDataToLocalStorage();
           }
@@ -8853,6 +8862,7 @@
 
       const bentukOptions = [
         'Pelatihan Mandiri PMM',
+        'Pelatihan / Workshop Daring',
         'Bimtek / Workshop Tatap Muka',
         'Webinar Online / Daring',
         'Komunitas Belajar (Kombel) / MGMP',
@@ -8874,7 +8884,7 @@
         const currentBukti = Array.isArray(item.bukti) ? item.bukti : [];
 
         html += `
-          <div class="bg-slate-50/70 p-4 sm:p-5 rounded-xl border border-slate-200 shadow-xs space-y-4 transition">
+          <div class="pd-item-card bg-slate-50/70 p-4 sm:p-5 rounded-xl border border-slate-200 shadow-xs space-y-4 transition" data-idx="${idx}">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
               <div class="flex items-center space-x-2">
                 <span class="w-6 h-6 rounded-full bg-teal-600 text-white text-xs font-bold flex items-center justify-center shadow-xs">${itemNum}</span>
@@ -8890,7 +8900,7 @@
               <!-- Aspek -->
               <div>
                 <label class="block font-semibold text-slate-700 mb-1">1. Aspek Kompetensi <span class="text-rose-500">*</span></label>
-                <select onchange="updatePdField(${idx}, 'aspek', this.value)" class="w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+                <select onchange="updatePdField(${idx}, 'aspek', this.value)" class="pd-input-aspek w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
                   ${aspekOptions.map(opt => `<option value="${opt}" ${item.aspek === opt ? 'selected' : ''}>${opt}</option>`).join('')}
                 </select>
               </div>
@@ -8898,7 +8908,7 @@
               <!-- Bentuk Kegiatan -->
               <div>
                 <label class="block font-semibold text-slate-700 mb-1">2. Bentuk Kegiatan <span class="text-rose-500">*</span></label>
-                <select onchange="updatePdField(${idx}, 'bentuk', this.value)" class="w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+                <select onchange="updatePdField(${idx}, 'bentuk', this.value)" class="pd-input-bentuk w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
                   ${bentukOptions.map(opt => `<option value="${opt}" ${item.bentuk === opt ? 'selected' : ''}>${opt}</option>`).join('')}
                 </select>
               </div>
@@ -8906,19 +8916,19 @@
               <!-- Durasi / Waktu -->
               <div>
                 <label class="block font-semibold text-slate-700 mb-1">3. Waktu / Durasi / JP</label>
-                <input type="text" oninput="updatePdField(${idx}, 'durasi', this.value)" value="${escapeHtml(item.durasi || '')}" placeholder="Contoh: 32 JP atau 3 Hari" class="w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+                <input type="text" oninput="updatePdField(${idx}, 'durasi', this.value)" value="${escapeHtml(item.durasi || '')}" placeholder="Contoh: 32 JP atau 3 Hari" class="pd-input-durasi w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
               </div>
 
               <!-- Judul / Topik -->
               <div class="md:col-span-2">
                 <label class="block font-semibold text-slate-700 mb-1">4. Judul / Topik Kegiatan <span class="text-rose-500">*</span></label>
-                <input type="text" oninput="updatePdField(${idx}, 'judul', this.value)" value="${escapeHtml(item.judul || '')}" placeholder="Contoh: Pemanfaatan Platform Merdeka Mengajar untuk Asesmen Pembelajaran" class="w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+                <input type="text" oninput="updatePdField(${idx}, 'judul', this.value)" value="${escapeHtml(item.judul || '')}" placeholder="Contoh: Pemanfaatan Platform Merdeka Mengajar untuk Asesmen Pembelajaran" class="pd-input-judul w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
               </div>
 
               <!-- Penyelenggara -->
               <div>
                 <label class="block font-semibold text-slate-700 mb-1">5. Penyelenggara Kegiatan</label>
-                <input type="text" oninput="updatePdField(${idx}, 'penyelenggara', this.value)" value="${escapeHtml(item.penyelenggara || '')}" placeholder="Contoh: Kemendikbudristek / MGMP / Sekolah" class="w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+                <input type="text" oninput="updatePdField(${idx}, 'penyelenggara', this.value)" value="${escapeHtml(item.penyelenggara || '')}" placeholder="Contoh: Kemendikbudristek / MGMP / Sekolah" class="pd-input-penyelenggara w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
               </div>
 
               <!-- Kebutuhan Pengembangan -->
@@ -8927,7 +8937,7 @@
                   <label class="block font-semibold text-slate-700">6. Kebutuhan Pengembangan (Alasan / Latar Belakang)</label>
                   <span class="text-[10px] text-slate-400">Saran: 100 – 250 karakter</span>
                 </div>
-                <textarea rows="2" maxlength="500" oninput="updatePdField(${idx}, 'kebutuhan', this.value); updateCharCounter('pd-char-kebutuhan-${idx}', 'pd-hint-kebutuhan-${idx}', this.value)" placeholder="Mengapa kegiatan ini diambil berdasarkan evaluasi diri atau supervisi sebelumnya..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.kebutuhan || '')}</textarea>
+                <textarea rows="2" maxlength="500" oninput="updatePdField(${idx}, 'kebutuhan', this.value); updateCharCounter('pd-char-kebutuhan-${idx}', 'pd-hint-kebutuhan-${idx}', this.value)" placeholder="Mengapa kegiatan ini diambil berdasarkan evaluasi diri atau supervisi sebelumnya..." class="pd-input-kebutuhan w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.kebutuhan || '')}</textarea>
                 <div class="flex items-center justify-between text-[10px] mt-1 px-1">
                   <span id="pd-hint-kebutuhan-${idx}" class="${getCharHintClass(item.kebutuhan)}">${getCharHintText(item.kebutuhan)}</span>
                   <span id="pd-char-kebutuhan-${idx}" class="${getCharCounterClass(item.kebutuhan)}">${(item.kebutuhan || '').length} / 500</span>
@@ -8940,7 +8950,7 @@
                 <div class="flex flex-wrap gap-3 pt-1">
                   ${buktiCheckboxList.map(bk => `
                     <label class="inline-flex items-center space-x-1.5 text-xs text-slate-700 cursor-pointer">
-                      <input type="checkbox" onchange="updatePdCheckbox(${idx}, '${bk}', this.checked)" ${currentBukti.includes(bk) ? 'checked' : ''} class="rounded text-teal-600 focus:ring-teal-500">
+                      <input type="checkbox" value="${bk}" onchange="updatePdCheckbox(${idx}, '${bk}', this.checked)" ${currentBukti.includes(bk) ? 'checked' : ''} class="pd-input-bukti rounded text-teal-600 focus:ring-teal-500">
                       <span>${bk}</span>
                     </label>
                   `).join('')}
@@ -8950,7 +8960,7 @@
               <!-- Link Bukti Dokumen -->
               <div>
                 <label class="block font-semibold text-slate-700 mb-1">8. Tautan / Link Bukti Dokumen</label>
-                <input type="url" oninput="updatePdField(${idx}, 'linkBukti', this.value)" value="${escapeHtml(item.linkBukti || '')}" placeholder="https://drive.google.com/..." class="w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
+                <input type="url" oninput="updatePdField(${idx}, 'linkBukti', this.value)" value="${escapeHtml(item.linkBukti || '')}" placeholder="https://drive.google.com/..." class="pd-input-link w-full rounded-lg border border-slate-300 py-1.5 px-3 bg-white focus:ring-2 focus:ring-teal-500 font-medium">
               </div>
 
               <!-- Rencana Implementasi di Kelas -->
@@ -8959,7 +8969,7 @@
                   <label class="block font-semibold text-slate-700">9. Rencana Implementasi</label>
                   <span class="text-[10px] text-slate-400">100–250 kr.</span>
                 </div>
-                <textarea rows="3" maxlength="500" oninput="updatePdField(${idx}, 'implementasi', this.value); updateCharCounter('pd-char-implementasi-${idx}', 'pd-hint-implementasi-${idx}', this.value)" placeholder="Bagaimana hasil pelatihan diterapkan secara konkret dalam proses belajar mengajar..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.implementasi || '')}</textarea>
+                <textarea rows="3" maxlength="500" oninput="updatePdField(${idx}, 'implementasi', this.value); updateCharCounter('pd-char-implementasi-${idx}', 'pd-hint-implementasi-${idx}', this.value)" placeholder="Bagaimana hasil pelatihan diterapkan secara konkret dalam proses belajar mengajar..." class="pd-input-implementasi w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.implementasi || '')}</textarea>
                 <div class="flex flex-col gap-0.5 text-[10px] mt-1 px-1">
                   <div class="flex justify-between items-center">
                     <span id="pd-char-implementasi-${idx}" class="${getCharCounterClass(item.implementasi)}">${(item.implementasi || '').length} / 500</span>
@@ -8974,7 +8984,7 @@
                   <label class="block font-semibold text-slate-700">10. Dampak Nyata Murid</label>
                   <span class="text-[10px] text-slate-400">100–250 kr.</span>
                 </div>
-                <textarea rows="3" maxlength="500" oninput="updatePdField(${idx}, 'dampak', this.value); updateCharCounter('pd-char-dampak-${idx}', 'pd-hint-dampak-${idx}', this.value)" placeholder="Perubahan keaktifan, pemahaman, atau respon murid setelah diterapkannya materi..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.dampak || '')}</textarea>
+                <textarea rows="3" maxlength="500" oninput="updatePdField(${idx}, 'dampak', this.value); updateCharCounter('pd-char-dampak-${idx}', 'pd-hint-dampak-${idx}', this.value)" placeholder="Perubahan keaktifan, pemahaman, atau respon murid setelah diterapkannya materi..." class="pd-input-dampak w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.dampak || '')}</textarea>
                 <div class="flex flex-col gap-0.5 text-[10px] mt-1 px-1">
                   <div class="flex justify-between items-center">
                     <span id="pd-char-dampak-${idx}" class="${getCharCounterClass(item.dampak)}">${(item.dampak || '').length} / 500</span>
@@ -8989,7 +8999,7 @@
                   <label class="block font-semibold text-slate-700">11. Refleksi & Kendala</label>
                   <span class="text-[10px] text-slate-400">100–250 kr.</span>
                 </div>
-                <textarea rows="3" maxlength="500" oninput="updatePdField(${idx}, 'refleksi', this.value); updateCharCounter('pd-char-refleksi-${idx}', 'pd-hint-refleksi-${idx}', this.value)" placeholder="Tantangan saat menerapkan dan refleksi terhadap kendala yang dihadapi..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.refleksi || '')}</textarea>
+                <textarea rows="3" maxlength="500" oninput="updatePdField(${idx}, 'refleksi', this.value); updateCharCounter('pd-char-refleksi-${idx}', 'pd-hint-refleksi-${idx}', this.value)" placeholder="Tantangan saat menerapkan dan refleksi terhadap kendala yang dihadapi..." class="pd-input-refleksi w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.refleksi || '')}</textarea>
                 <div class="flex flex-col gap-0.5 text-[10px] mt-1 px-1">
                   <div class="flex justify-between items-center">
                     <span id="pd-char-refleksi-${idx}" class="${getCharCounterClass(item.refleksi)}">${(item.refleksi || '').length} / 500</span>
@@ -9004,7 +9014,7 @@
                   <label class="block font-semibold text-slate-700">12. Rencana Tindak Lanjut Berikutnya</label>
                   <span class="text-[10px] text-slate-400">Saran: 100 – 250 karakter</span>
                 </div>
-                <textarea rows="2" maxlength="500" oninput="updatePdField(${idx}, 'tindakLanjut', this.value); updateCharCounter('pd-char-tindakLanjut-${idx}', 'pd-hint-tindakLanjut-${idx}', this.value)" placeholder="Langkah perbaikan berkelanjutan atau desiminasi ke rekan sejawat..." class="w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.tindakLanjut || '')}</textarea>
+                <textarea rows="2" maxlength="500" oninput="updatePdField(${idx}, 'tindakLanjut', this.value); updateCharCounter('pd-char-tindakLanjut-${idx}', 'pd-hint-tindakLanjut-${idx}', this.value)" placeholder="Langkah perbaikan berkelanjutan atau desiminasi ke rekan sejawat..." class="pd-input-tindak-lanjut w-full rounded-lg border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-teal-500 font-medium leading-relaxed">${escapeHtml(item.tindakLanjut || '')}</textarea>
                 <div class="flex items-center justify-between text-[10px] mt-1 px-1">
                   <span id="pd-hint-tindakLanjut-${idx}" class="${getCharHintClass(item.tindakLanjut)}">${getCharHintText(item.tindakLanjut)}</span>
                   <span id="pd-char-tindakLanjut-${idx}" class="${getCharCounterClass(item.tindakLanjut)}">${(item.tindakLanjut || '').length} / 500</span>
@@ -9060,8 +9070,53 @@
       }
     }
 
+    function harvestPengembanganDiriFromDOM() {
+      const targetGid = Number(selectedGuruId) || 1;
+      const guru = guruDatabase.find(g => Number(g.id) === targetGid) || guruDatabase[0];
+      if (!guru) return;
+      if (!Array.isArray(guru.pengembanganDiri)) guru.pengembanganDiri = [];
+
+      const cards = document.querySelectorAll('.pd-item-card');
+      cards.forEach((card, idx) => {
+        if (!guru.pengembanganDiri[idx]) {
+          guru.pengembanganDiri[idx] = {};
+        }
+        const it = guru.pengembanganDiri[idx];
+        const aspekEl = card.querySelector('.pd-input-aspek');
+        const bentukEl = card.querySelector('.pd-input-bentuk');
+        const durasiEl = card.querySelector('.pd-input-durasi');
+        const judulEl = card.querySelector('.pd-input-judul');
+        const penyEl = card.querySelector('.pd-input-penyelenggara');
+        const kebEl = card.querySelector('.pd-input-kebutuhan');
+        const linkEl = card.querySelector('.pd-input-link');
+        const implEl = card.querySelector('.pd-input-implementasi');
+        const dmpkEl = card.querySelector('.pd-input-dampak');
+        const reflEl = card.querySelector('.pd-input-refleksi');
+        const tlEl = card.querySelector('.pd-input-tindak-lanjut');
+
+        if (aspekEl) it.aspek = aspekEl.value;
+        if (bentukEl) it.bentuk = bentukEl.value;
+        if (durasiEl) it.durasi = durasiEl.value;
+        if (judulEl) it.judul = judulEl.value;
+        if (penyEl) it.penyelenggara = penyEl.value;
+        if (kebEl) it.kebutuhan = kebEl.value;
+        if (linkEl) it.linkBukti = linkEl.value;
+        if (implEl) it.implementasi = implEl.value;
+        if (dmpkEl) it.dampak = dmpkEl.value;
+        if (reflEl) it.refleksi = reflEl.value;
+        if (tlEl) it.tindakLanjut = tlEl.value;
+
+        const checkedBukti = [];
+        card.querySelectorAll('.pd-input-bukti:checked').forEach(cb => {
+          checkedBukti.push(cb.value);
+        });
+        it.bukti = checkedBukti;
+      });
+    }
+
     function updatePdField(idx, field, value) {
-      const guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
+      const targetGid = Number(selectedGuruId) || 1;
+      const guru = guruDatabase.find(g => Number(g.id) === targetGid) || guruDatabase[0];
       if (!guru || !Array.isArray(guru.pengembanganDiri)) return;
       if (!guru.pengembanganDiri[idx]) return;
 
@@ -9070,7 +9125,8 @@
     }
 
     function updatePdCheckbox(idx, buktiName, isChecked) {
-      const guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
+      const targetGid = Number(selectedGuruId) || 1;
+      const guru = guruDatabase.find(g => Number(g.id) === targetGid) || guruDatabase[0];
       if (!guru || !Array.isArray(guru.pengembanganDiri)) return;
       if (!guru.pengembanganDiri[idx]) return;
 
@@ -9090,23 +9146,52 @@
     }
 
     async function savePengembanganDiri() {
-      const guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
+      const targetGid = Number(selectedGuruId) || 1;
+      const guru = guruDatabase.find(g => Number(g.id) === targetGid) || guruDatabase[0];
       if (!guru) return;
 
+      // Ambil nilai terbaru langsung dari formulir (DOM) untuk mencegah data hilang
+      harvestPengembanganDiriFromDOM();
       saveDataToLocalStorage();
+
+      const btnSave = document.getElementById('pd-btn-save');
+      let originalBtnContent = '';
+      if (btnSave) {
+        originalBtnContent = btnSave.innerHTML;
+        btnSave.disabled = true;
+        btnSave.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i><span>Menyimpan ke Server...</span>';
+      }
+
       showToast('Menyimpan Portofolio Pengembangan Diri...');
 
-      const res = await apiCall('save_pengembangan_diri', {
-        guruId: guru.id,
-        items: guru.pengembanganDiri || []
-      });
+      try {
+        const res = await apiCall('save_pengembangan_diri', {
+          guruId: Number(guru.id),
+          items: guru.pengembanganDiri || []
+        });
 
-      if (res && res.success) {
-        showToast(res.message || 'Portofolio Pengembangan Diri berhasil disimpan ke server!');
-      } else if (isServerOnline) {
-        showToast('Data tersimpan lokal, namun server merespon: ' + (res.error || 'Galat'), true);
-      } else {
-        showToast('Portofolio Pengembangan Diri tersimpan secara lokal!');
+        if (res && res.success) {
+          showToast(res.message || 'Portofolio Pengembangan Diri berhasil disimpan ke server MySQL!');
+          // Sinkronkan juga tampilan laporan jika sedang aktif
+          if (typeof renderReportPengembanganDiri === 'function') {
+            renderReportPengembanganDiri(guru);
+          }
+        } else if (res && res.error) {
+          showToast('Gagal simpan ke server: ' + res.error, true);
+          alert('Peringatan Server:\n' + res.error + '\n\nCatatan: Data sementara tetap tersimpan di browser Anda.');
+        } else if (!isServerOnline) {
+          showToast('Tersimpan di penyimpanan lokal browser (Mode Offline).');
+        } else {
+          showToast('Data tersimpan lokal, respon server belum terkonfirmasi.', true);
+        }
+      } catch (err) {
+        console.error('Error savePengembanganDiri:', err);
+        showToast('Terjadi kendala jaringan saat menyimpan ke server.', true);
+      } finally {
+        if (btnSave) {
+          btnSave.disabled = false;
+          btnSave.innerHTML = originalBtnContent;
+        }
       }
     }
 

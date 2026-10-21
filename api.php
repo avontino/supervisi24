@@ -68,6 +68,11 @@ function getJsonInput() {
         $raw = trim($raw, "\xEF\xBB\xBF \t\n\r\0\x0B");
         $data = json_decode($raw, true);
         if (is_array($data)) return $data;
+        if (function_exists('mb_convert_encoding')) {
+            $rawClean = mb_convert_encoding($raw, 'UTF-8', 'UTF-8, Windows-1252, ISO-8859-1');
+            $data = json_decode($rawClean, true);
+            if (is_array($data)) return $data;
+        }
     }
     if (!empty($_POST)) return $_POST;
     return [];
@@ -108,11 +113,12 @@ try {
             try {
                 $pdo->exec("CREATE TABLE IF NOT EXISTS supervisi_pengembangan_diri (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    guru_id INT NOT NULL UNIQUE,
+                    guru_id INT NOT NULL,
                     items_json LONGTEXT,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                    INDEX (guru_id)
+                    UNIQUE KEY uq_pd_guru (guru_id)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+                $pdo->exec("ALTER TABLE supervisi_pengembangan_diri MODIFY items_json LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
             } catch (Exception $e) {}
 
             try {
@@ -179,13 +185,21 @@ try {
                         'rencana' => $r['coach_rencana'] ?? '',
                         'tanggungJawab' => $r['coach_tanggung_jawab'] ?? '',
                     ],
-                    'pengembanganDiri' => json_decode($r['pd_items_json'] ?? '[]', true) ?: []
+                    'pengembanganDiri' => (function() use ($r) {
+                        $pdRaw = $r['pd_items_json'] ?? '';
+                        if (empty($pdRaw)) return [];
+                        $dec = json_decode($pdRaw, true);
+                        if (is_array($dec)) return $dec;
+                        $dec2 = json_decode(stripslashes($pdRaw), true);
+                        if (is_array($dec2)) return $dec2;
+                        return [];
+                    })()
                 ];
             }
 
             echo json_encode([
                 'success' => true,
-                'appVersion' => '2026.10.20.1330',
+                'appVersion' => '2026.10.21.0900',
                 'currentUser' => $currentUser,
                 'appSettings' => $settings,
                 'guruDatabase' => $guruList
@@ -485,26 +499,38 @@ try {
             try {
                 $pdo->exec("CREATE TABLE IF NOT EXISTS supervisi_pengembangan_diri (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    guru_id INT NOT NULL UNIQUE,
+                    guru_id INT NOT NULL,
                     items_json LONGTEXT,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                    INDEX (guru_id)
+                    UNIQUE KEY uq_pd_guru (guru_id)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+                $pdo->exec("ALTER TABLE supervisi_pengembangan_diri MODIFY items_json LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
             } catch (Exception $e) {}
 
             $items = is_array($input['items'] ?? null) ? $input['items'] : [];
-            $itemsJson = json_encode($items, JSON_UNESCAPED_UNICODE);
+            $itemsJson = json_encode($items, JSON_UNESCAPED_UNICODE | (defined('JSON_INVALID_UTF8_SUBSTITUTE') ? JSON_INVALID_UTF8_SUBSTITUTE : 0));
+            if ($itemsJson === false) {
+                $itemsJson = json_encode($items);
+            }
 
-            $stmt = $pdo->prepare("
-                INSERT INTO supervisi_pengembangan_diri (guru_id, items_json)
-                VALUES (?, ?)
-                ON DUPLICATE KEY UPDATE
-                    items_json = VALUES(items_json),
-                    updated_at = CURRENT_TIMESTAMP
-            ");
-            $stmt->execute([$guruId, $itemsJson]);
+            // Cek apakah data guru_id sudah ada di database
+            $stmtCheck = $pdo->prepare("SELECT id FROM supervisi_pengembangan_diri WHERE guru_id = ? LIMIT 1");
+            $stmtCheck->execute([$guruId]);
+            $exists = $stmtCheck->fetch();
 
-            echo json_encode(['success' => true, 'message' => 'Portofolio Pengembangan Diri berhasil disimpan ke server!']);
+            if ($exists) {
+                $stmtSave = $pdo->prepare("UPDATE supervisi_pengembangan_diri SET items_json = ?, updated_at = CURRENT_TIMESTAMP WHERE guru_id = ?");
+                $stmtSave->execute([$itemsJson, $guruId]);
+            } else {
+                $stmtSave = $pdo->prepare("INSERT INTO supervisi_pengembangan_diri (guru_id, items_json) VALUES (?, ?)");
+                $stmtSave->execute([$guruId, $itemsJson]);
+            }
+
+            echo json_encode([
+                'success' => true,
+                'message' => 'Portofolio Pengembangan Diri (' . count($items) . ' kegiatan) berhasil disimpan ke server MySQL!',
+                'itemsCount' => count($items)
+            ]);
             break;
 
         // ------------------------------------------------------------
@@ -796,7 +822,7 @@ try {
         case 'check_version':
             echo json_encode([
                 'success' => true,
-                'appVersion' => '2026.10.20.1330',
+                'appVersion' => '2026.10.21.0900',
                 'timestamp' => date('c')
             ]);
             break;
@@ -804,7 +830,7 @@ try {
         default:
             echo json_encode([
                 'success' => true,
-                'appVersion' => '2026.10.20.1330',
+                'appVersion' => '2026.10.21.0900',
                 'status' => 'online',
                 'service' => 'API Supervisi Akademik SMPN 24 Malang',
                 'timestamp' => date('c')
