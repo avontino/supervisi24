@@ -3123,7 +3123,7 @@
     // ============================================================
     // SISTEM AUTO-SYNC DATA & AUTO-UPDATE VERSION DETECTOR
     // ============================================================
-    const CURRENT_APP_BUILD_VERSION = '2026.10.21.0915';
+    const CURRENT_APP_BUILD_VERSION = '2026.10.23.0700';
     let latestServerAppVersion = CURRENT_APP_BUILD_VERSION;
     let lastDataSyncTimestamp = Date.now();
     const SYNC_THROTTLE_MS = 15000; // 15 detik batas throttling antar request navigasi
@@ -7680,7 +7680,8 @@
       const hasAllNotes = hasFakta && hasKekuatan && hasKelemahan;
 
       if (isBk) {
-        const obsScoreCount = guru.bkObsScores ? Object.values(guru.bkObsScores).filter(v => Number(v) > 0).length : 0;
+        const bkScoresObj = guru.obsScores || guru.bkObsScores;
+        const obsScoreCount = bkScoresObj ? Object.values(bkScoresObj).filter(v => Number(v) > 0).length : 0;
         const totalObsItems = 27;
         obsComplete = Boolean(hasAllNotes && obsScoreCount >= totalObsItems);
         obsPartial = Boolean(hasFakta || hasKekuatan || hasKelemahan || obsScoreCount > 0);
@@ -7727,8 +7728,8 @@
         },
         {
           id: 'observasi',
-          title: 'Observasi Kelas',
-          sub: isBk ? '27 Indikator & Catatan Fakta' : '28 Indikator & Catatan Fakta',
+          title: isBk ? 'Observasi Layanan BK' : 'Observasi Kelas',
+          sub: isBk ? (isGuru ? '27 Indikator (Dinilai Supervisor)' : '27 Indikator & Catatan Fakta') : (isGuru ? '28 Indikator (Dinilai Supervisor)' : '28 Indikator & Catatan Fakta'),
           icon: 'fa-chalkboard-user',
           view: 'observasi',
           isComplete: obsComplete,
@@ -7919,8 +7920,14 @@
         } else if (progress.isAllComplete) {
           alertDesc.innerHTML = `<span class="text-blue-800 font-semibold">Seluruh 4 tahapan supervisi telah lengkap terisi (100%).</span> ${isGuru ? 'Saat ini berkas menunggu pengesahan tuntas dari Supervisor (' + spvCleanName + '). Silakan konfirmasi jika diperlukan.' : 'Semua instrumen telah lengkap. Anda dapat melakukan pengesahan di menu Pasca-Observasi atau Laporan.'}`;
         } else {
-          const incompleteTitles = progress.stages.filter(s => !s.isComplete).map(s => s.title).join(', ');
-          alertDesc.innerHTML = `<span class="text-amber-800 font-semibold">Terdapat tahapan belum lengkap:</span> <strong class="text-slate-800">${incompleteTitles}</strong>. ${isGuru ? 'Mohon segera lengkapi atau berkonsultasi dengan Supervisor Anda (' + spvCleanName + ') agar supervisi dapat dituntaskan dan disahkan.' : 'Mohon koordinasikan dengan guru untuk melengkapi instrumen di atas.'}`;
+          const incompleteStages = progress.stages.filter(s => !s.isComplete);
+          const hasOnlyObservasi = incompleteStages.length === 1 && incompleteStages[0].id === 'observasi';
+          if (isGuru && hasOnlyObservasi) {
+            alertDesc.innerHTML = `<span class="text-amber-800 font-semibold">Tugas mandiri Anda sudah lengkap!</span> Saat ini menunggu pelaksanaan & penilaian <strong>Observasi Layanan/Kelas</strong> langsung oleh Supervisor Anda (<strong>${spvCleanName}</strong>). Silakan berkoordinasi dengan beliau terkait jadwal observasi.`;
+          } else {
+            const incompleteTitles = incompleteStages.map(s => s.title).join(', ');
+            alertDesc.innerHTML = `<span class="text-amber-800 font-semibold">Terdapat tahapan belum lengkap:</span> <strong class="text-slate-800">${incompleteTitles}</strong>. ${isGuru ? 'Mohon segera lengkapi atau berkonsultasi dengan Supervisor Anda (' + spvCleanName + ') agar supervisi dapat dituntaskan dan disahkan.' : 'Mohon koordinasikan dengan guru untuk melengkapi instrumen di atas.'}`;
+          }
         }
       }
 
