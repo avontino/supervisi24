@@ -3123,7 +3123,7 @@
     // ============================================================
     // SISTEM AUTO-SYNC DATA & AUTO-UPDATE VERSION DETECTOR
     // ============================================================
-    const CURRENT_APP_BUILD_VERSION = '2026.10.23.0700';
+    const CURRENT_APP_BUILD_VERSION = '2026.10.23.0710';
     let latestServerAppVersion = CURRENT_APP_BUILD_VERSION;
     let lastDataSyncTimestamp = Date.now();
     const SYNC_THROTTLE_MS = 15000; // 15 detik batas throttling antar request navigasi
@@ -7643,6 +7643,7 @@
         needGuidance: false
       };
 
+      const isGuru = (typeof currentRole !== 'undefined' && currentRole === 'guru');
       const isBk = guru.isBk || (guru.mapel && (guru.mapel.toLowerCase().includes('bimbingan konseling') || guru.mapel.toLowerCase() === 'bk'));
 
       // 1. Pra-Observasi
