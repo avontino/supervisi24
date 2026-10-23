@@ -319,10 +319,12 @@
       <button onclick="navigateTo('observasi')" id="nav-observasi" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
         <i class="fa-solid fa-clipboard-check w-4 flex-shrink-0 text-center"></i>
         <span id="nav-text-obs" class="text-left leading-snug">Observasi Kelas</span>
+        <span id="nav-obs-lock-icon" class="hidden ml-auto text-[11px] text-amber-400" title="Terkunci - Selesaikan Pra-Observasi"><i class="fa-solid fa-lock"></i></span>
       </button>
       <button onclick="navigateTo('coaching')" id="nav-coaching" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
         <i class="fa-solid fa-comments w-4 flex-shrink-0 text-center"></i>
         <span class="text-left leading-snug">Coaching Model TIRTA</span>
+        <span id="nav-coach-lock-icon" class="hidden ml-auto text-[11px] text-amber-400" title="Terkunci - Selesaikan Observasi"><i class="fa-solid fa-lock"></i></span>
       </button>
       <button onclick="navigateTo('pengembangan-diri')" id="nav-pengembangan-diri" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-xs text-left text-slate-300 hover:bg-slate-800 transition">
         <i class="fa-solid fa-graduation-cap w-4 flex-shrink-0 text-center text-teal-400"></i>
@@ -1092,6 +1094,28 @@
       </section>
 
       <section id="view-observasi" class="hidden space-y-5">
+        <!-- Banner Peringatan Kunci Hirarki Observasi -->
+        <div id="obs-lock-banner" class="hidden bg-amber-50 border-2 border-amber-300 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
+          <div class="flex items-start space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg flex-shrink-0 shadow-xs">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-amber-900 text-sm flex items-center space-x-2">
+                <span>Tahap Observasi Kelas / Layanan Masih Terkunci</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-200 text-amber-800">Alur Hirarki</span>
+              </h4>
+              <p class="text-xs text-amber-800 mt-1 leading-relaxed">
+                Sesuai alur supervisi akademik, penilaian observasi hanya dapat dimulai setelah <strong>Tahap Pra-Observasi (Telaah Modul Ajar / RPL)</strong> guru dinyatakan lengkap dan tuntas.
+              </p>
+            </div>
+          </div>
+          <button type="button" onclick="navigateTo('pra')" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm transition flex-shrink-0">
+            <span>Buka Pra-Observasi</span>
+            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+
         <!-- Banner Guru & Fokus -->
         <div class="bg-gradient-to-r from-slate-900 to-indigo-900 text-white p-5 rounded-xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -1407,6 +1431,28 @@
       </section>
 
       <section id="view-coaching" class="hidden space-y-5">
+        <!-- Banner Peringatan Kunci Hirarki Coaching -->
+        <div id="coach-lock-banner" class="hidden bg-amber-50 border-2 border-amber-300 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
+          <div class="flex items-start space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg flex-shrink-0 shadow-xs">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-amber-900 text-sm flex items-center space-x-2">
+                <span>Tahap Pasca-Observasi (Coaching) Masih Terkunci</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-200 text-amber-800">Alur Hirarki</span>
+              </h4>
+              <p class="text-xs text-amber-800 mt-1 leading-relaxed">
+                Percakapan refleksi coaching Model TIRTA baru dapat dilaksanakan setelah <strong>Tahap Observasi Kelas / Layanan</strong> selesai dinilai lengkap oleh Supervisor.
+              </p>
+            </div>
+          </div>
+          <button type="button" onclick="navigateTo('observasi')" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm transition flex-shrink-0">
+            <span>Buka Observasi Kelas</span>
+            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+
         <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-200">
             <div>
@@ -1702,6 +1748,7 @@
                 <option value="Baik">Baik (B)</option>
                 <option value="Cukup">Cukup (C)</option>
                 <option value="Perlu Pembinaan">Perlu Pembinaan (D)</option>
+                <option value="Belum Dinilai">Belum Dinilai / Belum Diisi</option>
               </select>
             </div>
           </div>
@@ -3123,7 +3170,7 @@
     // ============================================================
     // SISTEM AUTO-SYNC DATA & AUTO-UPDATE VERSION DETECTOR
     // ============================================================
-    const CURRENT_APP_BUILD_VERSION = '2026.10.23.0710';
+    const CURRENT_APP_BUILD_VERSION = '2026.10.23.0730';
     let latestServerAppVersion = CURRENT_APP_BUILD_VERSION;
     let lastDataSyncTimestamp = Date.now();
     const SYNC_THROTTLE_MS = 15000; // 15 detik batas throttling antar request navigasi
@@ -5483,6 +5530,8 @@
           : (titlesDesktop[targetView] || 'Dashboard Supervisi');
       }
 
+      if (typeof updateSidebarStageLocks === 'function') updateSidebarStageLocks();
+
       if (targetView === 'dashboard') {
         updateDashboardKPI();
         renderDashboardTable();
@@ -5989,6 +6038,7 @@
       const obsMetaBanner = document.getElementById('obs-guru-meta-banner');
       const obsTargetBadge = document.getElementById('obs-target-badge');
 
+      if (typeof updateSidebarStageLocks === 'function') updateSidebarStageLocks();
       if (obsNamaBanner) obsNamaBanner.innerText = guru.nama;
       if (obsMetaBanner) obsMetaBanner.innerText = `${guru.mapel} • ${guru.kelas} • NIP: ${guru.nip}`;
       const targetPerilakuVal = guru.targetPerilaku || 'Instruksi Pembelajaran';
@@ -6584,6 +6634,13 @@
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
 
+      const obsLock = getStageLockStatus('observasi', guru);
+      const obsLockBanner = document.getElementById('obs-lock-banner');
+      if (obsLockBanner) {
+        if (obsLock.isLocked) obsLockBanner.classList.remove('hidden');
+        else obsLockBanner.classList.add('hidden');
+      }
+
       const instTitle = document.getElementById('obs-inst-title');
       const instSubtitle = document.getElementById('obs-inst-subtitle');
       const scaleLegend = document.getElementById('obs-scale-legend');
@@ -6917,6 +6974,13 @@
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
 
+      const lock = getStageLockStatus('observasi', guru);
+      if (lock.isLocked) {
+        showToast('Tahap Observasi masih terkunci: ' + lock.reason, true);
+        alert('Tahap Terkunci (Alur Hirarki Supervisi):\n\n' + lock.reason + '\n\nSilakan selesaikan Tahap Pra-Observasi terlebih dahulu.');
+        return;
+      }
+
       const obsCatatanFakta = document.getElementById('obs-catatan-fakta');
       if (obsCatatanFakta) guru.catatanFakta = obsCatatanFakta.value;
 
@@ -6995,6 +7059,13 @@
     function loadCoachingData() {
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
+
+      const coachLock = getStageLockStatus('coaching', guru);
+      const coachLockBanner = document.getElementById('coach-lock-banner');
+      if (coachLockBanner) {
+        if (coachLock.isLocked) coachLockBanner.classList.remove('hidden');
+        else coachLockBanner.classList.add('hidden');
+      }
       if (!guru.coaching) guru.coaching = {};
 
       const tEl = document.getElementById('coach-tujuan');
@@ -7019,6 +7090,13 @@
     async function saveCoaching() {
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
+
+      const lock = getStageLockStatus('coaching', guru);
+      if (lock.isLocked) {
+        showToast('Tahap Pasca-Observasi masih terkunci: ' + lock.reason, true);
+        alert('Tahap Terkunci (Alur Hirarki Supervisi):\n\n' + lock.reason + '\n\nSilakan selesaikan Tahap Observasi Kelas / Layanan terlebih dahulu.');
+        return;
+      }
       if (!guru.coaching) guru.coaching = {};
 
       const tEl = document.getElementById('coach-tujuan');
@@ -7346,6 +7424,9 @@
             const cVal = document.getElementById('rekap-select-capaian')?.value || 'Sangat Baik';
             return guruDatabase.filter(g => {
               const m = getGuruEvaluationMetrics(g);
+              if (cVal === 'Belum Dinilai') {
+                return m.predikat.includes('Belum Dinilai') || m.finalScore === 0;
+              }
               return m.predikat.includes(cVal);
             });
           }
@@ -7363,6 +7444,9 @@
         const cVal = document.getElementById('rekap-select-capaian')?.value || 'Sangat Baik';
         return guruDatabase.filter(g => {
           const m = getGuruEvaluationMetrics(g);
+          if (cVal === 'Belum Dinilai') {
+            return m.predikat.includes('Belum Dinilai') || m.finalScore === 0;
+          }
           return m.predikat.includes(cVal);
         });
       }
@@ -7627,6 +7711,70 @@
       if (kpiSelesaiPct) kpiSelesaiPct.innerText = total > 0 ? Math.round((selesai / total) * 100) : 0;
       if (kpiTindak) kpiTindak.innerText = tindak;
       if (kpiBelum) kpiBelum.innerText = belum;
+    }
+
+    function getStageLockStatus(stageId, guruObj = null) {
+      if (typeof currentRole !== 'undefined' && currentRole === 'superadmin') {
+        return { isLocked: false, reason: '', bypassed: true };
+      }
+
+      const g = guruObj || (guruDatabase && guruDatabase.find(x => x.id === selectedGuruId)) || (guruDatabase && guruDatabase[0]);
+      if (!g) return { isLocked: false, reason: '' };
+
+      const prog = getGuruSupervisiStagesProgress(g);
+      const praStage = prog.stages.find(s => s.id === 'pra');
+      const obsStage = prog.stages.find(s => s.id === 'observasi');
+
+      if (stageId === 'observasi') {
+        if (!praStage || !praStage.isComplete) {
+          return {
+            isLocked: true,
+            reason: 'Tahap Pra-Observasi (Telaah Modul Ajar / RPL) belum tuntas.',
+            prereqStage: 'pra',
+            prereqTitle: 'Pra-Observasi'
+          };
+        }
+      } else if (stageId === 'coaching') {
+        if (!praStage || !praStage.isComplete) {
+          return {
+            isLocked: true,
+            reason: 'Tahap Pra-Observasi belum tuntas.',
+            prereqStage: 'pra',
+            prereqTitle: 'Pra-Observasi'
+          };
+        }
+        if (!obsStage || !obsStage.isComplete) {
+          return {
+            isLocked: true,
+            reason: 'Tahap Observasi Kelas / Layanan belum lengkap dinilai oleh Supervisor.',
+            prereqStage: 'observasi',
+            prereqTitle: 'Observasi Kelas'
+          };
+        }
+      }
+
+      return { isLocked: false, reason: '' };
+    }
+
+    function updateSidebarStageLocks() {
+      const activeGuru = (currentRole === 'guru' && currentLoggedInUser && currentLoggedInUser.id)
+        ? (guruDatabase.find(g => g.id === currentLoggedInUser.id) || guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0])
+        : (guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0]);
+
+      const obsLock = getStageLockStatus('observasi', activeGuru);
+      const coachLock = getStageLockStatus('coaching', activeGuru);
+
+      const navObsLockBadge = document.getElementById('nav-obs-lock-icon');
+      const navCoachLockBadge = document.getElementById('nav-coach-lock-icon');
+
+      if (navObsLockBadge) {
+        if (obsLock.isLocked) navObsLockBadge.classList.remove('hidden');
+        else navObsLockBadge.classList.add('hidden');
+      }
+      if (navCoachLockBadge) {
+        if (coachLock.isLocked) navCoachLockBadge.classList.remove('hidden');
+        else navCoachLockBadge.classList.add('hidden');
+      }
     }
 
     function getGuruSupervisiStagesProgress(guru) {
@@ -7957,24 +8105,39 @@
           let summaryColor = 'text-slate-500';
           let btnBg = 'bg-slate-100 hover:bg-slate-200 text-slate-700';
 
-          if (st.isComplete) {
+          const lockInfo = getStageLockStatus(st.id, guru);
+          let btnText = 'Buka Tahap Ini';
+          let btnAction = `navigateTo('${st.view}')`;
+
+          if (lockInfo.isLocked) {
+            cardBorder = 'border-amber-200';
+            cardBg = 'bg-amber-50/20';
+            badgeHtml = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-300"><i class="fa-solid fa-lock mr-0.5"></i>Terkunci</span>';
+            summaryColor = 'text-amber-700';
+            btnBg = 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300';
+            btnText = `Selesaikan ${lockInfo.prereqTitle}`;
+            btnAction = `navigateTo('${lockInfo.prereqStage}'); showToast('Tahap ${st.title} terkunci. Mohon tuntaskan ${lockInfo.prereqTitle} terlebih dahulu.', true);`;
+          } else if (st.isComplete) {
             cardBorder = 'border-emerald-200';
             cardBg = 'bg-emerald-50/30';
             badgeHtml = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300"><i class="fa-solid fa-check mr-0.5"></i>Lengkap</span>';
             summaryColor = 'text-emerald-700';
             btnBg = 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200';
+            btnText = 'Buka Tahap Ini';
           } else if (st.isPartial) {
             cardBorder = 'border-amber-200';
             cardBg = 'bg-amber-50/30';
             badgeHtml = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-300"><i class="fa-solid fa-hourglass-half mr-0.5"></i>Sebagian</span>';
             summaryColor = 'text-amber-700';
             btnBg = 'bg-amber-500 hover:bg-amber-600 text-white';
+            btnText = 'Buka Tahap Ini';
           } else {
             cardBorder = 'border-rose-200';
             cardBg = 'bg-rose-50/20';
             badgeHtml = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-100 text-rose-800 border border-rose-300"><i class="fa-solid fa-xmark mr-0.5"></i>Belum Diisi</span>';
             summaryColor = 'text-rose-600';
             btnBg = 'bg-rose-600 hover:bg-rose-700 text-white';
+            btnText = 'Buka Tahap Ini';
           }
 
           const iconColors = ['bg-indigo-100 text-indigo-700', 'bg-blue-100 text-blue-700', 'bg-violet-100 text-violet-700', 'bg-teal-100 text-teal-700'];
@@ -7991,12 +8154,12 @@
                 <h5 class="font-bold text-slate-800 text-xs">${st.title}</h5>
                 <p class="text-[10px] text-slate-500 mt-0.5 truncate" title="${st.sub}">${st.sub}</p>
                 <p class="text-[10px] font-semibold ${summaryColor} mt-1.5 flex items-center space-x-1">
-                  <i class="fa-solid ${st.isComplete ? 'fa-circle-check text-emerald-500' : (st.isPartial ? 'fa-clock text-amber-500' : 'fa-circle-exclamation text-rose-500')} text-[9px]"></i>
-                  <span>${st.summary}</span>
+                  <i class="fa-solid ${lockInfo.isLocked ? 'fa-lock text-amber-500' : (st.isComplete ? 'fa-circle-check text-emerald-500' : (st.isPartial ? 'fa-clock text-amber-500' : 'fa-circle-exclamation text-rose-500'))} text-[9px]"></i>
+                  <span>${lockInfo.isLocked ? ('Terkunci (' + lockInfo.prereqTitle + ')') : st.summary}</span>
                 </p>
               </div>
-              <button type="button" onclick="navigateTo('${st.view}')" class="w-full py-1.5 px-2.5 rounded-lg ${btnBg} text-[10px] font-bold flex items-center justify-center space-x-1 transition shadow-2xs">
-                <span>Buka Tahap Ini</span>
+              <button type="button" onclick="${btnAction}" class="w-full py-1.5 px-2.5 rounded-lg ${btnBg} text-[10px] font-bold flex items-center justify-center space-x-1 transition shadow-2xs">
+                <span>${btnText}</span>
                 <i class="fa-solid fa-arrow-right text-[9px]"></i>
               </button>
             </div>
