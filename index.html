@@ -17,6 +17,8 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <!-- html2pdf.js (Direct Client-Side PDF Generator) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- SweetAlert2 (Modern Interactive Alerts) -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     body { font-family: 'Inter', sans-serif; }
@@ -3170,7 +3172,7 @@
     // ============================================================
     // SISTEM AUTO-SYNC DATA & AUTO-UPDATE VERSION DETECTOR
     // ============================================================
-    const CURRENT_APP_BUILD_VERSION = '2026.10.23.0730';
+    const CURRENT_APP_BUILD_VERSION = '2026.10.23.0740';
     let latestServerAppVersion = CURRENT_APP_BUILD_VERSION;
     let lastDataSyncTimestamp = Date.now();
     const SYNC_THROTTLE_MS = 15000; // 15 detik batas throttling antar request navigasi
@@ -6977,7 +6979,7 @@
       const lock = getStageLockStatus('observasi', guru);
       if (lock.isLocked) {
         showToast('Tahap Observasi masih terkunci: ' + lock.reason, true);
-        alert('Tahap Terkunci (Alur Hirarki Supervisi):\n\n' + lock.reason + '\n\nSilakan selesaikan Tahap Pra-Observasi terlebih dahulu.');
+        showStageLockedAlert('observasi', lock);
         return;
       }
 
@@ -7094,7 +7096,7 @@
       const lock = getStageLockStatus('coaching', guru);
       if (lock.isLocked) {
         showToast('Tahap Pasca-Observasi masih terkunci: ' + lock.reason, true);
-        alert('Tahap Terkunci (Alur Hirarki Supervisi):\n\n' + lock.reason + '\n\nSilakan selesaikan Tahap Observasi Kelas / Layanan terlebih dahulu.');
+        showStageLockedAlert('coaching', lock);
         return;
       }
       if (!guru.coaching) guru.coaching = {};
@@ -7774,6 +7776,49 @@
       if (navCoachLockBadge) {
         if (coachLock.isLocked) navCoachLockBadge.classList.remove('hidden');
         else navCoachLockBadge.classList.add('hidden');
+      }
+    }
+
+    function showStageLockedAlert(stageId, lock) {
+      if (!lock || !lock.isLocked) return;
+
+      const prereqTitle = lock.prereqTitle || (stageId === 'observasi' ? 'Pra-Observasi' : 'Observasi Kelas');
+      const prereqStage = lock.prereqStage || (stageId === 'observasi' ? 'pra' : 'observasi');
+      const stageName = stageId === 'observasi' ? 'Observasi Kelas / Layanan' : 'Pasca-Observasi (Coaching TIRTA)';
+
+      if (typeof Swal !== 'undefined') {
+        Swal.fire({
+          icon: 'warning',
+          title: `<span class="text-base sm:text-lg font-bold text-slate-800">Tahap ${stageName} Terkunci</span>`,
+          html: `
+            <div class="text-left text-xs text-slate-600 space-y-3 mt-2">
+              <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 font-medium flex items-start space-x-2.5">
+                <i class="fa-solid fa-lock text-amber-600 mt-0.5 text-sm flex-shrink-0"></i>
+                <div class="leading-relaxed">${lock.reason}</div>
+              </div>
+              <p class="leading-relaxed text-slate-700">
+                Sesuai alur hirarki supervisi akademik, tahap <strong>${prereqTitle}</strong> harus diselesaikan secara lengkap sebelum Anda dapat menilai atau menyimpan instrumen ini.
+              </p>
+            </div>
+          `,
+          showCancelButton: true,
+          confirmButtonText: `<i class="fa-solid fa-arrow-right mr-1.5"></i> Buka ${prereqTitle}`,
+          cancelButtonText: 'Tutup',
+          confirmButtonColor: '#4f46e5',
+          cancelButtonColor: '#64748b',
+          reverseButtons: true,
+          customClass: {
+            popup: 'rounded-2xl shadow-2xl p-5 border border-slate-100',
+            confirmButton: 'rounded-xl px-4 py-2 text-xs font-semibold shadow-sm',
+            cancelButton: 'rounded-xl px-4 py-2 text-xs font-semibold'
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigateTo(prereqStage);
+          }
+        });
+      } else {
+        alert('Tahap Terkunci (Alur Hirarki Supervisi):\n\n' + lock.reason + '\n\nSilakan selesaikan Tahap ' + prereqTitle + ' terlebih dahulu.');
       }
     }
 
