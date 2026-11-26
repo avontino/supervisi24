@@ -23,6 +23,45 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     body { font-family: 'Inter', sans-serif; }
 
+    /* Mode Tamu (Read-Only) */
+    body.tamu-readonly-mode #btn-ganti-sandi,
+    body.tamu-readonly-mode button[onclick*="savePraObservasi"],
+    body.tamu-readonly-mode button[onclick*="resetPraObservasi"],
+    body.tamu-readonly-mode button[onclick*="saveObservasi"],
+    body.tamu-readonly-mode button[onclick*="resetObservasi"],
+    body.tamu-readonly-mode button[onclick*="saveCoaching"],
+    body.tamu-readonly-mode button[onclick*="resetCoaching"],
+    body.tamu-readonly-mode #pd-btn-add,
+    body.tamu-readonly-mode #pd-btn-save,
+    body.tamu-readonly-mode button[onclick*="addPengembanganDiriItem"],
+    body.tamu-readonly-mode button[onclick*="deletePengembanganDiriItem"],
+    body.tamu-readonly-mode #lap-approve-btn-container,
+    body.tamu-readonly-mode #coach-approve-btn-container,
+    body.tamu-readonly-mode #lap-approval-banner-action {
+      display: none !important;
+    }
+    body.tamu-readonly-mode #view-pra input,
+    body.tamu-readonly-mode #view-pra textarea,
+    body.tamu-readonly-mode #view-pra select:not(#pra-guru-select),
+    body.tamu-readonly-mode #view-pra button[onclick*="setRppScore"],
+    body.tamu-readonly-mode #view-pra button[onclick*="setBkScore"],
+    body.tamu-readonly-mode #view-pra button[onclick*="setBkDlScore"],
+    body.tamu-readonly-mode #view-observasi input,
+    body.tamu-readonly-mode #view-observasi textarea,
+    body.tamu-readonly-mode #view-observasi select:not(#obs-guru-select),
+    body.tamu-readonly-mode #view-observasi button[onclick*="setObsScore"],
+    body.tamu-readonly-mode #view-observasi button[onclick*="setDlScore"],
+    body.tamu-readonly-mode #view-coaching input,
+    body.tamu-readonly-mode #view-coaching textarea,
+    body.tamu-readonly-mode #view-coaching select:not(#coaching-guru-select),
+    body.tamu-readonly-mode #view-pengembangan-diri input,
+    body.tamu-readonly-mode #view-pengembangan-diri textarea,
+    body.tamu-readonly-mode #view-pengembangan-diri select:not(#pd-guru-select) {
+      pointer-events: none !important;
+      opacity: 0.88;
+      background-color: #f8fafc !important;
+    }
+
     .field-invalid, textarea.field-invalid, input.field-invalid {
       border: 1.5px solid #f43f5e !important;
       border-color: #f43f5e !important;
@@ -419,7 +458,7 @@
         </div>
 
         <!-- Tombol Ganti Password -->
-        <button onclick="openChangePasswordModal()" title="Ganti Kata Sandi" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1 border border-slate-200 transition">
+        <button id="btn-ganti-sandi" onclick="openChangePasswordModal()" title="Ganti Kata Sandi" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center space-x-1 border border-slate-200 transition">
           <i class="fa-solid fa-key text-slate-500"></i>
           <span class="hidden md:inline">Sandi</span>
         </button>
@@ -433,6 +472,16 @@
     </header>
 
     <div class="flex-1 overflow-y-auto p-3.5 sm:p-5 md:p-6 pb-28 sm:pb-20 space-y-4 sm:space-y-6">
+
+      <div id="tamu-readonly-banner" class="hidden bg-cyan-50 border border-cyan-200 text-cyan-900 px-4 py-2.5 rounded-xl text-xs font-medium flex flex-col sm:flex-row sm:items-center justify-between gap-2 no-print shadow-xs">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-7 h-7 rounded-lg bg-cyan-600 text-white flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-eye text-xs"></i>
+          </div>
+          <span><strong>Mode Tamu (Lihat Saja):</strong> Anda masuk sebagai pengunjung dengan akses baca saja. Seluruh tombol simpan dan ubah data dinonaktifkan.</span>
+        </div>
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-100 text-cyan-800 border border-cyan-300 self-start sm:self-center whitespace-nowrap">Read-Only</span>
+      </div>
 
       <section id="view-dashboard" class="space-y-6">
         <!-- Action Toolbar with Print -->
@@ -2358,6 +2407,17 @@
         <button onclick="handleLogin()" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md transition">
           Masuk ke Aplikasi
         </button>
+
+        <div class="relative flex py-1 items-center">
+          <div class="flex-grow border-t border-slate-200"></div>
+          <span class="flex-shrink mx-3 text-[11px] font-medium text-slate-400">atau akses peninjau</span>
+          <div class="flex-grow border-t border-slate-200"></div>
+        </div>
+
+        <button type="button" onclick="loginAsTamu()" class="w-full py-2.5 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-800 border border-cyan-200 text-xs font-bold shadow-xs transition flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-eye text-cyan-600"></i>
+          <span>Masuk sebagai Tamu (Lihat Saja)</span>
+        </button>
       </div>
     </div>
   </div>
@@ -3128,7 +3188,15 @@
 
     let isServerOnline = false;
 
+    function isTamuReadOnly() {
+      return typeof currentRole !== 'undefined' && currentRole === 'tamu';
+    }
+
     async function apiCall(action, data = null) {
+      const readOnlyAllowed = ['get_data', 'login', 'switch_role', 'logout', 'check_version'];
+      if (isTamuReadOnly() && !readOnlyAllowed.includes(action)) {
+        return { success: false, error: 'Mode Tamu hanya dapat melihat data (Read-Only).' };
+      }
       try {
         const options = {
           method: data ? 'POST' : 'GET',
@@ -3172,7 +3240,7 @@
     // ============================================================
     // SISTEM AUTO-SYNC DATA & AUTO-UPDATE VERSION DETECTOR
     // ============================================================
-    const CURRENT_APP_BUILD_VERSION = '2026.10.23.0740';
+    const CURRENT_APP_BUILD_VERSION = '2026.11.26.1130';
     let latestServerAppVersion = CURRENT_APP_BUILD_VERSION;
     let lastDataSyncTimestamp = Date.now();
     const SYNC_THROTTLE_MS = 15000; // 15 detik batas throttling antar request navigasi
@@ -5466,7 +5534,7 @@
       if (currentRole === 'guru' && (targetView === 'guru' || targetView === 'pengaturan' || targetView === 'users')) {
         targetView = 'dashboard';
       }
-      if (currentRole === 'supervisor' && (targetView === 'pengaturan' || targetView === 'users')) {
+      if ((currentRole === 'supervisor' || currentRole === 'tamu') && (targetView === 'pengaturan' || targetView === 'users')) {
         targetView = 'dashboard';
       }
 
@@ -5611,7 +5679,7 @@
       if (currentRole === 'guru') {
         return guruDatabase.filter(g => g.id === selectedGuruId);
       }
-      if (currentRole === 'superadmin') {
+      if (currentRole === 'superadmin' || currentRole === 'tamu') {
         return guruDatabase;
       }
       // Mode Supervisor
@@ -5659,6 +5727,14 @@
       const bulkBar = document.getElementById('bulk-action-bar');
 
       deselectAllGuru();
+      const tamuBanner = document.getElementById('tamu-readonly-banner');
+      if (role === 'tamu') {
+        document.body.classList.add('tamu-readonly-mode');
+        if (tamuBanner) tamuBanner.classList.remove('hidden');
+      } else {
+        document.body.classList.remove('tamu-readonly-mode');
+        if (tamuBanner) tamuBanner.classList.add('hidden');
+      }
 
       // Update role switcher buttons highlight
       if (currentLoggedInUser) {
@@ -5684,6 +5760,10 @@
           sideUserNama.innerText = spvName.split('(')[0].trim();
           sideUserRole.innerText = 'Supervisor Penilai';
           if (sideUserIcon) sideUserIcon.className = 'fa-solid fa-user-tie';
+        } else if (role === 'tamu') {
+          sideUserNama.innerText = (currentLoggedInUser && currentLoggedInUser.nama) ? currentLoggedInUser.nama : 'Tamu (Pengunjung)';
+          sideUserRole.innerText = 'Mode Lihat Saja (Read-Only)';
+          if (sideUserIcon) sideUserIcon.className = 'fa-solid fa-eye';
         } else {
           sideUserNama.innerText = (currentLoggedInUser && currentLoggedInUser.nama) ? currentLoggedInUser.nama : 'Guru';
           sideUserRole.innerText = 'Guru (Self-Asesmen)';
@@ -5754,6 +5834,37 @@
         if (btnHapusSemua) btnHapusSemua.classList.remove('hidden');
         if (thCheckAll) thCheckAll.classList.remove('hidden');
         if (roleSwitchContainer) roleSwitchContainer.classList.remove('hidden');
+      } else if (role === 'tamu') {
+        if (rolePill) {
+          rolePill.innerText = 'Mode Tamu (Lihat Saja)';
+          rolePill.className = 'hidden md:inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-cyan-50 text-cyan-700 border border-cyan-300 shadow-sm';
+        }
+        if (navGuru) {
+          navGuru.classList.remove('hidden');
+          navGuru.style.display = 'flex';
+        }
+        if (navTextGuru) {
+          navTextGuru.innerText = `Database Guru (${guruDatabase.length} Guru)`;
+        }
+        if (navPengaturan) {
+          navPengaturan.classList.add('hidden');
+          navPengaturan.style.display = 'none';
+        }
+        if (navUsers) {
+          navUsers.classList.add('hidden');
+          navUsers.style.display = 'none';
+        }
+        if (dashBtnDb) dashBtnDb.classList.add('hidden');
+        if (adminGuruActions) adminGuruActions.classList.add('hidden');
+        if (btnHapusSemua) btnHapusSemua.classList.add('hidden');
+        if (thCheckAll) thCheckAll.classList.add('hidden');
+        if (bulkBar) bulkBar.classList.add('hidden');
+        if (roleSwitchContainer) roleSwitchContainer.classList.add('hidden');
+
+        const curActive = document.querySelector('section:not(.hidden)');
+        if (curActive && (curActive.id === 'view-pengaturan' || curActive.id === 'view-users')) {
+          navigateTo('dashboard');
+        }
       } else {
         // Mode Supervisor
         const binaanCount = getSupervisorTeachers().length;
@@ -5948,6 +6059,7 @@
     }
 
     function autoSavePraInput() {
+      if (isTamuReadOnly()) return;
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
       if (guru.mapel === 'BK') {
@@ -6000,6 +6112,7 @@
     }
 
     function autoSaveCoachingInput() {
+      if (isTamuReadOnly()) return;
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
       if (!guru.coaching) guru.coaching = {};
@@ -6540,6 +6653,7 @@
     }
 
     async function savePraObservasi() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Read-Only).', true); return; }
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
 
@@ -6973,6 +7087,7 @@
     }
 
     async function saveObservasi() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Read-Only).', true); return; }
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
 
@@ -7090,6 +7205,7 @@
     }
 
     async function saveCoaching() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Read-Only).', true); return; }
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
 
@@ -7230,6 +7346,7 @@
     // FUNGSI RESET / KOSONGKAN ISIAN FORMULIR PENILAIAN
     // ============================================================
     function resetPraObservasi() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Read-Only).', true); return; }
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
       if (!confirm(`Apakah Anda yakin ingin mengosongkan seluruh isian dan skor telaah dokumen Pra-Observasi untuk ${guru.nama}?`)) return;
@@ -7260,6 +7377,7 @@
     }
 
     function resetObservasi() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Read-Only).', true); return; }
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
       if (!confirm(`Apakah Anda yakin ingin mengosongkan seluruh penilaian dan catatan Observasi Kelas untuk ${guru.nama}?`)) return;
@@ -7275,6 +7393,7 @@
     }
 
     function resetCoaching() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Read-Only).', true); return; }
       const guru = guruDatabase.find(g => g.id === selectedGuruId);
       if (!guru) return;
       if (!confirm(`Apakah Anda yakin ingin mengosongkan seluruh catatan percakapan Coaching TIRTA untuk ${guru.nama}?`)) return;
@@ -7716,7 +7835,7 @@
     }
 
     function getStageLockStatus(stageId, guruObj = null) {
-      if (typeof currentRole !== 'undefined' && currentRole === 'superadmin') {
+      if (typeof currentRole !== 'undefined' && (currentRole === 'superadmin' || currentRole === 'tamu')) {
         return { isLocked: false, reason: '', bypassed: true };
       }
 
@@ -9251,6 +9370,7 @@
     }
 
     function addPengembanganDiriItem() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Read-Only).', true); return; }
       const guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
       if (!guru) return;
       if (!Array.isArray(guru.pengembanganDiri)) guru.pengembanganDiri = [];
@@ -9282,6 +9402,7 @@
     }
 
     function deletePengembanganDiriItem(idx) {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Read-Only).', true); return; }
       const guru = guruDatabase.find(g => g.id === selectedGuruId) || guruDatabase[0];
       if (!guru || !Array.isArray(guru.pengembanganDiri)) return;
 
@@ -9371,6 +9492,7 @@
     }
 
     async function savePengembanganDiri() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Read-Only).', true); return; }
       const targetGid = Number(selectedGuruId) || 1;
       const guru = guruDatabase.find(g => Number(g.id) === targetGid) || guruDatabase[0];
       if (!guru) return;
@@ -9532,6 +9654,7 @@
     }
 
     async function toggleApproveSupervisi(targetId) {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Read-Only).', true); return; }
       const guruId = targetId || selectedGuruId;
       const guru = guruDatabase.find(g => g.id === guruId);
       if (!guru) return;
@@ -10534,6 +10657,21 @@
       }
 
       // 2. Fallback Offline (jika aplikasi dijalankan langsung via file:// tanpa web server)
+      if ((u.toLowerCase() === 'tamu' || u.toLowerCase() === 'guest') && (p === 'tamu' || p === 'guest' || p === '123456' || p === '12345678')) {
+        const tamuObj = { id: 0, nip: 'tamu', nama: 'Tamu (Pengunjung)', role: 'tamu', available_roles: ['tamu'], active_role: 'tamu' };
+        saveUserSession(tamuObj);
+        selectedGuruId = (guruDatabase && guruDatabase[0]) ? guruDatabase[0].id : 1;
+        try { localStorage.setItem(STORAGE_KEY_SELECTED_GURU, String(selectedGuruId)); } catch(e) {}
+        document.getElementById('modal-login').classList.add('hidden');
+        errEl.classList.add('hidden');
+        renderRoleSwitcher(['tamu']);
+        switchRole('tamu');
+        try { localStorage.setItem(STORAGE_KEY_VIEW, 'dashboard'); } catch(e) {}
+        navigateTo('dashboard');
+        showToast('Masuk sebagai Tamu (Mode Lihat Saja)!');
+        return;
+      }
+
       if (loginSelectedRole === 'superadmin' || u.toLowerCase() === 'superadmin' || u.toLowerCase() === 'admin') {
         if (p === 'admin123' || p === 'superadmin' || p === '123456' || p === '12345678') {
           const adminObj = { nama: 'Superadmin Utama', role: 'superadmin', available_roles: ['guru', 'supervisor', 'superadmin'], active_role: 'superadmin' };
@@ -10591,10 +10729,43 @@
       errEl.classList.remove('hidden');
     }
 
+    async function loginAsTamu() {
+      const errEl = document.getElementById('login-error');
+      if (errEl) errEl.classList.add('hidden');
+
+      let tamuUser = null;
+      try {
+        const res = await apiCall('login', { nip: 'tamu', username: 'tamu', password: 'tamu' });
+        if (res && res.success && res.user) {
+          tamuUser = res.user;
+        }
+      } catch (e) {
+        console.warn('API tamu login offline fallback', e);
+      }
+
+      if (!tamuUser) {
+        tamuUser = { id: 0, nip: 'tamu', nama: 'Tamu (Pengunjung)', role: 'tamu', available_roles: ['tamu'], active_role: 'tamu' };
+      }
+
+      saveUserSession(tamuUser);
+      selectedGuruId = (guruDatabase && guruDatabase[0]) ? guruDatabase[0].id : 1;
+      try { localStorage.setItem(STORAGE_KEY_SELECTED_GURU, String(selectedGuruId)); } catch(e) {}
+
+      document.getElementById('modal-login').classList.add('hidden');
+      renderRoleSwitcher(['tamu']);
+      switchRole('tamu');
+      try { localStorage.setItem(STORAGE_KEY_VIEW, 'dashboard'); } catch(e) {}
+      navigateTo('dashboard');
+      showToast('Masuk sebagai Tamu (Mode Lihat Saja)!');
+    }
+
     async function handleLogout() {
       await apiCall('logout').catch(() => {});
       clearUserSession();
       currentRole = 'guru';
+      document.body.classList.remove('tamu-readonly-mode');
+      const tamuBanner = document.getElementById('tamu-readonly-banner');
+      if (tamuBanner) tamuBanner.classList.add('hidden');
       const container = document.getElementById('role-switch-container');
       if (container) container.classList.add('hidden');
       showLoginModal();

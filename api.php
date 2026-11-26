@@ -83,6 +83,15 @@ $action = isset($_GET['action']) ? trim($_GET['action']) : '';
 try {
     $pdo = getDb();
 
+    $readOnlyAllowedActions = ['get_data', 'login', 'switch_role', 'logout', 'check_version'];
+    if (isset($_SESSION['user']['active_role']) && $_SESSION['user']['active_role'] === 'tamu' && !in_array($action, $readOnlyAllowedActions, true)) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'Akses ditolak: Mode Tamu hanya dapat melihat data (Read-Only).'
+        ]);
+        exit;
+    }
+
     switch ($action) {
 
         // ------------------------------------------------------------
@@ -199,7 +208,7 @@ try {
 
             echo json_encode([
                 'success' => true,
-                'appVersion' => '2026.10.23.0740',
+                'appVersion' => '2026.11.26.1130',
                 'currentUser' => $currentUser,
                 'appSettings' => $settings,
                 'guruDatabase' => $guruList
@@ -231,6 +240,24 @@ try {
                     'is_superadmin' => 1,
                     'available_roles' => ['guru', 'supervisor', 'superadmin'],
                     'active_role' => 'superadmin'
+                ];
+                $_SESSION['user'] = $user;
+                echo json_encode(['success' => true, 'user' => $user]);
+                exit;
+            }
+
+            // Cek Tamu (Akses Lihat Saja / Read-Only)
+            if (($nip === 'tamu' || $nip === 'guest') && ($password === 'tamu' || $password === 'guest' || $password === '123456' || $password === '12345678')) {
+                $user = [
+                    'id' => 0,
+                    'nip' => 'tamu',
+                    'nama' => 'Tamu (Pengunjung)',
+                    'mapel' => 'Lihat Saja',
+                    'kelas' => 'Semua',
+                    'is_supervisor' => 0,
+                    'is_superadmin' => 0,
+                    'available_roles' => ['tamu'],
+                    'active_role' => 'tamu'
                 ];
                 $_SESSION['user'] = $user;
                 echo json_encode(['success' => true, 'user' => $user]);
@@ -822,7 +849,7 @@ try {
         case 'check_version':
             echo json_encode([
                 'success' => true,
-                'appVersion' => '2026.10.23.0740',
+                'appVersion' => '2026.11.26.1130',
                 'timestamp' => date('c')
             ]);
             break;
@@ -830,7 +857,7 @@ try {
         default:
             echo json_encode([
                 'success' => true,
-                'appVersion' => '2026.10.23.0740',
+                'appVersion' => '2026.11.26.1130',
                 'status' => 'online',
                 'service' => 'API Supervisi Akademik SMPN 24 Malang',
                 'timestamp' => date('c')
