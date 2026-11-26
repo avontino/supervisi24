@@ -37,8 +37,18 @@
     body.tamu-readonly-mode button[onclick*="deletePengembanganDiriItem"],
     body.tamu-readonly-mode #lap-approve-btn-container,
     body.tamu-readonly-mode #coach-approve-btn-container,
-    body.tamu-readonly-mode #lap-approval-banner-action {
+    body.tamu-readonly-mode #lap-approval-banner-action,
+    body.tamu-readonly-mode button[onclick*="window.print"],
+    body.tamu-readonly-mode button[onclick*="PDF"],
+    body.tamu-readonly-mode button[onclick*="Excel"],
+    body.tamu-readonly-mode button[onclick*="printLaporan"],
+    body.tamu-readonly-mode button[onclick*="printUserAccounts"] {
       display: none !important;
+    }
+    @media print {
+      body.tamu-readonly-mode * {
+        display: none !important;
+      }
     }
     body.tamu-readonly-mode #view-pra input,
     body.tamu-readonly-mode #view-pra textarea,
@@ -478,7 +488,7 @@
           <div class="w-7 h-7 rounded-lg bg-cyan-600 text-white flex items-center justify-center flex-shrink-0">
             <i class="fa-solid fa-eye text-xs"></i>
           </div>
-          <span><strong>Mode Tamu (Lihat Saja):</strong> Anda masuk sebagai pengunjung dengan akses baca saja. Seluruh tombol simpan dan ubah data dinonaktifkan.</span>
+          <span><strong>Mode Tamu (Lihat Saja):</strong> Anda masuk sebagai pengunjung dengan akses baca saja. Seluruh fitur ubah, simpan, cetak, unduh PDF, dan ekspor data dinonaktifkan.</span>
         </div>
         <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-100 text-cyan-800 border border-cyan-300 self-start sm:self-center whitespace-nowrap">Read-Only</span>
       </div>
@@ -3192,6 +3202,17 @@
       return typeof currentRole !== 'undefined' && currentRole === 'tamu';
     }
 
+    if (typeof window !== 'undefined' && typeof window.print === 'function') {
+      const _nativeWindowPrint = window.print.bind(window);
+      window.print = function() {
+        if (isTamuReadOnly()) {
+          showToast('Mode Tamu hanya bisa melihat data (Fitur cetak dinonaktifkan).', true);
+          return;
+        }
+        return _nativeWindowPrint();
+      };
+    }
+
     async function apiCall(action, data = null) {
       const readOnlyAllowed = ['get_data', 'login', 'switch_role', 'logout', 'check_version'];
       if (isTamuReadOnly() && !readOnlyAllowed.includes(action)) {
@@ -3240,7 +3261,7 @@
     // ============================================================
     // SISTEM AUTO-SYNC DATA & AUTO-UPDATE VERSION DETECTOR
     // ============================================================
-    const CURRENT_APP_BUILD_VERSION = '2026.11.26.1130';
+    const CURRENT_APP_BUILD_VERSION = '2026.11.26.1135';
     let latestServerAppVersion = CURRENT_APP_BUILD_VERSION;
     let lastDataSyncTimestamp = Date.now();
     const SYNC_THROTTLE_MS = 15000; // 15 detik batas throttling antar request navigasi
@@ -8711,6 +8732,7 @@
     }
 
     function exportToExcel() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Ekspor Excel dinonaktifkan).', true); return; }
       const dataToExport = getRekapFilteredTeachers();
 
       const exportRows = dataToExport.map((g, idx) => {
@@ -8748,6 +8770,7 @@
     }
 
     function exportDatabaseGuruToExcel() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Ekspor Excel dinonaktifkan).', true); return; }
       if (!guruDatabase || !guruDatabase.length) {
         showToast('Tidak ada data guru untuk diekspor!', 'error');
         return;
@@ -8875,6 +8898,7 @@
     });
 
     function downloadLaporanPDF() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Unduh PDF dinonaktifkan).', true); return; }
       if (typeof html2pdf === 'undefined') {
         showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
         return;
@@ -8918,6 +8942,7 @@
     }
 
     function downloadRekapKolektifPDF() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Unduh PDF dinonaktifkan).', true); return; }
       if (typeof html2pdf === 'undefined') {
         showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
         return;
@@ -8960,6 +8985,7 @@
     }
 
     function downloadPraObservasiPDF() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Unduh PDF dinonaktifkan).', true); return; }
       if (typeof html2pdf === 'undefined') {
         showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
         return;
@@ -9001,6 +9027,7 @@
     }
 
     function downloadObservasiPDF() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Unduh PDF dinonaktifkan).', true); return; }
       if (typeof html2pdf === 'undefined') {
         showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
         return;
@@ -9042,6 +9069,7 @@
     }
 
     function downloadCoachingPDF() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Unduh PDF dinonaktifkan).', true); return; }
       if (typeof html2pdf === 'undefined') {
         showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
         return;
@@ -9543,6 +9571,7 @@
     }
 
     function downloadPengembanganDiriPDF() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Unduh PDF dinonaktifkan).', true); return; }
       if (typeof html2pdf === 'undefined') {
         showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
         return;
@@ -9941,6 +9970,7 @@
     }
 
     function downloadUserAccountsPDF() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Unduh PDF dinonaktifkan).', true); return; }
       if (typeof html2pdf === 'undefined') {
         showToast('Pustaka PDF sedang dimuat, silakan coba sesaat lagi...', 'error');
         return;
@@ -10003,6 +10033,7 @@
     }
 
     function printUserAccounts() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Cetak dinonaktifkan).', true); return; }
       if (!guruDatabase || !guruDatabase.length) {
         showToast('Tidak ada data akun guru!', 'error');
         return;
@@ -10028,6 +10059,7 @@
     }
 
     function exportUserAccountsExcel() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Ekspor Excel dinonaktifkan).', true); return; }
       if (!guruDatabase || !guruDatabase.length) {
         showToast('Tidak ada data akun guru!', 'error');
         return;
@@ -10323,6 +10355,7 @@
 
     // Fungsi Cetak Laporan Keseluruhan
     function printLaporanKeseluruhan() {
+      if (isTamuReadOnly()) { showToast('Mode Tamu hanya bisa melihat data (Cetak dinonaktifkan).', true); return; }
       const allReportDiv = document.getElementById('printable-all-reports');
       const singleReportDiv = document.getElementById('printable-report');
       const tbody = document.getElementById('all-report-tbody');
